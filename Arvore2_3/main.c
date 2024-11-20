@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Arvore2_3/ARV2_3.h"   
-
+#include "Arvore_binaria/ARV_BINARIA.h"  
+#include "ARV2_3.h"   
 
 
 int main(){
@@ -24,7 +24,10 @@ int main(){
 
     // Exibe a árvore em ordem
     printf("\nArvore em ordem:\n");
-    mostrar(raiz);
+    exibirEmOrdem(raiz);
+
+    // Libera memória alocada
+    freeTree(raiz);
 
     return 0;
 }
