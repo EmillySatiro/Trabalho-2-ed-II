@@ -31,6 +31,6 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho);
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai);
 void insere(ARV2_3 **raiz, Informacao info);
 void mostrar(ARV2_3 *raiz);
-
+void liberar(ARV2_3 *raiz);
 
 #endif 

@@ -24,10 +24,8 @@ int main(){
 
     // Exibe a árvore em ordem
     printf("\nArvore em ordem:\n");
-    exibirEmOrdem(raiz);
-
+    mostrar(raiz);
     // Libera memória alocada
-    freeTree(raiz);
-
+    liberar(raiz);
     return 0;
 }
