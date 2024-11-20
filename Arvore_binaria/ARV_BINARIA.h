@@ -4,8 +4,8 @@
 typedef struct ARV_BINARIA{
     char palavra_ingles[25];
     int unidade; 
-    ARV_BINARIA *esquerda; 
-    ARV_BINARIA *direita; 
+    struct ARV_BINARIA *esquerda; 
+    struct ARV_BINARIA *direita; 
 }ARV_BINARIA;
 
 #endif

@@ -1,13 +1,14 @@
 #ifndef ARV2_3_H 
 #define ARV2_3_H 
 
-//#include "Arvore_binaria/ARV_BINARIA.h"
+#include "../Arvore_binaria/ARV_BINARIA.h"
 
 
 typedef struct Informacao{
-    ARV_BINARIA *palavra_ingles; 
+   
     char palavra_portugues[25];
-    int unidade;
+    ARV_BINARIA *palavra_ingles; 
+
 }Informacao;
 
 
@@ -15,9 +16,9 @@ typedef struct ARV2_3{
     Informacao info1; 
     Informacao info2; 
     int quant_infos; 
-    ARV2_3 *esquerda; 
-    ARV2_3 *centro; 
-    ARV2_3 *direita; 
+    struct ARV2_3 *esquerda; 
+    struct ARV2_3 *centro; 
+    struct ARV2_3 *direita; 
 } ARV2_3;
 
 
@@ -31,4 +32,4 @@ void insere(ARV2_3 **raiz, Informacao info);
 void mostrar(ARV2_3 *raiz);
 
 
-#endif
+#endif 
