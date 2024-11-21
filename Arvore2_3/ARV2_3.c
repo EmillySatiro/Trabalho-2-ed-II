@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Arvore2_3/ARV2_3.h"
-//#include "Arvore_binaria/ARV_BINARIA.h"
+#include "ARV2_3.h"
+#include "ARV_BINARIA.h"
 
 
 
@@ -88,7 +88,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
             }else{
                 maior = quebra_No(no, info, sobe, NULL);
                 if (pai && !(*pai)){
-                    *no = criar(*sobe, *no, maior);
+                    *no = criar_no(*sobe, *no, maior);
                     maior = NULL; 
                 }
                 
@@ -145,3 +145,4 @@ void mostrar(ARV2_3 *raiz){
 
     }
 }
+

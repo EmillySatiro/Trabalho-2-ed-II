@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "../Arvore2_3/ARV2_3.h"   
+#include <stdlib.h> 
+#include "ARV2_3.h"
 
 
 

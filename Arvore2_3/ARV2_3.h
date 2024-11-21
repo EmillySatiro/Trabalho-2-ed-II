@@ -1,7 +1,7 @@
 #ifndef ARV2_3_H 
 #define ARV2_3_H 
 
-#include "../Arvore_binaria/ARV_BINARIA.h"
+#include "ARV_BINARIA.h"
 
 
 typedef struct Informacao{
