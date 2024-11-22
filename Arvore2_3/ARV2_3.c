@@ -24,14 +24,12 @@ ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3*filho_centro){
 ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho){
     ARV2_3 *maior_info; 
 
+    // caso 1 : O novo elemento (info) é maior que minha info2. 
     if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues)> 0){
-        *sobe = (*no)->info2;
+        *sobe = (*no)->info2;// o info dois sobe pq ele é o do meio 
 
-        if (filho){
-            maior_info = criar_no(info, (*no)->direita, *filho);
-        }else{
-            maior_info= criar_no(info, (*no)->direita, NULL);
-        }
+        maior_info = criar_no(info,(*no)->direita, filho ? *filho: NULL); 
+        // criando um no para o maior que no caso é meu novo elemento( esse filho ? * filho: null é se o filho não for nulo ele executa e manda(*filho)  para o criar e se não for manda null)
         
     }else if(strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0){
         *sobe = info; 
@@ -94,10 +92,10 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                 
             }
         }else{
-            if(strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues)> 0 ){
+            if(strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues)< 0 ){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no); 
 
-            }else if(((*no)->quant_infos == 1)|| (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues))> 0){
+            }else if(((*no)->quant_infos == 1)|| (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues))< 0){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no); 
 
             }else{
