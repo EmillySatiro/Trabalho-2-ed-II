@@ -1,7 +1,12 @@
+#include "Arvore_binaria/ARV_BINARIA.h"
+
 #ifndef ARV2_3_H 
 #define ARV2_3_H 
 
+<<<<<<< HEAD
+=======
 #include "ARV_BINARIA.h"
+>>>>>>> 6c9427b442816ad84f9b906bc7289cd6a9579e25
 
 
 typedef struct Informacao{
@@ -30,6 +35,6 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho);
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai);
 void insere(ARV2_3 **raiz, Informacao info);
 void mostrar(ARV2_3 *raiz);
-
+void liberar(ARV2_3 *raiz);
 
 #endif 
