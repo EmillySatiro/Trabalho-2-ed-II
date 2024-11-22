@@ -31,20 +31,19 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
         maior_info = criar_no(info,(*no)->direita, filho ? *filho: NULL); 
         // criando um no para o maior que no caso é meu novo elemento( esse filho ? * filho: null é se o filho não for nulo ele executa e manda(*filho)  para o criar e se não for manda null)
         
+    // cado 2: o novo elemento é oq sobe pois ele esta entre info 1 e info 2
     }else if(strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0){
-        *sobe = info; 
+        *sobe = info; // novo elemento sobe 
 
-        if (filho){
-
-            maior_info = criar_no((*no)->info2, *filho, (*no)->direita);
-        }else{
-            maior_info = criar_no((*no)->info2, NULL, (*no)->direita);
-        }
+        maior_info = criar_no((*no)->info2, filho? *filho: NULL, (*no)->direita);
+        // msm coisa do outro só que quem sobe é info 2 
         
-    }else{
-        *sobe = (*no)->info1; 
+    }else{// caso 3 info menor info 1 
+        *sobe = (*no)->info1; // quem vai subir é info 1 
+         
+        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
 
-        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->centro);
+        // ajustar o no atual para nova info ser info 1 
         (*no)->info1 = info; 
         (*no)->centro = (filho ? *filho : NULL); 
     }
