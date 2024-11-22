@@ -143,15 +143,4 @@ void mostrar(ARV2_3 *raiz){
 
     }
 }
-<<<<<<< HEAD
-void libera(ARV2_3 *raiz){
-    if(raiz){
-        libera(raiz->esquerda); 
-        libera(raiz->centro); 
-        libera(raiz->direita); 
-        free(raiz); 
-    }
-}
-=======
 
->>>>>>> 6c9427b442816ad84f9b906bc7289cd6a9579e25
