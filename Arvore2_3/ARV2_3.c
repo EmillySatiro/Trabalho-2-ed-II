@@ -71,53 +71,60 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho){
     }
     no->quant_infos = 2; 
 }
+
+
+
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai){
     Informacao sobe_sup; 
     ARV2_3 *maior = NULL; 
 
+    // se é nullo cria né 
     if (*no == NULL){
         *no = criar_no(info, NULL, NULL); 
     }else{
-
+        // caso seja folha 
         if(eh_folha(*no)){
             if((*no)->quant_infos == 1){
                 add_elementos(*no, info,NULL);
             }else{
                 maior = quebra_No(no, info, sobe, NULL);
+                // se não houver pai, cria um novo só superior 
                 if (pai && !(*pai)){
                     *no = criar_no(*sobe, *no, maior);
-                    maior = NULL; 
+                    maior = NULL; // só pra limpar o maior 
                 }
                 
             }
-        }else{
+        }else{// caso não seja uma folha procrura onde vamos inserir né 
             if(strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues)< 0 ){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no); 
 
-            }else if(((*no)->quant_infos == 1)|| (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues))< 0){
+            }else if(((*no)->quant_infos == 1)|| (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues)) < 0){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no); 
 
             }else{
                 maior = maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
             }
-
+            
+            // se maior foi retornado, o nó pode precisar ser atualizado ou quebrado 
             if(maior){
                 if((*no)->quant_infos == 1){
                     add_elementos(*no,*sobe,maior);
-                    maior = NULL;
+                    maior = NULL;// limpa maior após adicionar 
                 }else{
                     maior = quebra_No(no, *sobe, &sobe_sup, &maior); 
                     if(pai && !(*pai)){
                         *no = criar_no(sobe_sup, *no, maior);
-                        maior= NULL; 
+                        maior= NULL; // limpar maior após criar o nó 
                     }
                 }
             }
         }
-       
     }
     return maior; 
 }
+
+
 
 void insere(ARV2_3 **raiz, Informacao info){
     Informacao sobe; 
