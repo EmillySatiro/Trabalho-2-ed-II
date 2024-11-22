@@ -1,7 +1,13 @@
 #include <stdio.h>
+<<<<<<< HEAD
 #include <stdlib.h>
 #include "Arvore_binaria/ARV_BINARIA.h"  
 #include "ARV2_3.h"   
+=======
+#include <stdlib.h> 
+#include "ARV2_3.h"
+
+>>>>>>> 6c9427b442816ad84f9b906bc7289cd6a9579e25
 
 
 int main(){

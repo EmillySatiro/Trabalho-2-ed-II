@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Arvore2_3/ARV2_3.h"
-//#include "Arvore_binaria/ARV_BINARIA.h"
+#include "ARV2_3.h"
+#include "ARV_BINARIA.h"
 
 
 
@@ -145,6 +145,7 @@ void mostrar(ARV2_3 *raiz){
 
     }
 }
+<<<<<<< HEAD
 void libera(ARV2_3 *raiz){
     if(raiz){
         libera(raiz->esquerda); 
@@ -153,3 +154,6 @@ void libera(ARV2_3 *raiz){
         free(raiz); 
     }
 }
+=======
+
+>>>>>>> 6c9427b442816ad84f9b906bc7289cd6a9579e25
