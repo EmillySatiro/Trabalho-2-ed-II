@@ -37,7 +37,7 @@ ARV_BINARIA *insere_arvore_binaria(ARV_BINARIA *arvore, char *palavra_ingles, in
 
 void mostrar_arvore_binaria(ARV_BINARIA *arvore,int unidade){
     if(arvore == NULL){
-        return 0;
+        return;
     }
 
     printf("%s",arvore->palavra_ingles);
@@ -55,6 +55,8 @@ ARV_BINARIA *libera_arvore_binaria(ARV_BINARIA *arvore)
     }
     return NULL;
 }
+
+
 
 
 

@@ -12,6 +12,7 @@ int main(){
     Informacao info4 = {"abobora", NULL};
     Informacao info5 = {"pera", NULL};
     Informacao info6 = {"uva", NULL};
+    ARV_BINARIA palavra;
     ARV2_3 *raiz = NULL; // Inicializa a árvore como vazia
 
     // Insere os elementos na árvore
@@ -25,6 +26,13 @@ int main(){
     // Exibe a árvore em ordem
     printf("\nArvore em ordem:\n");
     mostrar(raiz);
+
+    // insere_arvore_binaria(&palavra, "hello", 1);
+    // insere_arvore_binaria(&palavra, "world", 2);
+    // insere_arvore_binaria(&palavra, "apple", 3);
+    // printf("\nArvore binaria em ordem:\n");
+    // mostrar_arvore_binaria(&palavra, 1);
+
 
     return 0;
 }
