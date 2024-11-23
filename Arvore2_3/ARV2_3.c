@@ -72,8 +72,6 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho){
     no->quant_infos = 2; 
 }
 
-
-
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai){
     Informacao sobe_sup; 
     ARV2_3 *maior = NULL; 
@@ -113,7 +111,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                     maior = NULL;// limpa maior após adicionar 
                 }else{
                     maior = quebra_No(no, *sobe, &sobe_sup, &maior); 
-                    if(pai && !(*pai)){
+                    if(*pai){
                         *no = criar_no(sobe_sup, *no, maior);
                         maior= NULL; // limpar maior após criar o nó 
                     }
@@ -124,8 +122,6 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     return maior; 
 }
 
-
-
 void insere(ARV2_3 **raiz, Informacao info){
     Informacao sobe; 
     ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL); 
@@ -135,7 +131,6 @@ void insere(ARV2_3 **raiz, Informacao info){
     }
     
 }
-
 void mostrar(ARV2_3 *raiz){
     if(raiz){ 
         mostrar(raiz->esquerda); 
