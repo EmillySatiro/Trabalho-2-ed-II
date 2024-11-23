@@ -6,6 +6,7 @@ typedef struct Informacao{
    
     char palavra_portugues[25];
     ARV_BINARIA *palavra_ingles; 
+    int unidade; 
 
 }Informacao;
 

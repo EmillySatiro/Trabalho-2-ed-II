@@ -8,11 +8,12 @@
 typedef struct Informacao_VP{
     ARV_BINARIA *palavras_ingles; 
     char *palavra_portugues[25];
+    int unidade; 
 }Informacao_VP;
 
 typedef struct Rubronegra{
     Informacao_VP *info;
-    int color; 
+    int cor; 
     struct Rubronegra *direita; 
     struct Rubronegra *esquerda; 
 
