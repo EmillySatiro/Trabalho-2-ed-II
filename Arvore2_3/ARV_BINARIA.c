@@ -11,50 +11,72 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
         printf("Erro ao alocar memoria\n");
         exit(1);
     }
-    strcpy(arvore->palavra_ingles, palavra_ingles);
+    // Verifica se o tamanho da palavra é adequado para o buffer
+    strncpy(arvore->palavra_ingles, palavra_ingles, sizeof(arvore->palavra_ingles) - 1);
+    arvore->palavra_ingles[sizeof(arvore->palavra_ingles) - 1] = '\0';  // Garante que a string está terminada
     arvore->unidade = unidade;
     arvore->esquerda = NULL;
     arvore->direita = NULL;
     return arvore;
 }
 
-ARV_BINARIA *insere_arvore_binaria(ARV_BINARIA *arvore, char *palavra_ingles, int unidade)
+
+ARV_BINARIA *insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade)
 {
-    if (arvore == NULL)
+    // Se a árvore estiver vazia, cria um novo nó
+    if (*arvore == NULL)
     {
-        return cria_arvore_binaria(palavra_ingles, unidade);
+        *arvore = cria_arvore_binaria(palavra_ingles, unidade);
+        return *arvore; // Retorna o nó recém-criado
     }
-    if (strcmp(palavra_ingles, arvore->palavra_ingles) < 0)
+
+    // Se a palavra for menor, insere à esquerda
+    if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0)
     {
-        arvore->esquerda = insere_arvore_binaria(arvore->esquerda, palavra_ingles, unidade);
+        (*arvore)->esquerda = insere_arvore_binaria(&(*arvore)->esquerda, palavra_ingles, unidade);
     }
+    // Se a palavra for maior ou igual, insere à direita
     else
     {
-        arvore->direita = insere_arvore_binaria(arvore->direita, palavra_ingles, unidade);
+        (*arvore)->direita = insere_arvore_binaria(&(*arvore)->direita, palavra_ingles, unidade);
     }
-    return arvore;
+
+    return *arvore; // Retorna o ponteiro para o nó da árvore atual
 }
 
-void mostrar_arvore_binaria(ARV_BINARIA *arvore,int unidade){
-    if(arvore == NULL){
+
+void mostrar_arvore_binaria(ARV_BINARIA **arvore, int unidade)
+{
+    if (*arvore == NULL) {
         return;
     }
 
-    printf("%s",arvore->palavra_ingles);
-    mostrar_arvore_binaria(arvore->esquerda,unidade); 
-    mostrar_arvore_binaria(arvore->direita,unidade);
+    // Exibe a subárvore esquerda
+    mostrar_arvore_binaria(&(*arvore)->esquerda, unidade);
+    
+    // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
+    if ((*arvore)->unidade == unidade) {
+        printf("%s\n", (*arvore)->palavra_ingles);
+    }
+
+    // Exibe a subárvore direita
+    mostrar_arvore_binaria(&(*arvore)->direita, unidade);
 }
 
-ARV_BINARIA *libera_arvore_binaria(ARV_BINARIA *arvore)
+
+
+void libera_arvore_binaria(ARV_BINARIA **arvore)
 {
-    if (arvore != NULL)
+    if (*arvore != NULL)
     {
-        libera_arvore_binaria(arvore->esquerda);
-        libera_arvore_binaria(arvore->direita);
-        free(arvore);
+        libera_arvore_binaria(&(*arvore)->esquerda);
+        libera_arvore_binaria(&(*arvore)->direita);
+        free(*arvore);
+        *arvore = NULL; // Garantir que o ponteiro se torne NULL após liberar
     }
-    return NULL;
 }
+
+
 
 
 

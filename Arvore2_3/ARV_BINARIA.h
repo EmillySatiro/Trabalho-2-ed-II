@@ -9,8 +9,8 @@ typedef struct ARV_BINARIA{
 }ARV_BINARIA;
 
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade);
-ARV_BINARIA *insere_arvore_binaria(ARV_BINARIA *arvore, char *palavra_ingles, int unidade);
-ARV_BINARIA *libera_arvore_binaria(ARV_BINARIA *arvore);
-void mostrar_arvore_binaria(ARV_BINARIA *arvore,int unidade);
+ARV_BINARIA *insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade);
+void libera_arvore_binaria(ARV_BINARIA **arvore);
+void mostrar_arvore_binaria(ARV_BINARIA **arvore,int unidade);
 
 #endif
