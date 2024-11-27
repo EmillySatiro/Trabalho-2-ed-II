@@ -94,3 +94,61 @@ ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles)
         return buscar_palavra(arvore->direita, palavra_ingles);
     }
 }
+
+
+
+int eh_folha(ARV_BINARIA *no){
+    return (no->esquerda == NULL && no->direita == NULL);
+}
+
+int tem_apenas_um_filho(ARV_BINARIA *no){
+    return (no->esquerda == NULL && no->direita != NULL) || (no->esquerda != NULL && no->direita == NULL);
+}
+
+int tem_dois_filhos(ARV_BINARIA *no){
+    return (no->esquerda != NULL && no->direita != NULL);
+}
+
+int remover_no(ARV_BINARIA **arvore, char *palavra_ingles){
+    if (*arvore == NULL){
+        return 0;
+    }
+
+    if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0){
+        return remover_no(&(*arvore)->esquerda, palavra_ingles);
+    }
+    else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
+        return remover_no(&(*arvore)->direita, palavra_ingles);
+    }
+    else{
+        if (eh_folha(*arvore)){
+            free(*arvore);
+            *arvore = NULL;
+            return 1;
+        }
+        else if (tem_apenas_um_filho(*arvore)){
+        
+            ARV_BINARIA *temp = *arvore;
+            if ((*arvore)->esquerda != NULL){
+                *arvore = (*arvore)->esquerda;
+            }
+            else{
+                *arvore = (*arvore)->direita;
+            }
+            free(temp);
+            return 1;
+        }
+        else{
+            // Encontra o nó com o maior valor na subárvore esquerda
+            ARV_BINARIA *temp = (*arvore)->esquerda;
+            while (temp->direita != NULL){
+                temp = temp->direita;
+            }
+            // Copia o valor do nó encontrado para o nó a ser removido
+            strncpy((*arvore)->palavra_ingles, temp->palavra_ingles, sizeof((*arvore)->palavra_ingles) - 1);
+            (*arvore)->palavra_ingles[sizeof((*arvore)->palavra_ingles) - 1] = '\0';
+            return remover_no(&(*arvore)->esquerda, temp->palavra_ingles);
+        
+        }
+    }
+}
