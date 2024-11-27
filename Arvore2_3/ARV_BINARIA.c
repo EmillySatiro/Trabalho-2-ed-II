@@ -6,15 +6,13 @@
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
 {
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
-    if (arvore == NULL)
-    {
+    if (arvore == NULL){
         printf("Erro ao alocar memoria\n");
         exit(1);
     }
-    int TAMANHO_PALAVRA = strlen(palavra_ingles);
-    // Verifica se o tamanho da palavra é adequado para o buffer
-    strncpy(arvore->palavra_ingles, palavra_ingles, TAMANHO_PALAVRA - 1);
-    arvore->palavra_ingles[TAMANHO_PALAVRA - 1] = '\0'; // Garante que a string está terminada
+   
+    strncpy(arvore->palavra_ingles, palavra_ingles, sizeof(arvore->palavra_ingles) -1);
+    arvore->palavra_ingles[sizeof(arvore->palavra_ingles) - 1] = '\0'; // Garante que a string está terminada
 
     arvore->unidade = unidade;
     arvore->esquerda = NULL;
@@ -25,8 +23,7 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
 void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade)
 {
     // Se a árvore estiver vazia, cria um novo nó
-    if (*arvore == NULL)
-    {
+    if (*arvore == NULL){
         *arvore = cria_arvore_binaria(palavra_ingles, unidade);
         return;
     }

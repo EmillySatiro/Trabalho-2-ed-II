@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ARV2_3.h"
+#include "ARV_BINARIA.h"
 
 int main()
 {
