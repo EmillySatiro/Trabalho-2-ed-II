@@ -129,7 +129,7 @@ Rubronegra *procurar_menor(Rubronegra *raiz){
 
 void conferindo_regras(Rubronegra **raiz){
     // balencear se o filho da  e as esquerda preto direita for vermelho 
-    if(Qual_a_cor((*raiz)->direita)== VERMELHO){
+    if( Qual_a_cor((*raiz)->esquerda) == PRETO && ((*raiz)->direita)== VERMELHO){
         girar_esquerda(raiz);
     }
 
