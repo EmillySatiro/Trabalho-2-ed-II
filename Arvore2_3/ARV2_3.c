@@ -131,6 +131,7 @@ void insere(ARV2_3 **raiz, Informacao info){
     }
     
 }
+
 void mostrar(ARV2_3 *raiz){
     if(raiz){ 
         mostrar(raiz->esquerda); 
@@ -145,3 +146,22 @@ void mostrar(ARV2_3 *raiz){
     }
 }
 
+
+void liberar_2_3_binaria(Informacao *info){
+    // liberar binaria 
+    free(info->palavra_portugues);
+
+}
+
+void liberar_2_3(ARV2_3 *raiz){
+    if(raiz){
+        liberar_2_3(raiz->esquerda); 
+        liberar_2_3(raiz->centro); 
+        if (raiz->quant_infos == 2){
+            liberar_2_3(raiz->direita);
+            liberar_2_3_binaria(&raiz->info2);
+        }
+         liberar_2_3_binaria(&raiz->info1);
+        free(raiz); 
+    }
+}

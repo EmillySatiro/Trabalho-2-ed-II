@@ -27,4 +27,5 @@ int main(){
     mostrar(raiz);
 
     return 0;
+    liberar_2_3(raiz); 
 }
