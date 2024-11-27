@@ -119,13 +119,7 @@ void mover_direita(Rubronegra **no){
     }
 }
 
-Rubronegra *procurar_menor(Rubronegra *raiz){
-    Rubronegra *menor = raiz;
-    if(raiz != NULL && raiz->esquerda != NULL ){
-        menor = procurar_menor(raiz->esquerda);
-    }
-    return menor;
-}
+
 
 void conferindo_regras(Rubronegra **raiz){
     // balencear se o filho da  e as esquerda preto direita for vermelho 
@@ -145,27 +139,28 @@ void conferindo_regras(Rubronegra **raiz){
      
 }
 
-void remover_elemento_min(Rubronegra **raiz){
-    if(*raiz != NULL){
-        // se a esquerda é nula  achamos o minimo
-        if ((*raiz)->esquerda == NULL){
-            Rubronegra *aux = *raiz; 
-            *raiz  = (*raiz)->direita; //substitui o no min pelo a direita
-            free(aux);
-            conferindo_regras(raiz);
-        }else{
-            // se a esquerda não é nula então chama ela dnv
-            if(Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
-                move_esquerda(raiz);
-
-            }
-            remover_elemento_min(&((*raiz)->esquerda));
-
-            conferindo_regras(raiz);
-        }
-        
-    }
-}
+// void remover_elemento_min(Rubronegra **raiz){
+//     if(*raiz != NULL){
+//         // se a esquerda é nula  achamos o minimo
+//         if ((*raiz)->esquerda == NULL && (*raiz)->direita == NULL ){
+//             // lembrar de devolver o valor da info aqui 
+//             free(raiz);
+//             // não achou o minimo 
+//         }else if ((*raiz)->esquerda == NULL &&(*raiz)->direita != NULL){
+//             procurar_menor(&(*raiz)->direita);
+//         }else{
+//             procurar_menor(&(*raiz)->esquerda);
+//         }
+//         remover_elemento_min(&(*raiz)->esquerda);
+//         if(Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
+//             move_esquerda(raiz);
+//         }
+//         conferindo_regras(raiz); 
+//     }
+// }
+// Rubronegra *procurar_menor(Rubronegra **raiz){
+   
+// }
 
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info){
     Rubronegra *inserido = NULL; 
