@@ -2,7 +2,7 @@
 #define ARV_BINARIA_H
 
 typedef struct ARV_BINARIA{
-    char *palavra_ingles[100];
+    char palavra_ingles[100];
     int unidade; 
     struct ARV_BINARIA *esquerda; 
     struct ARV_BINARIA *direita; 
