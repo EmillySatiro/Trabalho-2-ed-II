@@ -3,73 +3,31 @@
 #include "ARV2_3.h"
 #include "ARV_BINARIA.h"
 
-// int main()
-// {
-
-//     ARV_BINARIA *palavra = NULL; // Inicializa a árvore binária como vazia
-
-//     // Insere os elementos na árvore 2-3
-
-//     // Exibe a árvore 2-3 em ordem
-
-//     // Insere os elementos na árvore binária
-//     insere_arvore_binaria(&palavra, "hello", 1);
-//     insere_arvore_binaria(&palavra, "world", 1);
-//     insere_arvore_binaria(&palavra, "goodbye", 1);
-//     insere_arvore_binaria(&palavra, "cruel", 1);
-//     insere_arvore_binaria(&palavra, "world", 1);
-
-//     mostrar_arvore_binaria(palavra, 1);
-
-//     ARV_BINARIA *resposta = buscar_palavra(palavra, "world");
-//     if (resposta)
-//     {
-//         printf("Palavra encontrada: %s\n", resposta->palavra_ingles);
-//     }
-//     else
-//     {
-//         printf("Palavra não encontrada\n");
-//     }
-//     remover_no(&palavra, "hello");
-//     printf("Após remover 'hello'=========:\n");
-//     mostrar_arvore_binaria(palavra, 1);
-//     remover_no(&palavra, "world");
-//     printf("Após remover 'world'=========:\n");
-//     mostrar_arvore_binaria(palavra, 1);
-
-//     // Libera a árvore binária
-//     libera_arvore_binaria(&palavra);
-
-//     // int main(){
-
-//     //     Informacao info1 = {"ola", NULL};
-//     //     Informacao info2 = {"zebra", NULL};
-//     //     Informacao info3 = {"casa", NULL};
-//     //     Informacao info4 = {"abobora", NULL};
-//     //     Informacao info5 = {"pera", NULL};
-//     //     Informacao info6 = {"uva", NULL};
-//     //     ARV2_3 *raiz = NULL; // Inicializa a árvore como vazia
-
-//     //     // Insere os elementos na árvore
-//     //     insere(&raiz, info1);
-//     //     insere(&raiz, info2);
-//     //     insere(&raiz, info6);
-//     //     insere(&raiz, info3);
-//     //     insere(&raiz, info4);
-//     //     insere(&raiz, info5);
-
-//     //     // Exibe a árvore em ordem
-//     //     printf("\nArvore em ordem:\n");
-//     //     mostrar(raiz);
-
-//     //     return 0;
-//     //     liberar_2_3(raiz);
-//     //
-// }
-
 int main()
 {
-    // // Criando a raiz da árvore rubro-negra
+
+    ARV_BINARIA *palavra = NULL; // Inicializa a árvore binária como vazia
+    ARV2_3 *raiz = NULL; // Inicializa a árvore 2-3 como vazia
+
+    // Inserindo palavras na ARV2_3
+    Informacao info1;
+   
+
+    insere_arvore_binaria(info1.palavra_ingles, "apple", 10);
+    insere_arvore_binaria(info1.palavra_ingles, "maçã", 10);
+    insere_arvore_binaria(info1.palavra_ingles, "manzana", 10);
+
+    mostrar_arvore_binaria(raiz->info1.palavra_ingles, 10);
+
+    // Libera a árvore binária
+    libera_arvore_binaria(&palavra);
+    
+
+}
+
+// int main()
+// {
+//     // // Criando a raiz da árvore rubro-negra
     // Rubronegra *raiz = NULL;
 
     // // Criando alguns dados para inserção
@@ -102,5 +60,5 @@ int main()
     // // Liberando a memória alocada para a árvore
     // liberar_rubronegra(&raiz);
 
-    return 0;
-}
+//     return 0;
+// }
