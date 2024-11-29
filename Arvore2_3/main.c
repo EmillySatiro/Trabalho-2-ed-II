@@ -11,24 +11,11 @@ int main()
 
     Informacao info1 = {"ola", NULL};
 
-    //     // Insere os elementos na árvore
-       insere(&raiz, info1);
-    //
-    //     // Exibe a árvore em ordem
-    printf("\nArvore em ordem:\n");
-    mostrar(raiz);
+    insere_arvore_binaria(&palavra, "hello", 10);
+    insere_arvore_binaria(&palavra, "world", 20);
+    insere_arvore_binaria(&palavra, "casa", 30);
 
-    //     return 0;
-    liberar_2_3(raiz);
-
-    insere_arvore_binaria(info1.palavra_ingles, "apple", 10);
-    insere_arvore_binaria(info1.palavra_ingles, "maçã", 10);
-    insere_arvore_binaria(info1.palavra_ingles, "manzana", 10);
-
-    mostrar_arvore_binaria(raiz->info1.palavra_ingles, 10);
-
-    // Libera a árvore binária
-    libera_arvore_binaria(&palavra);
+    mostrar_arvore_binaria(palavra, 10);
 }
 
 // int main()
