@@ -5,23 +5,19 @@
 
 int main()
 {
+    // Inicializa a árvore binária como vazia
+    ARV2_3 *raiz = NULL; // Inicializa a árvore 2-3 como vazia
 
-    ARV_BINARIA *palavra = NULL; // Inicializa a árvore binária como vazia
-    ARV2_3 *raiz = NULL;         // Inicializa a árvore 2-3 como vazia
+    inserir_binaria_em_2_3(&raiz, "maçã", 10, "apple");
+    inserir_binaria_em_2_3(&raiz, "banana", 20, "banana");
+    inserir_binaria_em_2_3(&raiz, "laranja", 15, "orange");
+    inserir_binaria_em_2_3(&raiz, "kiwi", 5, "kiwi");
 
-    Informacao info1 = {"ola", NULL};
-    Informacao info2 = {"mundo", NULL};
-    Informacao info3 = {"casa", NULL};
-
-    insere_arvore_binaria(&palavra, "hello", 10);
-    insere_arvore_binaria(&palavra, "world", 10);
-    insere_arvore_binaria(&palavra, "casa", 10);
-
-    mostrar_arvore_binaria(palavra, 10);
+    printf("Inserindo palavras na árvore binária...\n");
 
     mostrar(raiz);
-    liberar_2_3(raiz);
-    libera_arvore_binaria(&palavra);
+
+    liberar_arv2_3(raiz);
 }
 
 // int main()

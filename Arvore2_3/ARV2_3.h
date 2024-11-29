@@ -30,8 +30,9 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
 void insere(ARV2_3 **raiz, Informacao info);
 void mostrar(ARV2_3 *raiz);
 void liberar_2_3_binaria(Informacao *info);
-void liberar_2_3(ARV2_3 *raiz);
+//void liberar_2_3(ARV2_3 *raiz);
+void liberar_arv2_3(ARV2_3 *raiz);
 
-void inserir_binaria_em_2_3(ARV2_3 **raiz, Informacao info);
-
+Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade);
+void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles);
 #endif 
