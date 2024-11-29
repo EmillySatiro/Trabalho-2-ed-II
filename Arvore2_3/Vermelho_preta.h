@@ -6,9 +6,9 @@
 #define PRETO 0
 //informação do nó
 typedef struct Informacao_VP{
-    ARV_BINARIA *palavras_ingles; 
     char palavra_portugues[25];
     int unidade; 
+    ARV_BINARIA *palavras_ingles; 
 }Informacao_VP;
 
 typedef struct Rubronegra{
@@ -23,10 +23,10 @@ typedef struct Rubronegra{
 
 // alocar nó 
 Rubronegra *alocar_no(Informacao_VP info);
-void liberar_rubronegra_binaria(Rubronegra **raiz);
+void liberar_rubronegra_binaria(Informacao_VP *info);
 void liberar_rubronegra( Rubronegra **raiz);
 int Qual_a_cor(Rubronegra *no);
-void troca_cor(Rubronegra *no);
+void troca_cor(Rubronegra **no);
 void girar_esquerda(Rubronegra **raiz);
 void move_esquerda(Rubronegra **no);
 void girar_direita(Rubronegra **raiz);

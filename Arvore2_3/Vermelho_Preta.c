@@ -8,28 +8,92 @@
 Rubronegra *alocar_no(Informacao_VP info){
     Rubronegra *no = (Rubronegra *)malloc(sizeof(Rubronegra)); 
     if (no != NULL) {
-       strcpy(no->info->palavra_portugues, info.palavra_portugues);
-       no->info->unidade=info.unidade;
-       no->cor = VERMELHO; 
-       no->direita = NULL; 
-       no->esquerda = NULL; 
+        no->info = (Informacao_VP *)malloc(sizeof(Informacao_VP));
+            if (no->info != NULL){
+                strcpy(no->info->palavra_portugues, info.palavra_portugues);
+                no->info->unidade=info.unidade;
+                no->info->palavras_ingles = NULL;
+                no->cor = VERMELHO; 
+                no->direita = NULL; 
+                no->esquerda = NULL;
+            }else{
+                printf("Erro ao alocar memória para 'info'!\n");
+                
+            }
+        
     }else{
-        printf("erro ao alocar memoria !!\n");
+        printf("erro ao alocar memoria para nó !!\n");
+        exit(1);
 
     }
     return no;
     
 }
 
-void liberar_rubronegra_binaria(Rubronegra **raiz){
-   //  liberar_binaria(&(*raiz)->info->palavras_ingles); 
-   if (*raiz){
-    if ((*raiz)->info->palavra_portugues){
-        free((*raiz)->info->palavra_portugues);
-        
+Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info){
+    Rubronegra *inserido = NULL;
+    if (*raiz == NULL){
+       *raiz = alocar_no(info);
+       inserido = *raiz;
+    }else{
+        if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)< 0){
+            // esquerda 
+            inserido = inserir_rubro(&((*raiz)->esquerda), info);
+        }else if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)> 0){
+            // direita
+            inserido = inserir_rubro(&((*raiz)->direita), info);
+        }else{
+            // elemento ja existe 
+            inserido = NULL; 
+        } 
     }
-    free(*raiz);
-    *raiz = NULL;
+     
+    if (inserido != NULL){
+       conferindo_regras(raiz);
+    }
+    
+    return *raiz ; 
+}
+
+Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info){
+    raiz = inserir_rubro(&raiz, info); 
+    if(raiz != NULL){
+       raiz->cor = PRETO;
+    } 
+    return raiz;
+}
+
+void conferindo_regras(Rubronegra **raiz){
+    if(*raiz != NULL){
+
+        // balencear se o filho da  e as esquerda preto direita for vermelho 
+        if( Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->direita) == VERMELHO){
+            girar_esquerda(raiz);
+        }
+
+        // balancear se o filho á esquerda e o neto são vermelhos 
+        if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->esquerda->esquerda)==VERMELHO){
+            girar_direita(raiz);
+        }
+        
+        // ver se os dois filhos são vermelhos
+        if (Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->direita)== VERMELHO){
+            troca_cor(raiz);
+        }
+    }
+   
+     
+}
+
+// rpz custoso melhora emilly do futuro 
+void liberar_rubronegra_binaria(Informacao_VP *info){
+
+   if (info){
+       if (info->palavras_ingles){
+        //  liberar_binaria(&(*raiz)->info->palavras_ingles); 
+        info->palavras_ingles = NULL;
+       }
+       free(info);
    } 
     
 }
@@ -38,9 +102,10 @@ void liberar_rubronegra( Rubronegra **raiz){
     if(*raiz){
         liberar_rubronegra(&(*raiz)->esquerda); 
         liberar_rubronegra(&(*raiz)->direita); 
-        liberar_rubronegra_binaria(raiz);
-
+        //liberar_rubronegra_binaria((*raiz)->info);
     }
+    free(*raiz);
+    *raiz = NULL; 
 }
 
 int Qual_a_cor(Rubronegra *no){
@@ -58,6 +123,7 @@ void troca_cor(Rubronegra **no){
         
     }
 }
+
 void girar_esquerda(Rubronegra **raiz){
     if(*raiz != NULL && (*raiz)->direita != NULL){
         Rubronegra *novo_no = (*raiz)->direita; 
@@ -75,9 +141,10 @@ void girar_esquerda(Rubronegra **raiz){
 
     }
 }
+
 void move_esquerda(Rubronegra **no){
     if (*no != NULL){
-        troca_cor(*no); 
+        troca_cor(&(*no)); 
         Rubronegra *filho_direita = (*no)->direita; 
 
         if (filho_direita && Qual_a_cor(filho_direita->esquerda) == VERMELHO){
@@ -108,7 +175,7 @@ void girar_direita(Rubronegra **raiz){
 
 void mover_direita(Rubronegra **no){
     if(*no !=NULL){
-        troca_cor(*no); 
+        troca_cor(&(*no)); 
         Rubronegra *filho_esquerda = (*no)->esquerda; 
 
         if (filho_esquerda && Qual_a_cor(filho_esquerda->esquerda)== VERMELHO){
@@ -117,26 +184,6 @@ void mover_direita(Rubronegra **no){
         
         }
     }
-}
-
-
-
-void conferindo_regras(Rubronegra **raiz){
-    // balencear se o filho da  e as esquerda preto direita for vermelho 
-    if( Qual_a_cor((*raiz)->esquerda) == PRETO && ((*raiz)->direita)== VERMELHO){
-        girar_esquerda(raiz);
-    }
-
-    // balancear se o filho á esquerda e o neto são vermelhos 
-    if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->esquerda->esquerda)==VERMELHO){
-        girar_direita(raiz);
-    }
-    
-    // ver se os dois filhos são vermelhos
-    if (Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->direita)== VERMELHO){
-        troca_cor(raiz);
-    }
-     
 }
 
 // void remover_elemento_min(Rubronegra **raiz){
@@ -158,55 +205,13 @@ void conferindo_regras(Rubronegra **raiz){
 //         conferindo_regras(raiz); 
 //     }
 // }
-// Rubronegra *procurar_menor(Rubronegra **raiz){
-   
+// Rubronegra *procurar_menor(Rubronegra **raiz){   
 // }
-
-Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info){
-    Rubronegra *inserido = NULL; 
-
-    if (*raiz == NULL){
-        Rubronegra *novo_elemento = alocar_no(info); 
-        *raiz = novo_elemento;// atualiza a raiz
-        inserido = novo_elemento; // atribui o nó inserido
-    }else{
-        if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)< 0){
-            // esquerda 
-            inserido = inserir_rubro(&((*raiz)->esquerda), info);
-        }else if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)> 0){
-            // direita
-            inserido = inserir_rubro(&((*raiz)->direita), info);
-        }else{
-            // elemento ja existe 
-            inserido = NULL; 
-        }
-        conferindo_regras(raiz); 
-        
-    }
-    return inserido; 
-}
-
-Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info){
-    raiz = inserir_rubro(&raiz, info); 
-    if(raiz != NULL){
-       raiz->cor = PRETO;
-    } 
-    return raiz;
-}
 
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
-        mostrar_rubronegra(raiz->esquerda); 
-        
-        if(raiz->cor == VERMELHO){
-            printf("Cor: Vermelho\n");
-        }else{
-            printf("cor : Preto\n"); 
-        }
-
-        printf("%s\n", raiz->info->palavra_portugues); 
-        // chamar aqui a listagem da binaria 
-
-        mostrar_rubronegra(raiz->direita);
+    printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+    mostrar_rubronegra(raiz->esquerda);
+    mostrar_rubronegra(raiz->direita);
     }
 }

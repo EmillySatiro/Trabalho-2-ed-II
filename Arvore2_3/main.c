@@ -4,8 +4,6 @@
 #include "ARV2_3.h"
 #include "Vermelho_preta.h"
 
-
-
 // int main(){
   
 //     Informacao info1 = {"ola", NULL};
@@ -32,38 +30,40 @@
 //     liberar_2_3(raiz); 
 // }
 
+
 int main() {
-    // Criando a raiz da árvore rubro-negra
+    // Criar a árvore vazia (inicializa a raiz como NULL)
     Rubronegra *raiz = NULL;
-
-    // Criando alguns dados para inserção
-    Informacao_VP info1;
-    strcpy(info1.palavra_portugues, "maçã");
-    info1.unidade = 10;
-
-    Informacao_VP info2;
-    strcpy(info2.palavra_portugues, "banana");
-    info2.unidade = 20;
-
-    Informacao_VP info3;
-    strcpy(info3.palavra_portugues, "laranja");
-    info3.unidade = 15;
-
-    Informacao_VP info4;
-    strcpy(info4.palavra_portugues, "kiwi");
-    info4.unidade = 5;
-
-    // Inserindo elementos na árvore
+    
+    // Exemplo de inserção de dados com palavras e unidades
+    Informacao_VP info1 = {"abobora", 2,NULL};
+    Informacao_VP info2 = {"cachorro", 15, NULL};
+    Informacao_VP info3 = {"papagaio", 7, NULL};
+    Informacao_VP info4 = {"ola", 2,NULL};
+    Informacao_VP info5 = {"zebra",2, NULL};
+    Informacao_VP info6 = {"casa",2, NULL};
+    Informacao_VP info7 = {"abobora",2, NULL};
+    Informacao_VP info8 = {"pera",2, NULL};
+    Informacao_VP info9 = {"uva", 2,NULL};
+    Informacao_VP info10 = {"gato", 10, NULL}; 
+    
+    // Inserir elementos na árvore
     raiz = conferindo_raiz(raiz, info1);
     raiz = conferindo_raiz(raiz, info2);
     raiz = conferindo_raiz(raiz, info3);
     raiz = conferindo_raiz(raiz, info4);
-
-    // Mostrando a árvore rubro-negra
-    printf("Árvore Rubro-Negra:\n");
+    raiz = conferindo_raiz(raiz, info5);
+    raiz = conferindo_raiz(raiz, info6);
+    raiz = conferindo_raiz(raiz, info7);
+    raiz = conferindo_raiz(raiz, info8);
+    raiz = conferindo_raiz(raiz, info9);
+    raiz = conferindo_raiz(raiz, info10);
+    
+    // Mostrar a árvore
+    printf("Exibindo a árvore Rubro-Negra:\n");
     mostrar_rubronegra(raiz);
-
-    // Liberando a memória alocada para a árvore
+    
+    //Liberar memória (se necessário)
     liberar_rubronegra(&raiz);
 
     return 0;
