@@ -10,12 +10,18 @@ int main()
     ARV2_3 *raiz = NULL;         // Inicializa a árvore 2-3 como vazia
 
     Informacao info1 = {"ola", NULL};
+    Informacao info2 = {"mundo", NULL};
+    Informacao info3 = {"casa", NULL};
 
     insere_arvore_binaria(&palavra, "hello", 10);
-    insere_arvore_binaria(&palavra, "world", 20);
-    insere_arvore_binaria(&palavra, "casa", 30);
+    insere_arvore_binaria(&palavra, "world", 10);
+    insere_arvore_binaria(&palavra, "casa", 10);
 
     mostrar_arvore_binaria(palavra, 10);
+
+    mostrar(raiz);
+    liberar_2_3(raiz);
+    libera_arvore_binaria(&palavra);
 }
 
 // int main()

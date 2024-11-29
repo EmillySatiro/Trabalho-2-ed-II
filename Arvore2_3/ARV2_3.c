@@ -165,4 +165,8 @@ void liberar_2_3(ARV2_3 *raiz){
         free(raiz); 
     }
 }
+void inserir_binaria_em_2_3(ARV2_3 **raiz, Informacao info){
+    insere(raiz, info); 
+
+}
 

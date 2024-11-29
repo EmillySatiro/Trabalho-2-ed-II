@@ -97,7 +97,7 @@ ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles)
 
 
 
-int eh_folha(ARV_BINARIA *no){
+int eh_folha__binaria(ARV_BINARIA *no){
     return (no->esquerda == NULL && no->direita == NULL);
 }
 
@@ -121,7 +121,7 @@ int remover_no(ARV_BINARIA **arvore, char *palavra_ingles){
         return remover_no(&(*arvore)->direita, palavra_ingles);
     }
     else{
-        if (eh_folha(*arvore)){
+        if (eh_folha__binaria(*arvore)){
             free(*arvore);
             *arvore = NULL;
             return 1;
