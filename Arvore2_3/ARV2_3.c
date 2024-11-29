@@ -120,52 +120,52 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     return maior; 
 }
 
-// void insere(ARV2_3 **raiz, Informacao info){
-//     Informacao sobe; 
-//     ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL); 
-//     if (novo_no){
-//         *raiz = criar_no(sobe, *raiz, novo_no); 
+void insere(ARV2_3 **raiz, Informacao info){
+    Informacao sobe; 
+    ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL); 
+    if (novo_no){
+        *raiz = criar_no(sobe, *raiz, novo_no); 
 
-//     }
+    }
     
-// }
+}
 
-// void mostrar(ARV2_3 *raiz){
-//     if(raiz){ 
-//         mostrar(raiz->esquerda); 
-//         printf("%s\n", raiz->info1.palavra_portugues); 
-//         mostrar(raiz->centro); 
+void mostrar(ARV2_3 *raiz){
+    if(raiz){ 
+        mostrar(raiz->esquerda); 
+        printf("%s\n", raiz->info1.palavra_portugues); 
+        mostrar(raiz->centro); 
 
-//         if (raiz->quant_infos == 2){
-//             printf("%s\n", raiz->info2.palavra_portugues);
-//             mostrar(raiz->direita); 
-//         }
+        if (raiz->quant_infos == 2){
+            printf("%s\n", raiz->info2.palavra_portugues);
+            mostrar(raiz->direita); 
+        }
 
-//     }
-// }
+    }
+}
 
 
-// void liberar_2_3_binaria(Informacao *info){
-//     // liberar binaria 
-//     free(info->palavra_portugues);
+void liberar_2_3_binaria(Informacao *info){
+    // liberar binaria 
+    free(info->palavra_portugues);
 
-// }
+}
 
-// void liberar_2_3(ARV2_3 *raiz){
-//     if(raiz){
-//         liberar_2_3(raiz->esquerda); 
-//         liberar_2_3(raiz->centro); 
-//         if (raiz->quant_infos == 2){
-//             liberar_2_3(raiz->direita);
-//             liberar_2_3_binaria(&raiz->info2);
-//         }
-//          liberar_2_3_binaria(&raiz->info1);
-//         free(raiz); 
-//     }
-// }
+void liberar_2_3(ARV2_3 *raiz){
+    if(raiz){
+        liberar_2_3(raiz->esquerda); 
+        liberar_2_3(raiz->centro); 
+        if (raiz->quant_infos == 2){
+            liberar_2_3(raiz->direita);
+            liberar_2_3_binaria(&raiz->info2);
+        }
+         liberar_2_3_binaria(&raiz->info1);
+        free(raiz); 
+    }
+}
 
-// void inserir_palavra_ingles_ARV_2_3(Informacao info,ARV_BINARIA **arvore){
+void inserir_palavra_ingles_ARV_2_3(Informacao info,ARV_BINARIA **arvore){
     
-//      insere_arvore_binaria(info.palavra_ingles, &(*arvore)->palavra_ingles, &(*arvore)->unidade);
+     insere_arvore_binaria(info.palavra_ingles, &(*arvore)->palavra_ingles, &(*arvore)->unidade);
    
-// }
+}
