@@ -21,8 +21,18 @@ typedef struct Rubronegra{
 }Rubronegra;
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "Vermelho_preta.h"
+
 // alocar nó 
 Rubronegra *alocar_no(Informacao_VP info);
+Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info);
+Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
+void conferindo_regras(Rubronegra **raiz);
+// rpz custoso melhora emilly do futuro 
 void liberar_rubronegra_binaria(Informacao_VP *info);
 void liberar_rubronegra( Rubronegra **raiz);
 int Qual_a_cor(Rubronegra *no);
@@ -31,10 +41,9 @@ void girar_esquerda(Rubronegra **raiz);
 void move_esquerda(Rubronegra **no);
 void girar_direita(Rubronegra **raiz);
 void mover_direita(Rubronegra **no);
-Rubronegra *procurar_menor(Rubronegra *raiz);
-void conferindo_regras(Rubronegra **raiz);
+Rubronegra *procurar_menor(Rubronegra **raiz);
 void remover_elemento_min(Rubronegra **raiz);
-Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info);
-Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
+int remover_no(Rubronegra **raiz, char *palavra);
+int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_rubronegra(Rubronegra *raiz);
 #endif 

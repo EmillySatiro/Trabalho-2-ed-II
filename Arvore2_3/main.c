@@ -62,6 +62,11 @@ int main() {
     // Mostrar a árvore
     printf("Exibindo a árvore Rubro-Negra:\n");
     mostrar_rubronegra(raiz);
+    char palavra[] = "gato";
+    int resul = remover_na_arvore(&raiz, palavra); 
+
+    printf("Exibindo a árvore Rubro-Negra depois de remover:\n");
+    mostrar_rubronegra(raiz);
     
     //Liberar memória (se necessário)
     liberar_rubronegra(&raiz);

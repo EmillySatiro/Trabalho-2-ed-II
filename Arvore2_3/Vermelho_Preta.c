@@ -108,8 +108,11 @@ void liberar_rubronegra( Rubronegra **raiz){
     *raiz = NULL; 
 }
 
-int Qual_a_cor(Rubronegra *no){
-    return (no == NULL) ? PRETO : no->cor;
+int Qual_a_cor(Rubronegra *no) {
+    if (no == NULL) {
+        return PRETO; 
+    }
+    return no->cor;  
 }
 
 void troca_cor(Rubronegra **no){
@@ -185,32 +188,95 @@ void mover_direita(Rubronegra **no){
         }
     }
 }
+Rubronegra *procurar_menor(Rubronegra **raiz){
+    if (*raiz){
+        if ((*raiz)->esquerda != NULL){
+            troca_cor(raiz); 
+            if ( Qual_a_cor((*raiz)->esquerda->esquerda) == VERMELHO){
+                girar_direita(raiz);
+                troca_cor(raiz);
+            }
+            return procurar_menor(&(*raiz)->esquerda);
+        }
+        
+    }
+    return *raiz;
+}
+void remover_elemento_min(Rubronegra **raiz){
+    if(*raiz != NULL){
+        if ((*raiz)->esquerda == NULL){
+            free(*raiz);
+            *raiz = NULL;
+        }else{
+            if (Qual_a_cor((*raiz)->esquerda)  == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
+                move_esquerda(raiz);
+            }
 
-// void remover_elemento_min(Rubronegra **raiz){
-//     if(*raiz != NULL){
-//         // se a esquerda é nula  achamos o minimo
-//         if ((*raiz)->esquerda == NULL && (*raiz)->direita == NULL ){
-//             // lembrar de devolver o valor da info aqui 
-//             free(raiz);
-//             // não achou o minimo 
-//         }else if ((*raiz)->esquerda == NULL &&(*raiz)->direita != NULL){
-//             procurar_menor(&(*raiz)->direita);
-//         }else{
-//             procurar_menor(&(*raiz)->esquerda);
-//         }
-//         remover_elemento_min(&(*raiz)->esquerda);
-//         if(Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
-//             move_esquerda(raiz);
-//         }
-//         conferindo_regras(raiz); 
-//     }
-// }
-// Rubronegra *procurar_menor(Rubronegra **raiz){   
-// }
+            remover_elemento_min(&((*raiz)->esquerda));
 
+            conferindo_regras(raiz);
+            
+        }
+        
+    }
+}
+
+int remover_no(Rubronegra **raiz, char *palavra){
+    int encontrado = 0; // não encontrado 
+
+    if(*raiz){
+        if(strcmp(palavra, (*raiz)->info->palavra_portugues)< 0){
+            if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
+                move_esquerda(raiz);
+            }
+
+            encontrado = remover_no(&((*raiz)->esquerda), palavra);
+            
+        }else {
+            if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO){
+                girar_direita(raiz);
+            }
+
+            if (strcmp(palavra,(*raiz)->info->palavra_portugues) == 0){
+                encontrado = 1;
+
+                if ((*raiz)->direita == NULL){
+                    free(*raiz);
+                    *raiz = NULL;
+                }else{
+                    Rubronegra *min = procurar_menor(&(*raiz)->direita); 
+                    (*raiz)->info = min->info;
+                    remover_elemento_min(&((*raiz)->direita)); 
+
+                }
+                    
+            }else{
+                if((*raiz)->direita && Qual_a_cor((*raiz)->direita) == PRETO && Qual_a_cor((*raiz)->direita->esquerda) == PRETO){
+                    mover_direita(raiz);
+                }
+                encontrado = remover_no(&((*raiz)->direita), palavra);
+            }
+                
+        }
+        if (*raiz){
+            conferindo_regras(raiz);
+        }
+    }
+
+    return encontrado;
+}
+
+int remover_na_arvore(Rubronegra **raiz, char *palavra){
+    int resultado = remover_no(raiz,palavra);
+    if (*raiz){
+        (*raiz)->cor = PRETO;
+    }
+    return resultado;
+}
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
     printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+    // mostrar a arvore binaria dela chama sua 
     mostrar_rubronegra(raiz->esquerda);
     mostrar_rubronegra(raiz->direita);
     }
