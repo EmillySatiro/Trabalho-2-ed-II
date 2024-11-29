@@ -165,8 +165,20 @@ void liberar_2_3(ARV2_3 *raiz){
         free(raiz); 
     }
 }
-void inserir_binaria_em_2_3(ARV2_3 **raiz, Informacao info){
-    insere(raiz, info); 
+
+Informacao criar_info(char *palavra_portugues, ARV_BINARIA *palavra_ingles, int unidade){
+    Informacao info; 
+    strcpy(info.palavra_portugues, palavra_portugues);
+    info.palavra_ingles = palavra_ingles; 
+    info.unidade = unidade; 
+    return info; 
+}
+
+void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles){
+
+    Informacao info_2_3 = criar_info(palavra_portugues, cria_arvore_binaria(palavra_ingles,unidade), unidade);
+    criar_no(info_2_3, NULL, NULL);
+    insere(raiz, info_2_3);
 
 }
 
