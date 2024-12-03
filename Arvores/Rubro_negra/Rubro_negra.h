@@ -1,6 +1,6 @@
-#ifndef VERMELHO_PRETA_H
-#define VERMELHO_PRETA_H
-#include "ARV_BINARIA.h"
+#ifndef RUBRO_NEGRA_H
+#define RUBRO_NEGRA_H
+#include "Arvores/Binaria/ARV_BINARIA.h"
 
 #define VERMELHO 1 
 #define PRETO 0
@@ -21,11 +21,6 @@ typedef struct Rubronegra{
 }Rubronegra;
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-#include "Vermelho_preta.h"
 
 // alocar nó 
 Rubronegra *alocar_no(Informacao_VP info);

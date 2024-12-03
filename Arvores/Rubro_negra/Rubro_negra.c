@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "Vermelho_preta.h"
+#include "Rubro_negra.h"
 
 // alocar nó 
 Rubronegra *alocar_no(Informacao_VP info){
@@ -147,11 +147,9 @@ void girar_esquerda(Rubronegra **raiz){
 
 void move_esquerda(Rubronegra **no){
     if (*no != NULL){
-        troca_cor(&(*no)); 
-        Rubronegra *filho_direita = (*no)->direita; 
-
-        if (filho_direita && Qual_a_cor(filho_direita->esquerda) == VERMELHO){
-            girar_direita(&(filho_direita));
+        troca_cor(no); 
+        if ((*no)->direita->esquerda && Qual_a_cor((*no)->direita->esquerda) == VERMELHO){
+            girar_direita(&(*no)->direita);
             girar_esquerda(no); 
             troca_cor(no);
         }
@@ -178,10 +176,8 @@ void girar_direita(Rubronegra **raiz){
 
 void mover_direita(Rubronegra **no){
     if(*no !=NULL){
-        troca_cor(&(*no)); 
-        Rubronegra *filho_esquerda = (*no)->esquerda; 
-
-        if (filho_esquerda && Qual_a_cor(filho_esquerda->esquerda)== VERMELHO){
+        troca_cor(no); 
+        if ((*no)->esquerda->esquerda && Qual_a_cor((*no)->esquerda->esquerda)== VERMELHO){
             girar_direita(no); 
             troca_cor(no);
         
@@ -189,18 +185,18 @@ void mover_direita(Rubronegra **no){
     }
 }
 Rubronegra *procurar_menor(Rubronegra **raiz){
+    Rubronegra *no1 = *raiz;
+    Rubronegra *no2 = (*raiz)->esquerda;
     if (*raiz){
-        if ((*raiz)->esquerda != NULL){
-            troca_cor(raiz); 
-            if ( Qual_a_cor((*raiz)->esquerda->esquerda) == VERMELHO){
-                girar_direita(raiz);
-                troca_cor(raiz);
-            }
-            return procurar_menor(&(*raiz)->esquerda);
+        while (no2 !=NULL){
+            no1 = no2; 
+            no2 = no2->esquerda;
         }
         
+        
     }
-    return *raiz;
+    printf("%s\n",no1->info->palavra_portugues);
+    return no1;
 }
 void remover_elemento_min(Rubronegra **raiz){
     if(*raiz != NULL){
@@ -211,14 +207,17 @@ void remover_elemento_min(Rubronegra **raiz){
             if (Qual_a_cor((*raiz)->esquerda)  == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
                 move_esquerda(raiz);
             }
-
+            
             remover_elemento_min(&((*raiz)->esquerda));
 
-            conferindo_regras(raiz);
-            
         }
         
+        if(*raiz)
+            conferindo_regras(raiz);
+              
     }
+   
+
 }
 
 int remover_no(Rubronegra **raiz, char *palavra){
@@ -236,28 +235,29 @@ int remover_no(Rubronegra **raiz, char *palavra){
             if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO){
                 girar_direita(raiz);
             }
-
-            if (strcmp(palavra,(*raiz)->info->palavra_portugues) == 0){
-                encontrado = 1;
-
-                if ((*raiz)->direita == NULL){
-                    free(*raiz);
-                    *raiz = NULL;
-                }else{
-                    Rubronegra *min = procurar_menor(&(*raiz)->direita); 
-                    (*raiz)->info = min->info;
-                    remover_elemento_min(&((*raiz)->direita)); 
-
-                }
-                    
+            
+            if (strcmp(palavra,(*raiz)->info->palavra_portugues) == 0 && (*raiz)->direita == NULL){
+                free(*raiz);
+                *raiz = NULL;
             }else{
                 if((*raiz)->direita && Qual_a_cor((*raiz)->direita) == PRETO && Qual_a_cor((*raiz)->direita->esquerda) == PRETO){
                     mover_direita(raiz);
                 }
+
+                if (strcmp(palavra,(*raiz)->info->palavra_portugues) == 0){
+                    encontrado = 1;
+                    Rubronegra *min = procurar_menor(&(*raiz)->direita); // aqui 
+                    (*raiz)->info = min->info;
+                    remover_elemento_min(&((*raiz)->direita)); 
+                }else{
                 encontrado = remover_no(&((*raiz)->direita), palavra);
+               }
             }
+            
+           
                 
         }
+
         if (*raiz){
             conferindo_regras(raiz);
         }
@@ -275,9 +275,11 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
 }
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
-    printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+    
     // mostrar a arvore binaria dela chama sua 
     mostrar_rubronegra(raiz->esquerda);
+    printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
     mostrar_rubronegra(raiz->direita);
     }
 }
+
