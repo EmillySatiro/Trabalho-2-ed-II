@@ -220,7 +220,7 @@ void remover_elemento_min(Rubronegra **raiz){
 
 }
 
-int remover_no(Rubronegra **raiz, char *palavra){
+int remover_no_rubro(Rubronegra **raiz, char *palavra){
     int encontrado = 0; // não encontrado 
 
     if(*raiz){

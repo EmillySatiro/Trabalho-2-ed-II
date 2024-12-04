@@ -1,24 +1,24 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "ARV2_3.h"
-#include "ARV_BINARIA.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include "ARV2_3.h"
+// #include "ARV_BINARIA.h"
 
-int main()
-{
-    // Inicializa a árvore binária como vazia
-    ARV2_3 *raiz = NULL; // Inicializa a árvore 2-3 como vazia
+// int main()
+// {
+//     // Inicializa a árvore binária como vazia
+//     ARV2_3 *raiz = NULL; // Inicializa a árvore 2-3 como vazia
 
-    inserir_binaria_em_2_3(&raiz, "maçã", 10, "apple");
-    inserir_binaria_em_2_3(&raiz, "banana", 20, "banana");
-    inserir_binaria_em_2_3(&raiz, "laranja", 15, "orange");
-    inserir_binaria_em_2_3(&raiz, "kiwi", 5, "kiwi");
+//     inserir_binaria_em_2_3(&raiz, "maçã", 10, "apple");
+//     inserir_binaria_em_2_3(&raiz, "banana", 20, "banana");
+//     inserir_binaria_em_2_3(&raiz, "laranja", 15, "orange");
+//     inserir_binaria_em_2_3(&raiz, "kiwi", 5, "kiwi");
 
-    printf("Inserindo palavras na árvore binária...\n");
+//     printf("Inserindo palavras na árvore binária...\n");
 
-    mostrar(raiz);
+//     mostrar(raiz);
 
-    liberar_arv2_3(raiz);
-}
+//     liberar_arv2_3(raiz);
+// }
 
 // int main()
 // {

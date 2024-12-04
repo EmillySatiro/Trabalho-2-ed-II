@@ -1,6 +1,6 @@
 #ifndef RUBRO_NEGRA_H
 #define RUBRO_NEGRA_H
-#include "Arvores/Binaria/ARV_BINARIA.h"
+#include "../Binaria/ARV_BINARIA.h"
 
 #define VERMELHO 1 
 #define PRETO 0
@@ -23,7 +23,6 @@ typedef struct Rubronegra{
 
 
 // alocar nó 
-<<<<<<< HEAD:Arvore2_3/Vermelho_preta.h
 // Rubronegra *alocar_no(Informacao_VP info);
 // void liberar_rubronegra_binaria(Rubronegra **raiz);
 // void liberar_rubronegra( Rubronegra **raiz);
@@ -40,7 +39,6 @@ typedef struct Rubronegra{
 // Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
 // void mostrar_rubronegra(Rubronegra *raiz);
 
-=======
 Rubronegra *alocar_no(Informacao_VP info);
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info);
 Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
@@ -56,8 +54,8 @@ void girar_direita(Rubronegra **raiz);
 void mover_direita(Rubronegra **no);
 Rubronegra *procurar_menor(Rubronegra **raiz);
 void remover_elemento_min(Rubronegra **raiz);
-int remover_no(Rubronegra **raiz, char *palavra);
+int remover_no_rubro(Rubronegra **raiz, char *palavra);
 int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_rubronegra(Rubronegra *raiz);
->>>>>>> origin/main:Arvores/Rubro_negra/Rubro_negra.h
+void pegar_dados_arquirvo(Rubronegra *arvore);
 #endif 
