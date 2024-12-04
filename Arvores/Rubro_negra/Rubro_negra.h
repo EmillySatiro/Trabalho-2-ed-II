@@ -57,5 +57,4 @@ void remover_elemento_min(Rubronegra **raiz);
 int remover_no_rubro(Rubronegra **raiz, char *palavra);
 int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_rubronegra(Rubronegra *raiz);
-void pegar_dados_arquirvo(Rubronegra *arvore);
 #endif 

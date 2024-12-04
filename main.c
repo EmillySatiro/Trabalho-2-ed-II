@@ -79,7 +79,9 @@ int main() {
     // //Liberar memória (se necessário)
     // liberar_rubronegra(&raiz);
 
-    //pegar_dados_arquirvo(raiz);
+    pegar_dados_arquivo(&raiz);
+
+
 
     liberar_rubronegra(&raiz);
 
