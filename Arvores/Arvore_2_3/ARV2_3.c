@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ARV2_3.h"
-#include "ARV_BINARIA.h"
+#include "Arvores/Binaria/ARV_BINARIA.h"
 
 ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
 {
