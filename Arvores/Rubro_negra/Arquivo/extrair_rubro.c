@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include "../../Binaria/ARV_BINARIA.h"
 #include "../Rubro_negra.h"

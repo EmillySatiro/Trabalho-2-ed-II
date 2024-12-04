@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Diretório base do projeto
-BASE_DIR="/home/walison/Trabalho-2-ed-II"
+BASE_DIR="/home/Trabalho-2-ed-II"
 
 # Nome do executável
 EXECUTAVEL="programa"
@@ -35,7 +35,10 @@ if [ ! -f "$EXTRAIR" ]; then
     echo "Erro: $EXTRAIR não encontrado!"
     exit 1
 fi
-
+if [ ! -f "$EXTRAIR_RUBRO" ]; then
+    echo "Erro: $EXTRAIR_RUBRO não encontrado!"
+    exit 1
+fi  
 
 # Compilar o programa
 echo "Compilando o programa..."
@@ -45,7 +48,7 @@ gcc -o "$EXECUTAVEL" \
 "$BINARIA_FILE" \
 "$ARVORE_2_3_FILE" \
 "$RUBRO_NEGRA_FILE" \
-"$EXTRAIR"\
+"$EXTRAIR" \
 "$EXTRAIR_RUBRO"
 
 # Verificar se a compilação foi bem-sucedida
