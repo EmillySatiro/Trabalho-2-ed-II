@@ -229,7 +229,7 @@ int remover_no_rubro(Rubronegra **raiz, char *palavra){
                 move_esquerda(raiz);
             }
 
-            encontrado = remover_no(&((*raiz)->esquerda), palavra);
+            encontrado = remover_no_rubro(&((*raiz)->esquerda), palavra);
             
         }else {
             if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO){
@@ -250,7 +250,7 @@ int remover_no_rubro(Rubronegra **raiz, char *palavra){
                     (*raiz)->info = min->info;
                     remover_elemento_min(&((*raiz)->direita)); 
                 }else{
-                encontrado = remover_no(&((*raiz)->direita), palavra);
+                encontrado = remover_no_rubro(&((*raiz)->direita), palavra);
                }
             }
             
@@ -267,7 +267,7 @@ int remover_no_rubro(Rubronegra **raiz, char *palavra){
 }
 
 int remover_na_arvore(Rubronegra **raiz, char *palavra){
-    int resultado = remover_no(raiz,palavra);
+    int resultado = remover_no_rubro(raiz,palavra);
     if (*raiz){
         (*raiz)->cor = PRETO;
     }

@@ -109,16 +109,16 @@ int tem_dois_filhos(ARV_BINARIA *no){
     return (no->esquerda != NULL && no->direita != NULL);
 }
 
-int remover_no(ARV_BINARIA **arvore, char *palavra_ingles){
+int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles){
     if (*arvore == NULL){
         return 0;
     }
 
     if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0){
-        return remover_no(&(*arvore)->esquerda, palavra_ingles);
+        return remover_no_binaria(&(*arvore)->esquerda, palavra_ingles);
     }
     else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
-        return remover_no(&(*arvore)->direita, palavra_ingles);
+        return remover_no_binaria(&(*arvore)->direita, palavra_ingles);
     }
     else{
         if (eh_folha__binaria(*arvore)){
@@ -147,7 +147,7 @@ int remover_no(ARV_BINARIA **arvore, char *palavra_ingles){
             // Copia o valor do nó encontrado para o nó a ser removido
             strncpy((*arvore)->palavra_ingles, temp->palavra_ingles, sizeof((*arvore)->palavra_ingles) - 1);
             (*arvore)->palavra_ingles[sizeof((*arvore)->palavra_ingles) - 1] = '\0';
-            return remover_no(&(*arvore)->esquerda, temp->palavra_ingles);
+            return remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles);
         
         }
     }

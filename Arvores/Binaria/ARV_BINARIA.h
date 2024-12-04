@@ -13,7 +13,7 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
 void libera_arvore_binaria(ARV_BINARIA **arvore);
 void mostrar_arvore_binaria(ARV_BINARIA *arvore,int unidade);
 
-int remover_no(ARV_BINARIA **arvore, char *palavra_ingles);
+int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles);
 int eh_folha_binaria(ARV_BINARIA *no);
 int tem_apenas_um_filho(ARV_BINARIA *no);
 int tem_dois_filhos(ARV_BINARIA *no);

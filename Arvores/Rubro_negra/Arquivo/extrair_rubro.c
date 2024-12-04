@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "../../Binaria/ARV_BINARIA.h"
 #include "../Rubro_negra.h"
-#include "extrair.h"
+#include "./extrair_rubro.h"
 
 void pegar_dados_arquirvo(Rubronegra *arvore)
 {
