@@ -15,7 +15,7 @@ int main() {
     printf("\nArvore em ordem:\n");
     mostrar(arvore_2_3);
 
-    liberar_2_3(arvore_2_3); 
+   // liberar_2_3_binaria(arvore_2_3); 
     return 0;
 
 }

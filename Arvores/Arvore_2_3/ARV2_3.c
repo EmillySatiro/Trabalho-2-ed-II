@@ -91,8 +91,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     if (*no == NULL)
     {
         *no = criar_no(info, NULL, NULL);
-    }
-    else
+    }else
     {
         // caso seja folha
         if (eh_folha(*no))
@@ -219,8 +218,7 @@ void liberar_arv2_3(ARV2_3 *raiz) {
     free(raiz);  // Liberar o próprio nó da árvore 2-3
 }
 
-Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade)
-{
+Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade){
     ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
     Informacao info;
 
