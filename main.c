@@ -3,10 +3,7 @@
 #include <string.h>
 #include "Arvores/Binaria/ARV_BINARIA.h"
 #include "Arvores/Arvore_2_3/ARV2_3.h"
-#include "Arvores/Rubro_negra/Rubro_negra.h"
 #include "Arvores/Arvore_2_3/Arquivo/Extrair.h"
-
-
 
 int main() {
 

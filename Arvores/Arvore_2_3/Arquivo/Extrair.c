@@ -33,42 +33,45 @@ void processar_arquivo(char *nome_txt, ARV2_3 **arvore2_3) {
 
             // Separar o inglês da tradução
             char *palavra_ingles = strtok(linha_limpa, ":");
-            char *traducoes = strtok(NULL, ":");
-
-            // Verificar se a palavra em inglês e a tradução existem
-            if (palavra_ingles && traducoes) {
-                Informacao Info;
-
-                // Criar um nó da árvore binária para a palavra em inglês
-                ARV_BINARIA *no_palavra_ingles = cria_arvore_binaria(palavra_ingles, 0);  // Aqui você pode passar a unidade ou outra informação, dependendo do seu caso
-                if (no_palavra_ingles == NULL) {
-                    printf("Erro ao criar árvore binária para a palavra: %s\n", palavra_ingles);
-                    continue; // Ignorar essa palavra e continuar com o próximo item
-                }
-
-                // Armazenar o nó binário na estrutura Informacao
-                Info.palavra_ingles = no_palavra_ingles;
-
-                // Copiar a tradução para português
-                if (traducoes) {
-                    strncpy(Info.palavra_portugues, traducoes, sizeof(Info.palavra_portugues) - 1);
-                    Info.palavra_portugues[sizeof(Info.palavra_portugues) - 1] = '\0';
-                } else {
-                    printf("Erro: tradução não encontrada para a palavra: %s\n", palavra_ingles);
-                    continue;
-                }
-
-                // Atribuir a unidade
-                Info.unidade = unidade_atual;
-
-                // Inserir na árvore 2-3
-                if (*arvore2_3 == NULL) {
-                    printf("Erro: árvore 2-3 não inicializada corretamente.\n");
-                    continue; // Evitar inserir em árvore nula
-                }
-
-                insere(arvore2_3, Info);
+            if (palavra_ingles == NULL) {
+                printf("Erro: palavra em inglês não encontrada na linha: %s\n", linha_limpa);
+                continue; // Ignorar e continuar com a próxima linha
             }
+
+            char *traducoes = strtok(NULL, ":");
+            if (traducoes == NULL) {
+                printf("Erro: tradução não encontrada para a palavra: %s\n", palavra_ingles);
+                continue; // Ignorar e continuar com a próxima linha
+            }
+
+            // Verificar se as palavras e traduções existem
+            Informacao Info;
+
+            // Criar um nó da árvore binária para a palavra em inglês
+            ARV_BINARIA *no_palavra_ingles = cria_arvore_binaria(palavra_ingles, 0); // Aqui você pode passar a unidade ou outra informação, dependendo do seu caso
+            if (no_palavra_ingles == NULL) {
+                printf("Erro ao criar árvore binária para a palavra: %s\n", palavra_ingles);
+                continue; // Ignorar essa palavra e continuar com o próximo item
+            }
+
+            // Armazenar o nó binário na estrutura Informacao
+            Info.palavra_ingles = no_palavra_ingles;
+
+            // Copiar a tradução para português
+            strncpy(Info.palavra_portugues, traducoes, sizeof(Info.palavra_portugues) - 1);
+            Info.palavra_portugues[sizeof(Info.palavra_portugues) - 1] = '\0';
+
+            // Atribuir a unidade
+            Info.unidade = unidade_atual;
+
+            // Inserir na árvore 2-3
+            if (*arvore2_3 == NULL) {
+                printf("Erro: árvore 2-3 não inicializada corretamente.\n");
+                continue; // Evitar inserir em árvore nula
+            }
+
+            // Chamada para inserir a informação na árvore 2-3
+            insere(arvore2_3, Info);
         }
     }
 
