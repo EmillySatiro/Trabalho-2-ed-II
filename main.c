@@ -5,19 +5,21 @@
 #include "Arvores/Arvore_2_3/ARV2_3.h"
 #include "Arvores/Arvore_2_3/Arquivo/Extrair.h"
 
+
 int main() {
-    ARV2_3 *arvore2_3 = NULL; // Inicialização
-    
+    ARV2_3 *raiz = NULL;
 
-    processar_arquivo("Dicionario.txt",&arvore2_3);
-    
-    printf("\nArvore em ordem:\n");
-    mostrar(arvore2_3);
+    // Ler o arquivo e inserir na árvore 2-3
+    ler_arquivo_e_inserir("Dicionario.txt", &raiz);
 
-   // liberar_2_3_binaria(arvore_2_3); 
+    mostrar(raiz);
+
+    // Liberar memória alocada
+    liberar_arv2_3(raiz);
+
     return 0;
-
 }
+
 
 
 

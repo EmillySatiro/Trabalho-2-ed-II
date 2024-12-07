@@ -8,55 +8,73 @@ ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
 {
     ARV2_3 *no = (ARV2_3 *)malloc(sizeof(ARV2_3));
 
+
     if (no != NULL)
     {
-        no->info1 = info;
-        no->esquerda = filho_esquerda;
-        no->centro = filho_centro;
-        no->quant_infos = 1;
+       
+        no->info1 = info;           
+        no->esquerda = filho_esquerda;  
+        no->centro = filho_centro;     
+        no->quant_infos = 1;           
     }
-    else
-    {
-        printf("Não foi possivel criar no \n ");
+    else{
+        
+        printf("Erro: Não foi possível alocar memória para o nó.\n");
     }
+
     return no;
 }
 
+
 ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho)
 {
-    ARV2_3 *maior_info;
+ 
+    ARV2_3 *maior_info = NULL;
 
-    // caso 1 : O novo elemento (info) é maior que minha info2.
+    // Caso 1: O novo elemento (info) é maior que info2
     if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) > 0)
     {
-        *sobe = (*no)->info2; // o info dois sobe pq ele é o do meio
-
-        maior_info = criar_no(info, (*no)->direita, filho ? *filho : NULL);
-        // criando um no para o maior que no caso é meu novo elemento( esse filho ? * filho: null é se o filho não for nulo ele executa e manda(*filho)  para o criar e se não for manda null)
-
-        // cado 2: o novo elemento é oq sobe pois ele esta entre info 1 e info 2
+        *sobe = (*no)->info2;  // info2 sobe porque ele é o do meio
+        // Verificação adicional para evitar acesso a ponteiro nulo
+        if (*no && (*no)->direita) {
+            maior_info = criar_no(info, (*no)->direita, (filho ? *filho : NULL));
+        } else {
+            maior_info = NULL;  // Apenas marca o erro
+        }
     }
+    // Caso 2: O novo elemento é o que sobe, pois está entre info1 e info2
     else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
     {
-        *sobe = info; // novo elemento sobe
-
-        maior_info = criar_no((*no)->info2, filho ? *filho : NULL, (*no)->direita);
-        // msm coisa do outro só que quem sobe é info 2
+        *sobe = info;  // O novo elemento sobe
+        // Verificação adicional para evitar acesso a ponteiro nulo
+        if (*no && (*no)->direita) {
+            maior_info = criar_no((*no)->info2, (filho ? *filho : NULL), (*no)->direita);
+        } else {
+            maior_info = NULL;  // Apenas marca o erro
+        }
     }
+    // Caso 3: O novo elemento é menor que info1
     else
-    {                         // caso 3 info menor info 1
-        *sobe = (*no)->info1; // quem vai subir é info 1
+    {
+        *sobe = (*no)->info1;  // Info1 sobe
+        // Verificação adicional para evitar acesso a ponteiro nulo
+        if (*no && (*no)->centro && (*no)->direita) {
+            maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
+        } else {
+            maior_info = NULL;  // Apenas marca o erro
+        }
 
-        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
-
-        // ajustar o no atual para nova info ser info 1
+        // Ajustar o nó atual para que a nova info seja info1
         (*no)->info1 = info;
         (*no)->centro = (filho ? *filho : NULL);
     }
 
-    (*no)->quant_infos = 1;
+    // Se houve algum erro, apenas continue com o fluxo
+    if (maior_info != NULL) {
+        (*no)->quant_infos = 1;  // Reduzir o número de informações do nó
+    }
 
-    return maior_info;
+    return maior_info;  // Retorna o nó criado com o maior valor, ou NULL em caso de erro
 }
 
 int eh_folha(ARV2_3 *no)
@@ -84,6 +102,7 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
 
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai)
 {
+   
     Informacao sobe_sup;
     ARV2_3 *maior = NULL;
 
@@ -91,6 +110,11 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     if (*no == NULL)
     {
         *no = criar_no(info, NULL, NULL);
+        if (*no == NULL){
+            return NULL;
+        }
+        
+        
     }else
     {
         // caso seja folha
@@ -106,6 +130,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                 // se não houver pai, cria um novo só superior
                 if (pai && !(*pai))
                 {
+                    
                     *no = criar_no(*sobe, *no, maior);
                     maior = NULL; // só pra limpar o maior
                 }
@@ -123,7 +148,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
             }
             else
             {
-                maior = maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
+                maior  = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
             }
 
             // se maior foi retornado, o nó pode precisar ser atualizado ou quebrado
@@ -140,6 +165,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                     if (*pai)
                     {
                         *no = criar_no(sobe_sup, *no, maior);
+                       
                         maior = NULL; // limpar maior após criar o nó
                     }
                 }
@@ -153,27 +179,27 @@ void insere(ARV2_3 **raiz, Informacao info)
 {
     Informacao sobe;
     ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL);
-    if (novo_no)
-    {
+    if (novo_no){
+        printf("6 \n");
         *raiz = criar_no(sobe, *raiz, novo_no);
+       
     }
 }
 
-void mostrar(ARV2_3 *raiz)
-{
-    if (raiz)
-    {
+void mostrar(ARV2_3 *raiz){
+
+    if (raiz){
         mostrar(raiz->esquerda);
-        printf("\n%d\n", raiz->info1.unidade);
+        printf("%d\n", raiz->info1.unidade);
         printf("%s\n", raiz->info1.palavra_portugues);
         printf(":");
         mostrar_arvore_binaria(raiz->info1.palavra_ingles, raiz->info1.unidade);
         mostrar(raiz->centro);
 
         if (raiz->quant_infos == 2){
-            printf("\n%d\n", raiz->info2.unidade);
+            printf("%d\n", raiz->info2.unidade);
             printf("%s\n", raiz->info2.palavra_portugues);
-            printf(":");
+            //printf(":");
             mostrar_arvore_binaria(raiz->info2.palavra_ingles, raiz->info2.unidade);
             mostrar(raiz->direita);
         }
@@ -182,26 +208,12 @@ void mostrar(ARV2_3 *raiz)
 
 void liberar_2_3_binaria(Informacao *info)
 {
-    // liberar binaria
-    free(info->palavra_portugues);
+    if (info->palavra_ingles){
+          free(info->palavra_portugues);
+    }
+    
+  
 }
-
-// void liberar_2_3(ARV2_3 *raiz)
-// {
-//     if (raiz)
-//     {
-//         liberar_2_3(raiz->esquerda);
-//         liberar_2_3(raiz->centro);
-//         if (raiz->quant_infos == 2)
-//         {
-//             liberar_2_3(raiz->direita);
-//             liberar_2_3_binaria(&raiz->info2);
-//         }
-//         liberar_2_3_binaria(&raiz->info1);
-//         free(raiz);
-//     }
-// }
-
 void liberar_arv2_3(ARV2_3 *raiz) {
     if (raiz == NULL) return;
     // Liberar as subárvores binárias associadas a cada palavra
@@ -218,14 +230,13 @@ void liberar_arv2_3(ARV2_3 *raiz) {
 }
 
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade){
-    ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
-    insere_arvore_binaria(&arvore, palavra_ingles,unidade);
-
     Informacao info;
-    strcpy(info.palavra_portugues, palavra_portugues);
-    info.palavra_ingles = arvore;
+    strncpy(info.palavra_portugues, palavra_portugues, sizeof(info.palavra_portugues) - 1);
+    info.palavra_portugues[sizeof(info.palavra_portugues) - 1] = '\0';  // Garantir a terminação nula
+    // Aqui você usa a árvore binária para armazenar a tradução
+
+    info.palavra_ingles = cria_arvore_binaria(palavra_ingles, unidade);  
     info.unidade = unidade;
-    
     return info;
 }
 
