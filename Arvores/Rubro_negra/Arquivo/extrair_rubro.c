@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 void pegar_dados_arquivo(Rubronegra **arvore)
 {
     printf("Entrou\n");
@@ -22,26 +21,26 @@ void pegar_dados_arquivo(Rubronegra **arvore)
     char linha[200];  // Para armazenar cada linha do arquivo
     int unidade;
     char palavra_ingles[100];
-    char *pt, *result;
 
     // Loop para ler as linhas do arquivo
     while (fgets(linha, sizeof(linha), arquivo) != NULL)
     {
-        result = linha;  // A linha lida será processada
+        // Remover o caractere de nova linha, se existir
+        linha[strcspn(linha, "\n")] = '\0';
 
         // Verificar se a linha contém a palavra "Unidade"
-        if (strstr(result, "Unidade"))
+        if (strstr(linha, "Unidade"))
         {
             // Extrair a unidade da linha
-            pt = strtok(result, "%% Unidade ");  // Separar por "%% Unidade "
-            unidade = atoi(pt);  // Converter a unidade para inteiro
-            printf("Unidade: %d\n", unidade);
+            if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
+            {
+                printf("Unidade: %d\n", unidade);
+            }
         }
         else
         {
             // Processar as palavras caso contrário
-            pt = strtok(result, ":;,");
-
+            char *pt = strtok(linha, ":");
             if (pt)
             {
                 // Copiar a palavra em inglês
@@ -49,13 +48,14 @@ void pegar_dados_arquivo(Rubronegra **arvore)
                 printf("Palavra em inglês: %s\n", palavra_ingles);
 
                 // Agora processar as traduções
-                while ((pt = strtok(NULL, ":;,")) != NULL)
+                while ((pt = strtok(NULL, ",;")) != NULL)
                 {
-                    char pt_br[100];
-                    // Copiar a tradução em português
-                    strncpy(pt_br, pt + 1, strlen(pt) - 1);
-                    printf("Tradução em português: %s\n", pt_br);
+                    // Remover espaços ou outros caracteres indesejados
+                    while (*pt == ' ') pt++;  // Pular espaços iniciais
+
+                    printf("Tradução em português: %s\n", pt);
                 }
+                printf("\n");
             }
         }
     }
