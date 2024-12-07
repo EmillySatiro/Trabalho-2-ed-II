@@ -5,6 +5,6 @@
 #include "../../Binaria/ARV_BINARIA.h"
 #include "../Rubro_negra.h"
 
-void pegar_dados_arquivo(Rubronegra **arvore);
-
+Rubronegra *pegar_dados_arquivo(Rubronegra **arvore);
+char *trim(char *str);
 #endif

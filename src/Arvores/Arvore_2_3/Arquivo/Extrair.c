@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "Arvores/Binaria/ARV_BINARIA.h"
-#include "Arvores/Arvore_2_3/ARV2_3.h"
+#include "../../Binaria/ARV_BINARIA.h"
+#include "../../Arvore_2_3/ARV2_3.h"
 
 #define Tamanho_linha 1024
 

@@ -6,7 +6,7 @@
 #define PRETO 0
 //informação do nó
 typedef struct Informacao_VP{
-    char palavra_portugues[25];
+    char *palavra_portugues;
     int unidade; 
     ARV_BINARIA *palavras_ingles; 
 }Informacao_VP;
@@ -39,9 +39,9 @@ typedef struct Rubronegra{
 // Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
 // void mostrar_rubronegra(Rubronegra *raiz);
 
-Rubronegra *alocar_no(Informacao_VP info);
-Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info);
-Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);
+Rubronegra *alocar_no(Informacao_VP *info);
+Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info);
+Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP *info);
 void conferindo_regras(Rubronegra **raiz);
 // rpz custoso melhora emilly do futuro 
 void liberar_rubronegra_binaria(Informacao_VP *info);
@@ -57,4 +57,7 @@ void remover_elemento_min(Rubronegra **raiz);
 int remover_no_rubro(Rubronegra **raiz, char *palavra);
 int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_rubronegra(Rubronegra *raiz);
+void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info);
+Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
+void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
 #endif 

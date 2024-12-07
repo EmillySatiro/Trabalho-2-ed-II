@@ -3,16 +3,25 @@
 #include <string.h>
 #include <stdbool.h>
 #include "Rubro_negra.h"
+#include "../Binaria/ARV_BINARIA.h"
 
 // alocar nó 
-Rubronegra *alocar_no(Informacao_VP info){
+Rubronegra *alocar_no(Informacao_VP *info){
     Rubronegra *no = (Rubronegra *)malloc(sizeof(Rubronegra)); 
     if (no != NULL) {
         no->info = (Informacao_VP *)malloc(sizeof(Informacao_VP));
             if (no->info != NULL){
-                strcpy(no->info->palavra_portugues, info.palavra_portugues);
-                no->info->unidade=info.unidade;
-                no->info->palavras_ingles = NULL;
+                no->info->palavra_portugues = malloc(strlen(info->palavra_portugues) + 1);
+                if (no->info->palavra_portugues != NULL) {
+                    strcpy(no->info->palavra_portugues, info->palavra_portugues);
+                } else {
+                    printf("Erro ao alocar memória para 'palavra_portugues'!\n");
+                    free(no->info);
+                    free(no);
+                    return NULL;
+                }
+                no->info->unidade=info->unidade;
+                no->info->palavras_ingles = info->palavras_ingles;
                 no->cor = VERMELHO; 
                 no->direita = NULL; 
                 no->esquerda = NULL;
@@ -30,16 +39,16 @@ Rubronegra *alocar_no(Informacao_VP info){
     
 }
 
-Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info){
+Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     Rubronegra *inserido = NULL;
     if (*raiz == NULL){
        *raiz = alocar_no(info);
        inserido = *raiz;
     }else{
-        if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)< 0){
+        if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues) < 0){
             // esquerda 
             inserido = inserir_rubro(&((*raiz)->esquerda), info);
-        }else if (strcmp(info.palavra_portugues, (*raiz)->info->palavra_portugues)> 0){
+        }else if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues)> 0){
             // direita
             inserido = inserir_rubro(&((*raiz)->direita), info);
         }else{
@@ -55,7 +64,7 @@ Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info){
     return *raiz ; 
 }
 
-Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info){
+Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP *info){
     raiz = inserir_rubro(&raiz, info); 
     if(raiz != NULL){
        raiz->cor = PRETO;
@@ -279,7 +288,53 @@ void mostrar_rubronegra(Rubronegra *raiz){
     // mostrar a arvore binaria dela chama sua 
     mostrar_rubronegra(raiz->esquerda);
     printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+    printf("Unidade: %d\n", raiz->info->unidade);
+  
     mostrar_rubronegra(raiz->direita);
     }
 }
 
+Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade) {
+    Informacao_VP *info = malloc(sizeof(Informacao_VP));
+    if (info == NULL) {
+        perror("Erro ao alocar memória");
+        exit(EXIT_FAILURE);
+    }
+
+    // Aloca memória para a palavra em português e copia a string
+    info->palavra_portugues = malloc(strlen(palavra_portugues) + 1);
+    if (info->palavra_portugues == NULL) {
+        perror("Erro ao alocar memória para palavra_portugues");
+        exit(EXIT_FAILURE);
+    }
+    strcpy(info->palavra_portugues, palavra_portugues);
+
+    info->unidade = unidade;
+    info->palavras_ingles = NULL; // Inicializa a árvore binária como vazia
+
+    // Insere a palavra em inglês na árvore binária
+    insere_arvore_binaria(&info->palavras_ingles, palavra_ingles, unidade);
+
+    return info;
+}
+
+// void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info){
+//     *raiz = inserir_rubro(raiz, info);
+// }
+
+void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
+    if (raiz == NULL){
+        return;
+    }
+
+    // Exibe a subárvore esquerda
+    mostrar_binaria_em_rubro(raiz->esquerda, unidade);
+
+    // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
+    if (raiz->info->unidade == unidade){
+        printf("%s \n", raiz->info->palavras_ingles->palavra_ingles);
+    }
+
+    // Exibe a subárvore direita
+    mostrar_binaria_em_rubro(raiz->direita, unidade);
+}
