@@ -332,7 +332,7 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
     if (raiz->info->unidade == unidade){
-        printf("%s \n", raiz->info->palavras_ingles->palavra_ingles);
+        printf("%s\n", raiz->info->palavras_ingles->palavra_ingles);
     }
 
     // Exibe a subárvore direita
