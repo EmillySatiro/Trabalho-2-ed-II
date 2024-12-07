@@ -234,8 +234,8 @@ Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade
     strncpy(info.palavra_portugues, palavra_portugues, sizeof(info.palavra_portugues) - 1);
     info.palavra_portugues[sizeof(info.palavra_portugues) - 1] = '\0';  // Garantir a terminação nula
     // Aqui você usa a árvore binária para armazenar a tradução
-
-    info.palavra_ingles = cria_arvore_binaria(palavra_ingles, unidade);  
+    info.palavra_ingles = NULL;
+    insere_arvore_binaria((&info.palavra_ingles), palavra_ingles,unidade);
     info.unidade = unidade;
     return info;
 }

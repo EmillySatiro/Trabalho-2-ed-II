@@ -40,7 +40,7 @@ void ler_arquivo_e_inserir(const char *nome_arquivo, ARV2_3 **raiz) {
         // Verifica se a linha contém uma unidade
         if (linha[0] == '%' && strstr(linha, "Unidade")) {
             // Incrementa o número da unidade
-            if (sscanf(linha, "&% Unidade %d", &unidade) == 1) {
+            if (sscanf(linha, "%% Unidade %d", &unidade) == 1) {
                 continue;  // Se o número da unidade foi lido corretamente, passa para a próxima linha
             }
         }
