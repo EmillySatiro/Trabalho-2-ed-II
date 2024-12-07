@@ -273,6 +273,8 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
     }
     return resultado;
 }
+
+
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
     

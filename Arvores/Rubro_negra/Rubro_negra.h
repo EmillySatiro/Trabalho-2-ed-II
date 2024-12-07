@@ -23,6 +23,7 @@ typedef struct Rubronegra{
 
 
 // alocar nó 
+
 Rubronegra *alocar_no(Informacao_VP info);
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP info);
 Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP info);

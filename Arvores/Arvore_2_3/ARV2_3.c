@@ -170,8 +170,7 @@ void mostrar(ARV2_3 *raiz)
         mostrar_arvore_binaria(raiz->info1.palavra_ingles, raiz->info1.unidade);
         mostrar(raiz->centro);
 
-        if (raiz->quant_infos == 2)
-        {
+        if (raiz->quant_infos == 2){
             printf("\n%d\n", raiz->info2.unidade);
             printf("%s\n", raiz->info2.palavra_portugues);
             printf(":");
@@ -220,12 +219,10 @@ void liberar_arv2_3(ARV2_3 *raiz) {
 
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade){
     ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
-    Informacao info;
+    insere_arvore_binaria(&arvore, palavra_ingles,unidade);
 
+    Informacao info;
     strcpy(info.palavra_portugues, palavra_portugues);
-    // Insere a palavra na árvore binária, que é criada fora da função
-    insere_arvore_binaria(&arvore, palavra_ingles, unidade);
-    // Atribuindo a árvore binária à estrutura de informação
     info.palavra_ingles = arvore;
     info.unidade = unidade;
     
@@ -234,8 +231,7 @@ Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade
 
 void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles)
 {
-    Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade);  // Agora a árvore binária é associada corretamente
-    criar_no(info_2_3, NULL, NULL);  // O nó de ARV2_3 é criado com as informações corretas
-    insere(raiz, info_2_3);  // A inserção é feita com os dados da informação criada
+    Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade);  
+    insere(raiz, info_2_3);  
 }
 

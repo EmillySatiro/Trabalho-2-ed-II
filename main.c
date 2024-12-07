@@ -6,14 +6,13 @@
 #include "Arvores/Arvore_2_3/Arquivo/Extrair.h"
 
 int main() {
+    ARV2_3 *arvore2_3 = NULL; // Inicialização
+    
 
-    ARV2_3 *arvore_2_3 = NULL;
-    arvore_2_3 = (ARV2_3 *)malloc(sizeof(ARV2_3));
-
-    processar_arquivo("Dicionario.txt",&arvore_2_3);
+    processar_arquivo("Dicionario.txt",&arvore2_3);
     
     printf("\nArvore em ordem:\n");
-    mostrar(arvore_2_3);
+    mostrar(arvore2_3);
 
    // liberar_2_3_binaria(arvore_2_3); 
     return 0;
