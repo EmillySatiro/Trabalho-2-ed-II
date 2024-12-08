@@ -23,7 +23,7 @@ char *trim(char *str) {
 
 Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
 {
-    printf("Entrou\n");
+    //printf("Entrou\n");
 
     FILE *arquivo = fopen("Dicionario.txt", "r");
     if (!arquivo)
@@ -44,7 +44,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
         {
             if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
             {
-                 printf("Unidade: %d\n", unidade);
+                 //printf("Unidade: %d\n", unidade);
             }
         }
         else
@@ -66,7 +66,6 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
                         fprintf(stderr, "Erro ao criar Informacao_VP\n");
                     }
                 }
-                printf("\n");
             }
         }
     }

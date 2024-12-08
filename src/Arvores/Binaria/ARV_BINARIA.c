@@ -49,8 +49,9 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
     if (arvore->unidade == unidade){
-        printf("%s, ", arvore->palavra_ingles);
+        printf("%s", arvore->palavra_ingles);
     }
+    printf("\n");
 
     // Exibe a subárvore direita
     mostrar_arvore_binaria(arvore->direita, unidade);

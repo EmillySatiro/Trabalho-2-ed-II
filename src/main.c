@@ -83,10 +83,15 @@ int main()
 
     mostrar_rubronegra(raiz);
 
-  printf("=============Palavras em ingles =============\n");
+    printf("=============Palavras em ingles =============\n");
 
     mostrar_binaria_em_rubro(raiz, 1);
 
+    printf("=============Palavras em portugues de uma unidade =============\n");
+
+    mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+
+    
     if (raiz->info && raiz->info->palavras_ingles)
     {
         libera_arvore_binaria(&raiz->info->palavras_ingles);

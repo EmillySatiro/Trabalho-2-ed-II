@@ -318,6 +318,18 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
     return info;
 }
 
+void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
+    if (raiz != NULL){
+        mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
+        if (raiz->info->unidade == unidade){
+            printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
+            printf("Palavras em ingles: \n");
+            mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+        }
+        mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
+    }
+}
+
 // void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info){
 //     *raiz = inserir_rubro(raiz, info);
 // }
