@@ -83,7 +83,8 @@ int main()
 
     mostrar_rubronegra(raiz);
 
-    printf("=============Palabras em ingles=============\n");
+  printf("=============Palavras em ingles =============\n");
+
     mostrar_binaria_em_rubro(raiz, 1);
 
     if (raiz->info && raiz->info->palavras_ingles)

@@ -30,13 +30,11 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
     else
     {
         // Se a palavra a ser inserida for menor que a palavra do nó atual, insere na subárvore esquerda
-        if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0)
-        {
+        if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0){
             insere_arvore_binaria(&(*arvore)->esquerda, palavra_ingles, unidade);
         }
         // Se a palavra a ser inserida for maior que a palavra do nó atual, insere na subárvore direita
-        else
-        {
+        else{
             insere_arvore_binaria(&(*arvore)->direita, palavra_ingles, unidade);
         }
     }
@@ -44,22 +42,20 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
 
 void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 {
-    if (arvore == NULL)
-    {
-        return;
-    }
-
+    if (arvore != NULL){
+      
     // Exibe a subárvore esquerda
     mostrar_arvore_binaria(arvore->esquerda, unidade);
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
-    if (arvore->unidade == unidade)
-    {
+    if (arvore->unidade == unidade){
         printf("%s, ", arvore->palavra_ingles);
     }
 
     // Exibe a subárvore direita
     mostrar_arvore_binaria(arvore->direita, unidade);
+    }
+
 }
 
 void libera_arvore_binaria(ARV_BINARIA **arvore)

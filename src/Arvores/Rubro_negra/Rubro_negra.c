@@ -52,9 +52,9 @@ Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
             // direita
             inserido = inserir_rubro(&((*raiz)->direita), info);
         }else{
-            // elemento ja existe 
-            inserido = NULL; 
-        } 
+            insere_arvore_binaria(&((*raiz)->info->palavras_ingles),info->palavras_ingles->palavra_ingles,info->unidade);
+            inserido = NULL;
+        }
     }
      
     if (inserido != NULL){
@@ -284,13 +284,13 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
 }
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
-    
-    // mostrar a arvore binaria dela chama sua 
-    mostrar_rubronegra(raiz->esquerda);
-    printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
-    printf("Unidade: %d\n", raiz->info->unidade);
-  
-    mostrar_rubronegra(raiz->direita);
+        mostrar_rubronegra(raiz->esquerda);
+        printf("Arvore binaria da palavra: \n");
+        mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+        printf("\n");
+        printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+        printf("Unidade: %d\n", raiz->info->unidade);
+        mostrar_rubronegra(raiz->direita);
     }
 }
 
@@ -323,18 +323,17 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
 // }
 
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
-    if (raiz == NULL){
-        return;
-    }
-
+    if (raiz  != NULL){
     // Exibe a subárvore esquerda
     mostrar_binaria_em_rubro(raiz->esquerda, unidade);
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
     if (raiz->info->unidade == unidade){
-        printf("%s\n", raiz->info->palavras_ingles->palavra_ingles);
+       mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+       printf("\n");
     }
 
     // Exibe a subárvore direita
     mostrar_binaria_em_rubro(raiz->direita, unidade);
+    }
 }

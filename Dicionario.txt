@@ -1,5 +1,6 @@
 % Unidade 1
     Bus: ônibus, barramento;
+    Byeye: barramento;
     Bug: inseto, problema;
     Bike: bicicleta;
     Coller: ventilador;
