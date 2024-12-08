@@ -282,14 +282,32 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
     }
     return resultado;
 }
+
+// mostrar informações tanto da rubro como da binaria de uma unidade especifica 
+void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
+    if (raiz  != NULL){
+    // Exibe a subárvore esquerda
+    mostrar_binaria_em_rubro(raiz->esquerda, unidade);
+
+    // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
+    if (raiz->info->unidade == unidade){
+       mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+       printf("\n");
+    }
+
+    // Exibe a subárvore direita
+    mostrar_binaria_em_rubro(raiz->direita, unidade);
+    }
+}
+
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
         mostrar_rubronegra(raiz->esquerda);
-        printf("Arvore binaria da palavra: \n");
-        mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
-        printf("\n");
         printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
         printf("Unidade: %d\n", raiz->info->unidade);
+        printf("Arvore binaria da palavra(palavras em ingles): \n");
+        printf("\n");
+        mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
         mostrar_rubronegra(raiz->direita);
     }
 }
@@ -318,34 +336,21 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
     return info;
 }
 
+// informar uma unidade e então imprima todas as palavras da unidade em português seguida das 
+// equivalentes em inglês; 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
         if (raiz->info->unidade == unidade){
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
-            mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+            mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+            printf("\n");
         }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
     }
 }
 
-
-void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
-    if (raiz  != NULL){
-    // Exibe a subárvore esquerda
-    mostrar_binaria_em_rubro(raiz->esquerda, unidade);
-
-    // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
-    if (raiz->info->unidade == unidade){
-       mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
-       printf("\n");
-    }
-
-    // Exibe a subárvore direita
-    mostrar_binaria_em_rubro(raiz->direita, unidade);
-    }
-}
 
 // informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em 
 // português dada, independente da unidade; 
@@ -365,7 +370,7 @@ void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues){
         // Palavra encontrada, exibe as palavras em inglês da árvore binária
         printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
         printf("Palavras em inglês equivalentes:\n");
-        mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+        mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
         printf("\n");
     }
     
