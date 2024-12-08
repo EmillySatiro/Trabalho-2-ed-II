@@ -20,8 +20,7 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
     return arvore;
 }
 
-void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade)
-{
+void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade){
     // Se a árvore estiver vazia, cria um novo nó
     if (*arvore == NULL){
         *arvore = cria_arvore_binaria(palavra_ingles, unidade);
@@ -34,8 +33,10 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
             insere_arvore_binaria(&(*arvore)->esquerda, palavra_ingles, unidade);
         }
         // Se a palavra a ser inserida for maior que a palavra do nó atual, insere na subárvore direita
-        else{
+        else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
             insere_arvore_binaria(&(*arvore)->direita, palavra_ingles, unidade);
+        }else{
+          
         }
     }
 }
@@ -49,7 +50,7 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
     if (arvore->unidade == unidade){
-        printf("%s", arvore->palavra_ingles);
+        printf("%s \n ", arvore->palavra_ingles);
     }
     printf("\n");
 
@@ -58,6 +59,26 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
     }
 
 }
+
+void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
+{
+    if (arvore != NULL){
+      
+    // Exibe a subárvore esquerda
+    mostrar_arvore_binaria_completa(arvore->esquerda);
+
+    // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
+    printf("%s  ", arvore->palavra_ingles);
+    printf("  %d", arvore->unidade);
+    printf("\n");
+    // Exibe a subárvore direita
+    mostrar_arvore_binaria_completa(arvore->direita);
+    }
+
+}
+
+
+
 
 void libera_arvore_binaria(ARV_BINARIA **arvore)
 {
