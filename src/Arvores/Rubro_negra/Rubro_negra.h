@@ -60,4 +60,5 @@ void mostrar_rubronegra(Rubronegra *raiz);
 void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info);
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
+void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues);
 #endif 

@@ -79,19 +79,20 @@ int main()
 
     raiz = pegar_dados_arquivo(&raiz);
 
-    printf("=============Palavras em portugues=============\n");
+    // printf("=============Palavras em portugues=============\n");
 
-    mostrar_rubronegra(raiz);
+    // mostrar_rubronegra(raiz);
 
-  printf("=============Palavras em ingles =============\n");
+    // printf("=============Palavras em ingles =============\n");
 
-    mostrar_binaria_em_rubro(raiz, 1);
+    // mostrar_binaria_em_rubro(raiz, 1);
 
-    if (raiz->info && raiz->info->palavras_ingles)
-    {
-        libera_arvore_binaria(&raiz->info->palavras_ingles);
-    }
-    liberar_rubronegra(&raiz);
+    // if (raiz->info && raiz->info->palavras_ingles){
+    //     libera_arvore_binaria(&raiz->info->palavras_ingles);
+    // }
+    // liberar_rubronegra(&raiz);
+
+    buscar_palavra_portugues(raiz, "barramento");
 
     return 0;
 }
