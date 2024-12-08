@@ -9,17 +9,28 @@
 #include <ctype.h>
 
 char *trim(char *str) {
-    char *end;
+    if (str == NULL) return str;  // Garantir que o ponteiro não seja nulo
+
     // Remove espaços do início
-    while (isspace((unsigned char)*str)) str++;
-    if (*str == '\0') return str; // String vazia
+    while (*str && (isspace((unsigned char)*str) || *str == '\t')) {
+        str++;
+    }
+
+    // Se a string for esvaziada, retorne diretamente
+    if (*str == '\0') {
+        return str;
+    }
 
     // Remove espaços do final
-    end = str + strlen(str) - 1;
-    while (end > str && isspace((unsigned char)*end)) end--;
-    *(end + 1) = '\0';
+    char *end = str + strlen(str) - 1;
+    while (end > str && (isspace((unsigned char)*end) || *end == '\t')) {
+        end--;
+    }
+    *(end + 1) = '\0';  // Finaliza a string corretamente
+
     return str;
 }
+
 
 Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
 {
@@ -32,7 +43,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
             exit(EXIT_FAILURE);
     }
 
-    char linha[200];
+    char linha[100];
     int unidade;
     char palavra_ingles[100];
 
@@ -44,23 +55,24 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
         {
             if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
             {
-                 //printf("Unidade: %d\n", unidade);
+                 printf("Unidade: %d\n", unidade);
             }
         }
         else
         {
             char *pt = strtok(linha, ":");
+            pt = trim(pt);
+
             if (pt)
             {
                 strcpy(palavra_ingles, pt);
-         
-
+                //printf("Palavra em ingles: %s\n", palavra_ingles);
                 while ((pt = strtok(NULL, ",;")) != NULL)
                 {
-                
                     pt = trim(pt);
                     Informacao_VP *info = criar_info_vp(pt, palavra_ingles, unidade);
                     if (info != NULL) {
+                        printf("Palavra em portugues: %s\n", info->palavra_portugues);
                         inserir_rubro(arvore, info);
                     } else {
                         fprintf(stderr, "Erro ao criar Informacao_VP\n");

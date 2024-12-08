@@ -28,6 +28,7 @@ int main()
     printf("=============Palavras em portugues de uma unidade =============\n");
 
     mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+    //buscar_palavra_portugues(raiz, "barramento");
 
     
     if (raiz->info && raiz->info->palavras_ingles)
