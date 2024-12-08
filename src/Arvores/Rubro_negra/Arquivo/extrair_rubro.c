@@ -55,12 +55,12 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
         {
             if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
             {
-                 printf("Unidade: %d\n", unidade);
+                 //printf("Unidade: %d\n", unidade);
             }
         }
         else
         {
-            char *pt = strtok(linha, ":");
+            char *pt = strtok(linha, ":,;");
             pt = trim(pt);
 
             if (pt)
@@ -72,7 +72,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
                     pt = trim(pt);
                     Informacao_VP *info = criar_info_vp(pt, palavra_ingles, unidade);
                     if (info != NULL) {
-                        printf("Palavra em portugues: %s\n", info->palavra_portugues);
+                        //printf("Palavra em portugues: %s\n", info->palavra_portugues);
                         inserir_rubro(arvore, info);
                     } else {
                         fprintf(stderr, "Erro ao criar Informacao_VP\n");
