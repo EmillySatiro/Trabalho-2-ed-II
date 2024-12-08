@@ -62,4 +62,5 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
 
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
+void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues);
 #endif 

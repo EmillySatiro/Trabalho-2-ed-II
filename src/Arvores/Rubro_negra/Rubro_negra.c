@@ -330,9 +330,6 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
     }
 }
 
-// void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info){
-//     *raiz = inserir_rubro(raiz, info);
-// }
 
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
@@ -349,3 +346,30 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     mostrar_binaria_em_rubro(raiz->direita, unidade);
     }
 }
+
+// informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em 
+// português dada, independente da unidade; 
+
+void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues){
+    if(raiz != NULL){
+        
+    int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues); 
+
+    if(comparacao < 0 ){
+        // ela ta subárvore a esquerda 
+        buscar_palavra_portugues(raiz->esquerda, palavra_portugues); 
+
+    }else if ( comparacao > 0){
+          buscar_palavra_portugues(raiz->direita, palavra_portugues);
+    }else{
+        // Palavra encontrada, exibe as palavras em inglês da árvore binária
+        printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
+        printf("Palavras em inglês equivalentes:\n");
+        mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+        printf("\n");
+    }
+    
+    }
+}
+
+
