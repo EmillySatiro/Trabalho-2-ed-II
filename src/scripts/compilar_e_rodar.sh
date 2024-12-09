@@ -8,11 +8,11 @@ EXECUTAVEL="programa"
 
 # Arquivos necessários
 MAIN_FILE="$BASE_DIR/main.c"
-BINARIA_FILE="$BASE_DIR/Arvores/Binaria/ARV_BINARIA.c"
-ARVORE_2_3_FILE="$BASE_DIR/Arvores/Arvore_2_3/ARV2_3.c"
-RUBRO_NEGRA_FILE="$BASE_DIR/Arvores/Rubro_negra/Rubro_negra.c"
-EXTRAIR="$BASE_DIR/Arvores/Arvore_2_3/Arquivo/Extrair.c"
-EXTRAIR_RUBRO="$BASE_DIR/Arvores/Rubro_negra/Arquivo/extrair_rubro.c"
+BINARIA_FILE="$BASE_DIR/src/Arvores/Binaria/ARV_BINARIA.c"
+ARVORE_2_3_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/ARV2_3.c"
+RUBRO_NEGRA_FILE="$BASE_DIR/src/Arvores/Rubro_negra/Rubro_negra.c"
+EXTRAIR="$BASE_DIR/Arvores/src/Arvore_2_3/Arquivo/Extrair.c"
+EXTRAIR_RUBRO="$BASE_DIR/src/Arvores/Rubro_negra/Arquivo/extrair_rubro.c"
 
 # Verificar se os arquivos existem
 if [ ! -f "$MAIN_FILE" ]; then
