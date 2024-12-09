@@ -67,7 +67,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
             {
                 strcpy(palavra_ingles, pt);
                 //printf("Palavra em ingles: %s\n", palavra_ingles);
-                while ((pt = strtok(NULL, ",;")) != NULL)
+                while ((pt = strtok(NULL, ":,;")) != NULL)
                 {
                     pt = trim(pt);
                     Informacao_VP *info = criar_info_vp(pt, palavra_ingles, unidade);

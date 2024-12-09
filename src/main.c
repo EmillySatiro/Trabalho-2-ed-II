@@ -9,23 +9,22 @@
 int main()
 {
 
-
     Rubronegra *raiz = NULL;
-
- 
 
     raiz = pegar_dados_arquivo(&raiz);
 
     // printf("=============Palavras em portugues=============\n");
 
-    // mostrar_rubronegra(raiz);
+    mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
 
+    printf("============================================================\n");
+    remover_palavra_ingles_e_unidade(raiz,"Bug", 1);
 
     mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
-    //buscar_palavra_portugues(raiz, "barramento");
+    // buscar_palavra_portugues(raiz, "barramento");
 
-    //buscar_palavra_portugues(raiz, "barramento");
- 
+    // buscar_palavra_portugues(raiz, "barramento");
+
     // liberar_rubronegra(&raiz);
     // if (raiz->info && raiz->info->palavras_ingles){
     //     libera_arvore_binaria(&raiz->info->palavras_ingles);
