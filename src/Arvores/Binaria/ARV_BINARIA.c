@@ -238,15 +238,15 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
 
 
 /**
- * @brief Remove all words from the binary tree that match the given unit.
+ * @brief Remove todas as palavras da árvore binária que correspondem à unidade fornecida.
  *
- * This function traverses the binary tree and removes all nodes where the 
- * unit matches the specified unit. It performs a post-order traversal to 
- * ensure that all child nodes are processed before the current node is 
- * potentially removed.
+ * Esta função percorre a árvore binária e remove todos os nós onde a unidade
+ * corresponde à unidade especificada. Ela realiza uma travessia pós-ordem para
+ * garantir que todos os nós filhos sejam processados antes que o nó atual seja
+ * potencialmente removido.
  *
- * @param arvore A double pointer to the root of the binary tree.
- * @param unidade The unit value to match for removal.
+ * @param arvore Um ponteiro duplo para a raiz da árvore binária.
+ * @param unidade O valor da unidade a ser correspondido para remoção.
  */
 void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
     if (*arvore != NULL) {
