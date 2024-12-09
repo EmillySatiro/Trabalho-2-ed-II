@@ -165,7 +165,7 @@ void move_esquerda(Rubronegra **no)
     if (*no != NULL)
     {
         troca_cor(no);
-        if ((*no)->direita->esquerda && Qual_a_cor((*no)->direita->esquerda) == VERMELHO)
+        if ((*no)->direita != NULL && (*no)->direita->esquerda != NULL && Qual_a_cor((*no)->direita->esquerda) == VERMELHO)
         {
             girar_direita(&(*no)->direita);
             girar_esquerda(no);
@@ -198,7 +198,7 @@ void mover_direita(Rubronegra **no)
     if (*no != NULL)
     {
         troca_cor(no);
-        if ((*no)->esquerda->esquerda && Qual_a_cor((*no)->esquerda->esquerda) == VERMELHO)
+        if ((*no)->esquerda != NULL && (*no)->esquerda->esquerda != NULL && Qual_a_cor((*no)->esquerda->esquerda) == VERMELHO)
         {
             girar_direita(no);
             troca_cor(no);
@@ -522,39 +522,34 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
         return; // Árvore vazia, nada a remover
     }
 
-    // Travessia em profundidade primeiro pela esquerda
+    // Travessia em profundidade
     remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-    // Depois pela direita
+    remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
 
-    // Processa o nó atual
-    if ((*raiz)->info)
+    // Verifica se o nó atual tem palavras e unidade correspondente
+    if ((*raiz)->info && (*raiz)->info->unidade == unidade)
     {
-        // Remove palavras da árvore binária associada
-        remover_todas_palavras_por_unidade(&((*raiz)->info->palavras_ingles), unidade);
-        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
+        // Remove a palavra da árvore binária associada
+        remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
-        // Verifica se a árvore binária associada ficou vazia
-        if (*raiz && (*raiz)->info && (*raiz)->info->palavras_ingles == NULL)
+        // Verifica se a árvore binária ficou vazia após a remoção
+        if ((*raiz)->info->palavras_ingles == NULL)
         {
             // Captura a palavra em português antes de remover
             char palavra_portugues[100];
             strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
 
-            // Remove o nó da árvore rubro-negra
+            // Remove o nó da árvore Rubro-Negra
             int sucesso = remover_na_arvore(raiz, palavra_portugues);
             if (sucesso)
             {
+
                 printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
-            }
-            else
-            {
-                printf("Falha ao remover a palavra '%s' da árvore Rubro-Negra.\n", palavra_portugues);
             }
         }
         else
         {
             printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
         }
-        
     }
 }

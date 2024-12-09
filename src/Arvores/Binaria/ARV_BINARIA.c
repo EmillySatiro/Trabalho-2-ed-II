@@ -185,3 +185,19 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
         }
     } 
 }
+
+void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
+    if (*arvore == NULL) {
+        return; // Árvore vazia, nada a remover
+    }
+
+    // Travessia em profundidade
+    remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
+    remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
+
+    // Verifica se o nó atual tem palavras e unidade correspondente
+    if ((*arvore)->unidade == unidade) {
+        // Remove a palavra da árvore binária associada
+        remover_no_binaria(arvore, palavra_ingles);
+    }
+}
