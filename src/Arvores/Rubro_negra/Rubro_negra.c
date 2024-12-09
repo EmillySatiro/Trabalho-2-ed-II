@@ -5,7 +5,18 @@
 #include "Rubro_negra.h"
 #include "../Binaria/ARV_BINARIA.h"
 
-// alocar nó 
+
+/**
+ * @brief Aloca um novo nó para a árvore rubro-negra.
+ *
+ * Esta função aloca memória para um novo nó da árvore rubro-negra e inicializa
+ * seus campos com os valores fornecidos. Se a alocação de memória falhar em
+ * qualquer etapa, a função imprime uma mensagem de erro apropriada e retorna NULL.
+ *
+ * @param info Ponteiro para a estrutura Informacao_VP que contém os dados a serem
+ * copiados para o novo nó.
+ * @return Ponteiro para o novo nó alocado, ou NULL se a alocação de memória falhar.
+ */
 Rubronegra *alocar_no(Informacao_VP *info){
     Rubronegra *no = (Rubronegra *)malloc(sizeof(Rubronegra)); 
     if (no != NULL) {
@@ -39,6 +50,20 @@ Rubronegra *alocar_no(Informacao_VP *info){
     
 }
 
+/**
+ * @brief Insere um novo nó na árvore rubro-negra.
+ *
+ * Esta função insere um novo nó na árvore rubro-negra com a informação fornecida.
+ * Se a árvore estiver vazia, o novo nó se torna a raiz. Caso contrário, a função
+ * insere o nó na posição correta de acordo com a ordem alfabética da palavra em português.
+ * Se a palavra já existir na árvore, a função insere a palavra em inglês na árvore binária
+ * associada à palavra em português existente.
+ *
+ * @param raiz Ponteiro para o ponteiro da raiz da árvore rubro-negra.
+ * @param info Ponteiro para a estrutura de informação a ser inserida.
+ * @return Ponteiro para a raiz da árvore rubro-negra após a inserção.
+ */
+
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     Rubronegra *inserido = NULL;
     if (*raiz == NULL){
@@ -64,6 +89,16 @@ Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     return *raiz ; 
 }
 
+/**
+ * @brief Função que insere um novo nó na árvore rubro-negra e ajusta a cor da raiz.
+ *
+ * Esta função insere um novo nó na árvore rubro-negra utilizando a função `inserir_rubro`.
+ * Após a inserção, se a raiz não for nula, a cor da raiz é ajustada para preto.
+ *
+ * @param raiz Ponteiro para a raiz da árvore rubro-negra.
+ * @param info Ponteiro para a informação a ser inserida na árvore.
+ * @return Ponteiro para a nova raiz da árvore rubro-negra.
+ */
 Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP *info){
     raiz = inserir_rubro(&raiz, info); 
     if(raiz != NULL){
@@ -72,6 +107,18 @@ Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP *info){
     return raiz;
 }
 
+/**
+ * @brief Verifica e ajusta as regras da árvore rubro-negra.
+ *
+ * Esta função verifica e ajusta a árvore rubro-negra para garantir que as regras
+ * da árvore sejam mantidas. As regras verificadas incluem:
+ * 
+ * 1. Se o filho à esquerda é preto e o filho à direita é vermelho, realiza uma rotação à esquerda.
+ * 2. Se o filho à esquerda e o neto à esquerda são vermelhos, realiza uma rotação à direita.
+ * 3. Se ambos os filhos são vermelhos, troca as cores dos nós.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore rubro-negra.
+ */
 void conferindo_regras(Rubronegra **raiz){
     if(*raiz != NULL){
 
@@ -90,10 +137,18 @@ void conferindo_regras(Rubronegra **raiz){
             troca_cor(raiz);
         }
     }
-   
-     
 }
 
+/**
+ * @brief Retorna a cor de um nó na árvore rubro-negra.
+ *
+ * Esta função verifica a cor de um nó na árvore rubro-negra. Se o nó for NULL,
+ * a função retorna PRETO, indicando que nós nulos são considerados pretos.
+ * Caso contrário, a função retorna a cor do nó.
+ *
+ * @param no Ponteiro para o nó da árvore rubro-negra.
+ * @return A cor do nó. Se o nó for NULL, retorna PRETO.
+ */
 int Qual_a_cor(Rubronegra *no) {
     if (no == NULL) {
         return PRETO; 
@@ -101,6 +156,16 @@ int Qual_a_cor(Rubronegra *no) {
     return no->cor;  
 }
 
+/**
+ * @brief Inverte a cor do nó e de seus filhos.
+ *
+ * Esta função troca a cor do nó Rubronegra e de seus filhos, se existirem.
+ * A cor é invertida, ou seja, se for vermelho, torna-se preto e vice-versa.
+ *
+ * @param no Ponteiro duplo para o nó Rubronegra cuja cor será invertida.
+ *
+ * @note A função não faz nada se o ponteiro fornecido for NULL.
+ */
 void troca_cor(Rubronegra **no){
     if(no != NULL){
         (*no)->cor = !(*no)->cor; // inverte a cor 
@@ -113,6 +178,19 @@ void troca_cor(Rubronegra **no){
     }
 }
 
+/**
+ * @brief Realiza uma rotação à esquerda em uma árvore rubro-negra.
+ *
+ * Esta função realiza uma rotação à esquerda na árvore rubro-negra apontada por `raiz`.
+ * A rotação à esquerda é uma operação fundamental para manter o balanceamento da árvore
+ * rubro-negra após inserções e remoções.
+ *
+ * @param raiz Um ponteiro duplo para o nó raiz da árvore rubro-negra.
+ *
+ * @note A função assume que a árvore não é nula e que o nó à direita da raiz não é nulo.
+ *       A cor do novo nó raiz é ajustada para a cor do nó raiz original, e a cor do nó
+ *       raiz original é ajustada para vermelho.
+ */
 void girar_esquerda(Rubronegra **raiz){
     if(*raiz != NULL && (*raiz)->direita != NULL){
         Rubronegra *novo_no = (*raiz)->direita; 
@@ -131,6 +209,18 @@ void girar_esquerda(Rubronegra **raiz){
     }
 }
 
+/**
+ * @brief Move o nó para a esquerda em uma árvore rubro-negra.
+ *
+ * Esta função realiza uma rotação à esquerda em um nó de uma árvore rubro-negra,
+ * ajustando as cores dos nós conforme necessário para manter as propriedades da árvore.
+ *
+ * @param no Ponteiro duplo para o nó que será movido para a esquerda.
+ *
+ * A função verifica se o nó e seu filho direito não são nulos. Se o filho direito
+ * tiver um filho esquerdo vermelho, a função realiza uma rotação à direita no filho
+ * direito, seguida de uma rotação à esquerda no nó atual, e ajusta as cores dos nós.
+ */
 void move_esquerda(Rubronegra **no){
     if (*no != NULL){
         troca_cor(no); 
@@ -142,6 +232,17 @@ void move_esquerda(Rubronegra **no){
     }
 }
 
+/**
+ * @brief Realiza uma rotação à direita em uma árvore rubro-negra.
+ *
+ * Esta função realiza uma rotação à direita na árvore rubro-negra apontada por `raiz`.
+ * A rotação à direita é uma operação que mantém a propriedade de árvore binária de busca
+ * e é utilizada para balancear a árvore após inserções ou remoções.
+ *
+ * @param raiz Um ponteiro para o ponteiro da raiz da árvore rubro-negra.
+ *
+ * @note A função assume que a árvore não é nula e que o nó à esquerda da raiz não é nulo.
+ */
 void girar_direita(Rubronegra **raiz){
     if(*raiz != NULL && (*raiz)->esquerda != NULL){
         Rubronegra *novo_no = (*raiz)->esquerda; 
@@ -160,6 +261,19 @@ void girar_direita(Rubronegra **raiz){
     }
 }
 
+/**
+ * @brief Move o nó para a direita em uma árvore rubro-negra.
+ *
+ * Esta função realiza uma rotação à direita em um nó de uma árvore rubro-negra,
+ * ajustando as cores dos nós conforme necessário para manter as propriedades
+ * da árvore rubro-negra.
+ *
+ * @param no Um ponteiro duplo para o nó a ser movido para a direita.
+ *
+ * @note A função verifica se o nó e seu filho esquerdo não são nulos antes de
+ *       realizar a rotação. Se o filho esquerdo do nó também tiver um filho
+ *       esquerdo vermelho, a rotação é realizada e as cores dos nós são ajustadas.
+ */
 void mover_direita(Rubronegra **no){
     if(*no !=NULL){
         troca_cor(no); 
@@ -171,6 +285,15 @@ void mover_direita(Rubronegra **no){
     }
 }
 
+/**
+ * @brief Procura o menor nó na árvore rubro-negra.
+ *
+ * Esta função percorre a árvore rubro-negra a partir da raiz fornecida
+ * e encontra o nó com o menor valor (mais à esquerda).
+ *
+ * @param raiz Ponteiro para a raiz da árvore rubro-negra.
+ * @return Ponteiro para o nó com o menor valor na árvore.
+ */
 Rubronegra *procurar_menor(Rubronegra **raiz){
     Rubronegra *no1 = *raiz;
     Rubronegra *no2 = (*raiz)->esquerda;
@@ -186,6 +309,20 @@ Rubronegra *procurar_menor(Rubronegra **raiz){
     return no1;
 }
 
+/**
+ * @brief Remove o menor elemento de uma árvore Rubro-Negra.
+ *
+ * Esta função remove o menor elemento da árvore Rubro-Negra apontada por `raiz`.
+ * Se a árvore não estiver vazia, ela verifica se o nó esquerdo é nulo. Se for,
+ * libera a memória do nó atual e define o ponteiro `raiz` como nulo. Caso contrário,
+ * verifica a cor do nó esquerdo e do filho esquerdo do nó esquerdo. Se ambos forem pretos,
+ * chama a função `move_esquerda` para ajustar a árvore.
+ * Em seguida, chama recursivamente `remover_elemento_min` no nó esquerdo.
+ * Após a remoção, se a raiz não for nula, chama a função `conferindo_regras` para garantir
+ * que as propriedades da árvore Rubro-Negra sejam mantidas.
+ *
+ * @param raiz Ponteiro para o ponteiro da raiz da árvore Rubro-Negra.
+ */
 void remover_elemento_min(Rubronegra **raiz){
     if(*raiz != NULL){
         if ((*raiz)->esquerda == NULL){
@@ -208,6 +345,16 @@ void remover_elemento_min(Rubronegra **raiz){
 
 }
 
+/**
+ * @brief Remove um nó de uma árvore rubro-negra.
+ *
+ * Esta função remove um nó contendo a palavra especificada de uma árvore rubro-negra.
+ * A função ajusta a árvore conforme necessário para manter as propriedades da árvore rubro-negra.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore rubro-negra.
+ * @param palavra Palavra a ser removida da árvore.
+ * @return int Retorna 1 se a palavra foi encontrada e removida, 0 caso contrário.
+ */
 int remover_no_rubro(Rubronegra **raiz, char *palavra){
     int encontrado = 0; // não encontrado 
 
@@ -254,6 +401,16 @@ int remover_no_rubro(Rubronegra **raiz, char *palavra){
     return encontrado;
 }
 
+/**
+ * @brief Remove um nó da árvore rubro-negra.
+ *
+ * Esta função remove um nó da árvore rubro-negra que contém a palavra especificada.
+ * Após a remoção, se a árvore não estiver vazia, a raiz é colorida de preto.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore rubro-negra.
+ * @param palavra Palavra a ser removida da árvore.
+ * @return int Resultado da remoção (0 se bem-sucedido, outro valor se houver erro).
+ */
 int remover_na_arvore(Rubronegra **raiz, char *palavra){
     int resultado = remover_no_rubro(raiz,palavra);
     if (*raiz){
@@ -262,6 +419,15 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
     return resultado;
 }
 
+/**
+ * @brief Mostra informações tanto da árvore rubro-negra quanto da árvore binária de uma unidade específica.
+ *
+ * Esta função percorre a árvore rubro-negra em ordem simétrica (in-order) e, para cada nó cuja unidade corresponde à unidade fornecida,
+ * exibe as informações da árvore binária associada a esse nó.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
+ * @param unidade Unidade específica cujas informações devem ser exibidas.
+ */
 // mostrar informações tanto da rubro como da binaria de uma unidade especifica 
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
@@ -279,6 +445,15 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     }
 }
 
+/**
+ * @brief Exibe a árvore rubro-negra em ordem simétrica (in-order).
+ *
+ * Esta função percorre a árvore rubro-negra a partir da raiz e exibe as informações
+ * de cada nó, incluindo a palavra em português, a cor do nó (PRETO ou VERMELHO),
+ * a unidade e a árvore binária associada contendo palavras em inglês.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
+ */
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
         mostrar_rubronegra(raiz->esquerda);
@@ -291,6 +466,20 @@ void mostrar_rubronegra(Rubronegra *raiz){
     }
 }
 
+/**
+ * @brief Cria uma nova estrutura de informação para a árvore rubro-negra.
+ *
+ * Esta função aloca memória para uma nova estrutura Informacao_VP, inicializa
+ * seus campos com os valores fornecidos e insere a palavra em inglês na árvore
+ * binária associada.
+ *
+ * @param palavra_portugues A palavra em português a ser armazenada.
+ * @param palavra_ingles A palavra em inglês a ser inserida na árvore binária.
+ * @param unidade O valor da unidade associado à palavra.
+ * @return Um ponteiro para a nova estrutura Informacao_VP criada.
+ *
+ * @note A função termina o programa com um erro se a alocação de memória falhar.
+ */
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade) {
     Informacao_VP *info = malloc(sizeof(Informacao_VP));
     if (info == NULL) {
@@ -315,8 +504,16 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
     return info;
 }
 
-// informar uma unidade e então imprima todas as palavras da unidade em português seguida das 
-// equivalentes em inglês; 
+/**
+ * @brief Mostra as palavras em português de uma unidade específica na árvore rubro-negra.
+ *
+ * Esta função percorre a árvore rubro-negra em ordem e exibe as palavras em português
+ * que pertencem à unidade especificada. Para cada palavra em português encontrada,
+ * também são exibidas suas traduções em inglês.
+ *
+ * @param raiz Ponteiro para a raiz da árvore rubro-negra.
+ * @param unidade Unidade específica cujas palavras em português devem ser exibidas.
+ */
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
@@ -331,8 +528,17 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
 }
 
 
-// informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em 
-// português dada, independente da unidade; 
+
+/**
+ * @brief Imprime todas as palavras equivalentes em inglês para uma palavra em português específica na árvore rubro-negra.
+ * 
+ * Esta função percorre a árvore rubro-negra para encontrar a palavra em português especificada.
+ * Se a palavra for encontrada, ela exibe a palavra em português e todas as palavras equivalentes em inglês
+ * armazenadas na árvore binária associada.
+ * 
+ * @param raiz Ponteiro para a raiz da árvore rubro-negra.
+ * @param palavra_portugues Palavra em português a ser buscada na árvore.
+ */
 void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
     if(raiz != NULL){
         
@@ -355,6 +561,16 @@ void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
     }
 }
 
+/**
+ * @brief Busca uma palavra em uma árvore rubro-negra.
+ *
+ * Esta função realiza a busca de uma palavra em uma árvore rubro-negra,
+ * comparando a palavra fornecida com as palavras armazenadas nos nós da árvore.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
+ * @param palavra_portugues Ponteiro para a string contendo a palavra em português a ser buscada.
+ * @return Retorna um ponteiro para o nó que contém a palavra buscada, ou NULL se a palavra não for encontrada.
+ */
 Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues) {
     Rubronegra *resultado = NULL;
 
@@ -373,9 +589,19 @@ Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues
     return resultado;  
 }
 
-//informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto 
-// deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma 
-// unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da rubro negra
+
+/**
+ * @brief Remove uma palavra completa da árvore rubro-negra.
+ *
+ * Esta função busca uma palavra em português na árvore rubro-negra e remove todas as suas traduções
+ * em inglês associadas a uma unidade específica. Se todas as traduções em inglês forem removidas,
+ * a palavra em português também é removida da árvore rubro-negra.
+ *
+ * @param raiz Ponteiro para a raiz da árvore rubro-negra.
+ * @param palavra_portugues Palavra em português a ser removida.
+ * @param unidade Unidade associada às traduções em inglês a serem removidas.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, 0 caso contrário.
+ */
 int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int unidade) {
     int confere = 0; // Indicador de sucesso
 
