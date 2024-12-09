@@ -64,6 +64,15 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
     }
 }
 
+/**
+ * @brief Mostra as palavras em inglês da árvore binária que correspondem à unidade fornecida.
+ *
+ * Esta função percorre a árvore binária em ordem (in-order traversal) e imprime as palavras em inglês
+ * dos nós cuja unidade corresponde à unidade fornecida.
+ *
+ * @param arvore Ponteiro para a árvore binária (ARV_BINARIA) a ser exibida.
+ * @param unidade Unidade a ser comparada com a unidade dos nós da árvore.
+ */
 void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 {
     if (arvore != NULL){
@@ -83,6 +92,14 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 
 }
 
+/**
+ * @brief Exibe a árvore binária completa em ordem.
+ *
+ * Esta função percorre a árvore binária em ordem (in-order traversal) e imprime
+ * a palavra em inglês e a unidade de cada nó.
+ *
+ * @param arvore Ponteiro para a raiz da árvore binária.
+ */
 void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
 {
     if (arvore != NULL){
@@ -100,6 +117,15 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
 
 }
 
+/**
+ * @brief Libera a memória alocada para uma árvore binária.
+ *
+ * Esta função percorre a árvore binária de forma recursiva e libera a memória
+ * alocada para cada nó, garantindo que o ponteiro para o nó liberado seja
+ * definido como NULL.
+ *
+ * @param arvore Ponteiro duplo para a árvore binária a ser liberada.
+ */
 void libera_arvore_binaria(ARV_BINARIA **arvore)
 {
     if (*arvore != NULL)
@@ -111,6 +137,17 @@ void libera_arvore_binaria(ARV_BINARIA **arvore)
     }
 }
 
+/**
+ * @brief Busca uma palavra em uma árvore binária.
+ *
+ * Esta função realiza a busca de uma palavra em inglês em uma árvore binária.
+ * Se a palavra for encontrada, retorna o nó correspondente. Caso contrário,
+ * retorna NULL.
+ *
+ * @param arvore Ponteiro para a raiz da árvore binária.
+ * @param palavra_ingles Palavra em inglês a ser buscada na árvore.
+ * @return ARV_BINARIA* Ponteiro para o nó que contém a palavra buscada, ou NULL se a palavra não for encontrada.
+ */
 ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles) {
     ARV_BINARIA *resultado = NULL; // Variável para armazenar o resultado da busca
 
@@ -129,20 +166,59 @@ ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles) {
 
 
 
+/**
+ * @brief Verifies if a given node in a binary tree is a leaf node.
+ *
+ * This function checks if the specified node in a binary tree has no children.
+ * A node is considered a leaf node if both its left and right child pointers are NULL.
+ *
+ * @param no Pointer to the node in the binary tree to be checked.
+ * @return int Returns 1 if the node is a leaf node, otherwise returns 0.
+ */
 int eh_folha__binaria(ARV_BINARIA *no){
     return (no->esquerda == NULL && no->direita == NULL);
 }
 
+/**
+ * @brief Verifica se um nó da árvore binária tem apenas um filho.
+ *
+ * Esta função verifica se um nó da árvore binária possui exatamente um filho,
+ * ou seja, se tem um filho à esquerda ou à direita, mas não ambos.
+ *
+ * @param no Ponteiro para o nó da árvore binária a ser verificado.
+ * @return Retorna 1 se o nó tem exatamente um filho, caso contrário, retorna 0.
+ */
 int tem_apenas_um_filho(ARV_BINARIA *no){
     return (no->esquerda == NULL && no->direita != NULL) || (no->esquerda != NULL && no->direita == NULL);
 }
 
+/**
+ * @brief Checks if a binary tree node has two children.
+ *
+ * This function checks whether the given binary tree node has both left and right children.
+ *
+ * @param no Pointer to the binary tree node to be checked.
+ * @return int Returns 1 if the node has both left and right children, otherwise returns 0.
+ */
 int tem_dois_filhos(ARV_BINARIA *no){
     return (no->esquerda != NULL && no->direita != NULL);
 }
 
 
 
+/**
+ * @brief Remove um nó de uma árvore binária de busca com base na palavra em inglês fornecida.
+ *
+ * Esta função remove um nó de uma árvore binária de busca que contém a palavra em inglês especificada.
+ * A função lida com três casos principais:
+ * 1. O nó a ser removido é uma folha.
+ * 2. O nó a ser removido tem apenas um filho.
+ * 3. O nó a ser removido tem dois filhos.
+ *
+ * @param arvore Um ponteiro duplo para a árvore binária de busca.
+ * @param palavra_ingles A palavra em inglês a ser removida da árvore.
+ * @return int Retorna 1 se a remoção for bem-sucedida, caso contrário, retorna 0.
+ */
 int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
     int resultado = 0; // Variável para armazenar o status da remoção
 
@@ -182,6 +258,17 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
 }
 
 
+/**
+ * @brief Remove all words from the binary tree that match the given unit.
+ *
+ * This function traverses the binary tree and removes all nodes where the 
+ * unit matches the specified unit. It performs a post-order traversal to 
+ * ensure that all child nodes are processed before the current node is 
+ * potentially removed.
+ *
+ * @param arvore A double pointer to the root of the binary tree.
+ * @param unidade The unit value to match for removal.
+ */
 void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
     if (*arvore != NULL) {
         
@@ -194,6 +281,16 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
     } 
 }
 
+/**
+ * @brief Remove a word from a binary tree node based on the specified unit.
+ *
+ * This function traverses the binary tree in depth-first order and removes the specified word
+ * from nodes that match the given unit. If the tree is empty, the function returns immediately.
+ *
+ * @param arvore A double pointer to the root of the binary tree.
+ * @param palavra_ingles The word in English to be removed from the tree.
+ * @param unidade The unit associated with the word to be removed.
+ */
 void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
     if (*arvore == NULL) {
         return; // Árvore vazia, nada a remover
