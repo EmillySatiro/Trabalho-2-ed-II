@@ -172,12 +172,12 @@ int tem_apenas_um_filho(ARV_BINARIA *no){
 }
 
 /**
- * @brief Checks if a binary tree node has two children.
+ * @brief Verifica se um nó da árvore binária tem dois filhos.
  *
- * This function checks whether the given binary tree node has both left and right children.
+ * Esta função verifica se o nó da árvore binária possui ambos os filhos, esquerdo e direito.
  *
- * @param no Pointer to the binary tree node to be checked.
- * @return int Returns 1 if the node has both left and right children, otherwise returns 0.
+ * @param no Ponteiro para o nó da árvore binária a ser verificado.
+ * @return Retorna 1 se o nó tem ambos os filhos, caso contrário, retorna 0.
  */
 int tem_dois_filhos(ARV_BINARIA *no){
     return (no->esquerda != NULL && no->direita != NULL);
@@ -261,14 +261,14 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
 }
 
 /**
- * @brief Remove a word from a binary tree node based on the specified unit.
+ * @brief Remove uma palavra de um nó da árvore binária com base na unidade especificada.
  *
- * This function traverses the binary tree in depth-first order and removes the specified word
- * from nodes that match the given unit. If the tree is empty, the function returns immediately.
+ * Esta função percorre a árvore binária em ordem de profundidade e remove a palavra especificada
+ * dos nós que correspondem à unidade fornecida. Se a árvore estiver vazia, a função retorna imediatamente.
  *
- * @param arvore A double pointer to the root of the binary tree.
- * @param palavra_ingles The word in English to be removed from the tree.
- * @param unidade The unit associated with the word to be removed.
+ * @param arvore Um ponteiro duplo para a raiz da árvore binária.
+ * @param palavra_ingles A palavra em inglês a ser removida da árvore.
+ * @param unidade A unidade associada à palavra a ser removida.
  */
 void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
     if (*arvore != NULL) {
