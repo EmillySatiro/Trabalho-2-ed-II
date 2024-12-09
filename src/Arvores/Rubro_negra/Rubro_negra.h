@@ -62,7 +62,6 @@ void mostrar_rubronegra(Rubronegra *raiz);
 
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
 
- 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade);
 
 void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues);
