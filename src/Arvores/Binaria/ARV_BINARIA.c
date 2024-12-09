@@ -4,6 +4,18 @@
 #include "ARV_BINARIA.h"
 
 
+/**
+ * @brief Cria uma nova árvore binária.
+ *
+ * Esta função aloca memória para uma nova árvore binária e inicializa seus campos
+ * com os valores fornecidos.
+ *
+ * @param palavra_ingles A palavra em inglês a ser armazenada na árvore.
+ * @param unidade O valor da unidade a ser armazenado na árvore.
+ * @return Um ponteiro para a nova árvore binária criada.
+ *
+ * @note A função imprime uma mensagem de erro e termina o programa se a alocação de memória falhar.
+ */
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
 {
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
@@ -22,12 +34,22 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
 }
 
 
-// arrumar retornos 
+
+/**
+ * @brief Insere uma nova palavra na árvore binária.
+ *
+ * Esta função insere uma nova palavra na árvore binária de acordo com a ordem alfabética.
+ * Se a árvore estiver vazia, um novo nó é criado. Caso contrário, a função compara a palavra
+ * a ser inserida com a palavra do nó atual e decide se deve inserir na subárvore esquerda ou direita.
+ *
+ * @param arvore Ponteiro duplo para a árvore binária.
+ * @param palavra_ingles Palavra em inglês a ser inserida na árvore.
+ * @param unidade Unidade associada à palavra a ser inserida.
+ */
 void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade){
     // Se a árvore estiver vazia, cria um novo nó
     if (*arvore == NULL){
         *arvore = cria_arvore_binaria(palavra_ingles, unidade);
-        return;
     }
     else
     {
@@ -38,8 +60,6 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
         // Se a palavra a ser inserida for maior que a palavra do nó atual, insere na subárvore direita
         else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
             insere_arvore_binaria(&(*arvore)->direita, palavra_ingles, unidade);
-        }else{
-          
         }
     }
 }
@@ -91,27 +111,20 @@ void libera_arvore_binaria(ARV_BINARIA **arvore)
     }
 }
 
-// arrumar esses mil retornos 
-ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles)
-{
-    if (arvore == NULL)
-    {
-        return NULL;
+ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles) {
+    ARV_BINARIA *resultado = NULL; // Variável para armazenar o resultado da busca
+
+    if (arvore != NULL) {
+        if (strcmp(palavra_ingles, arvore->palavra_ingles) == 0) {
+            resultado = arvore; // Palavra encontrada
+        } else if (strcmp(palavra_ingles, arvore->palavra_ingles) < 0) {
+            resultado = buscar_palavra(arvore->esquerda, palavra_ingles); // Busca na subárvore esquerda
+        } else {
+            resultado = buscar_palavra(arvore->direita, palavra_ingles); // Busca na subárvore direita
+        }
     }
 
-    if (strcmp(palavra_ingles, arvore->palavra_ingles) == 0)
-    {
-        return arvore;
-    }
-
-    if (strcmp(palavra_ingles, arvore->palavra_ingles) < 0)
-    {
-        return buscar_palavra(arvore->esquerda, palavra_ingles);
-    }
-    else
-    {
-        return buscar_palavra(arvore->direita, palavra_ingles);
-    }
+    return resultado; // Retorna o resultado armazenado
 }
 
 
@@ -129,50 +142,45 @@ int tem_dois_filhos(ARV_BINARIA *no){
 }
 
 
-//  arrumar esse tanto de retorno 
-int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles){
-    if (*arvore == NULL){
-        return 0;
+
+int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
+    int resultado = 0; // Variável para armazenar o status da remoção
+
+    if (*arvore == NULL) {
+        return resultado; // Árvore vazia, nada a remover
     }
 
-    if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0){
-        return remover_no_binaria(&(*arvore)->esquerda, palavra_ingles);
-    }
-    else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
-        return remover_no_binaria(&(*arvore)->direita, palavra_ingles);
-    }
-    else{
-        if (eh_folha__binaria(*arvore)){
+    if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0) {
+        resultado = remover_no_binaria(&(*arvore)->esquerda, palavra_ingles); // Busca na subárvore esquerda
+    } else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0) {
+        resultado = remover_no_binaria(&(*arvore)->direita, palavra_ingles); // Busca na subárvore direita
+    } else {
+        // Caso em que o nó foi encontrado
+        if (eh_folha__binaria(*arvore)) {
             free(*arvore);
             *arvore = NULL;
-            return 1;
-        }
-        else if (tem_apenas_um_filho(*arvore)){
-        
+            resultado = 1; // Remoção bem-sucedida
+        } else if (tem_apenas_um_filho(*arvore)) {
             ARV_BINARIA *temp = *arvore;
-            if ((*arvore)->esquerda != NULL){
-                *arvore = (*arvore)->esquerda;
-            }
-            else{
-                *arvore = (*arvore)->direita;
-            }
+            *arvore = (*arvore)->esquerda != NULL ? (*arvore)->esquerda : (*arvore)->direita;
             free(temp);
-            return 1;
-        }
-        else{
-            // Encontra o nó com o maior valor na subárvore esquerda
+            resultado = 1; // Remoção bem-sucedida
+        } else {
+            // Encontra o maior valor na subárvore esquerda
             ARV_BINARIA *temp = (*arvore)->esquerda;
-            while (temp->direita != NULL){
+            while (temp->direita != NULL) {
                 temp = temp->direita;
             }
-            // Copia o valor do nó encontrado para o nó a ser removido
+            // Copia o valor do nó substituto
             strncpy((*arvore)->palavra_ingles, temp->palavra_ingles, sizeof((*arvore)->palavra_ingles) - 1);
             (*arvore)->palavra_ingles[sizeof((*arvore)->palavra_ingles) - 1] = '\0';
-            return remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles);
-        
+            resultado = remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles); // Remove o nó substituto
         }
     }
+
+    return resultado; // Retorna o resultado da remoção
 }
+
 
 void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
     if (*arvore != NULL) {
@@ -201,3 +209,4 @@ void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int
         remover_no_binaria(arvore, palavra_ingles);
     }
 }
+
