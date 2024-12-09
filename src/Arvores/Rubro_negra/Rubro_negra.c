@@ -115,33 +115,6 @@ void conferindo_regras(Rubronegra **raiz)
     }
 }
 
-// rpz custoso melhora emilly do futuro
-void liberar_rubronegra_binaria(Informacao_VP *info)
-{
-
-    if (info)
-    {
-        if (info->palavras_ingles)
-        {
-            //  liberar_binaria(&(*raiz)->info->palavras_ingles);
-            info->palavras_ingles = NULL;
-        }
-        free(info);
-    }
-}
-
-void liberar_rubronegra(Rubronegra **raiz)
-{
-    if (*raiz)
-    {
-        liberar_rubronegra(&(*raiz)->esquerda);
-        liberar_rubronegra(&(*raiz)->direita);
-        // liberar_rubronegra_binaria((*raiz)->info);
-    }
-    free(*raiz);
-    *raiz = NULL;
-}
-
 int Qual_a_cor(Rubronegra *no)
 {
     if (no == NULL)
@@ -232,6 +205,7 @@ void mover_direita(Rubronegra **no)
         }
     }
 }
+
 Rubronegra *procurar_menor(Rubronegra **raiz)
 {
     Rubronegra *no1 = *raiz;
@@ -247,6 +221,7 @@ Rubronegra *procurar_menor(Rubronegra **raiz)
     printf("%s\n", no1->info->palavra_portugues);
     return no1;
 }
+
 void remover_elemento_min(Rubronegra **raiz)
 {
     if (*raiz != NULL)
@@ -445,40 +420,155 @@ void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues)
             printf("\n");
         }
     }
+    // informar uma palavra em português e então imprima todas as palavras em inglês equivalente a palavra em
+}
+// português dada, independente da unidade;
+void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues)
+{
+    if (raiz != NULL)
+    {
+
+        int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues);
+
+        if (comparacao < 0)
+        {
+            // ela ta subárvore a esquerda
+            Imprimir_toda_palavras(raiz->esquerda, palavra_portugues);
+        }
+        else if (comparacao > 0)
+        {
+            Imprimir_toda_palavras(raiz->direita, palavra_portugues);
+        }
+        else
+        {
+            // Palavra encontrada, exibe as palavras em inglês da árvore binária
+            printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
+            printf("Palavras em inglês equivalentes:\n");
+            mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+            printf("\n");
+        }
+    }
 }
 bool arvore_binaria_vazia(ARV_BINARIA *raiz)
 {
     return (raiz == NULL);
 }
 
+Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues)
+{
+    Rubronegra *resultado = NULL;
+
+    if (raiz != NULL)
+    {
+        int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues);
+
+        if (comparacao == 0)
+        {
+            resultado = raiz;
+        }
+        else if (comparacao < 0)
+        {
+            resultado = buscar_palavra_rubro_negra(raiz->esquerda, palavra_portugues);
+        }
+        else
+        {
+            resultado = buscar_palavra_rubro_negra(raiz->direita, palavra_portugues);
+        }
+    }
+
+    return resultado;
+}
+
+// informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto
+//  deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma
+//  unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da rubro negra
+int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int unidade)
+{
+    int confere = 0; // Indicador de sucesso
+
+    Rubronegra *no = buscar_palavra_rubro_negra(*raiz, palavra_portugues);
+
+    if (no != NULL)
+    {
+
+        remover_todas_palavras_por_unidade(&(no->info->palavras_ingles), unidade);
+
+        if (no->info->palavras_ingles == NULL)
+        {
+
+            remover_na_arvore(raiz, palavra_portugues);
+
+            printf("A palavra '%s' foi removida da árvore rubro-negra e da árvore binária.\n", palavra_portugues);
+        }
+        else
+        {
+            printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
+        }
+
+        confere = 1; // Indica que a remoção foi bem-sucedida
+    }
+    else
+    {
+        printf("A palavra '%s' não foi encontrada ou a unidade não corresponde.\n", palavra_portugues);
+    }
+
+    return confere; // Retorna 1 se a remoção foi bem-sucedida, 0 caso contrário
+}
+
 void remover_palavra_ingles_e_unidade(Rubronegra *raiz, char *palavra_ingles, int unidade)
 {
     if (raiz)
     {
-        // Chama recursivamente para a esquerda
-        remover_palavra_ingles_e_unidade(raiz->esquerda, palavra_ingles, unidade);
+        // Chama recursivamente para a subárvore esquerda
+        remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
 
-        // Verifica se o nó e a unidade são válidos antes de proceder
+        // Verifica se o nó atual e a unidade são válidos antes de proceder
         if (raiz->info && raiz->info->unidade == unidade)
         {
-            // Tenta remover a palavra em inglês
-            int removido = remover_no_binaria(&raiz->info->palavras_ingles, palavra_ingles);
-            if (removido)
-            {
-                // Se a árvore de palavras em inglês estiver vazia, remove o nó da árvore
-                if (arvore_binaria_vazia(raiz->info->palavras_ingles))
-                {
-                    remover_na_arvore(&raiz, raiz->info->palavra_portugues);
-                    // printf("===========================\n");
-                    // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
-                    // printf("===========================\n");
+            // Remove a palavra em inglês da árvore binária associada
+            remover_todas_palavras_por_unidade(&(raiz->info->palavras_ingles), unidade);
 
-                }
+            // Verifica se a árvore binária de palavras em inglês está vazia
+            if (arvore_binaria_vazia(raiz->info->palavras_ingles))
+            {
+                // Remove o nó da árvore rubro-negra
+                remover_na_arvore(&raiz, raiz->info->palavra_portugues);
+
+                printf("Palavra '%s' foi removida da árvore rubro-negra e da árvore binária.\n", palavra_ingles);
+            }
+            else
+            {
+                printf("Palavra em inglês '%s' removida, mas a palavra em português permanece.\n", palavra_ingles);
             }
         }
+        printf("\n");
 
-        //remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
-
-        // Chama recursivamente para a direita
     }
+}
+
+// rpz custoso melhora emilly do futuro
+void liberar_rubronegra_binaria(Informacao_VP *info)
+{
+
+    if (info)
+    {
+        if (info->palavras_ingles)
+        {
+            //  liberar_binaria(&(*raiz)->info->palavras_ingles);
+            info->palavras_ingles = NULL;
+        }
+        free(info);
+    }
+}
+
+void liberar_rubronegra(Rubronegra **raiz)
+{
+    if (*raiz)
+    {
+        liberar_rubronegra(&(*raiz)->esquerda);
+        liberar_rubronegra(&(*raiz)->direita);
+        liberar_rubronegra_binaria((*raiz)->info);
+    }
+    free(*raiz);
+    *raiz = NULL;
 }

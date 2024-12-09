@@ -25,6 +25,10 @@ int main()
 
     // buscar_palavra_portugues(raiz, "barramento");
 
+
+    // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+    //Imprimir_toda_palavras(raiz, "barramento");
+
     // liberar_rubronegra(&raiz);
     // if (raiz->info && raiz->info->palavras_ingles){
     //     libera_arvore_binaria(&raiz->info->palavras_ingles);

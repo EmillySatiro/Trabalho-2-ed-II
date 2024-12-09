@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ARV_BINARIA.h"
 
+
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
 {
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
@@ -20,6 +21,8 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
     return arvore;
 }
 
+
+// arrumar retornos 
 void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unidade){
     // Se a árvore estiver vazia, cria um novo nó
     if (*arvore == NULL){
@@ -68,17 +71,14 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
     mostrar_arvore_binaria_completa(arvore->esquerda);
 
     // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
-    printf("%s  ", arvore->palavra_ingles);
-    printf("  %d", arvore->unidade);
+    printf("%s ", arvore->palavra_ingles);
+    printf("%d ", arvore->unidade);
     printf("\n");
     // Exibe a subárvore direita
     mostrar_arvore_binaria_completa(arvore->direita);
     }
 
 }
-
-
-
 
 void libera_arvore_binaria(ARV_BINARIA **arvore)
 {
@@ -91,6 +91,7 @@ void libera_arvore_binaria(ARV_BINARIA **arvore)
     }
 }
 
+// arrumar esses mil retornos 
 ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles)
 {
     if (arvore == NULL)
@@ -127,6 +128,8 @@ int tem_dois_filhos(ARV_BINARIA *no){
     return (no->esquerda != NULL && no->direita != NULL);
 }
 
+
+//  arrumar esse tanto de retorno 
 int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles){
     if (*arvore == NULL){
         return 0;
@@ -169,4 +172,16 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles){
         
         }
     }
+}
+
+void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
+    if (*arvore != NULL) {
+        
+        remover_todas_palavras_por_unidade(&(*arvore)->esquerda, unidade);
+
+        remover_todas_palavras_por_unidade(&(*arvore)->direita, unidade);
+        if ((*arvore)->unidade == unidade) {
+            remover_no_binaria(arvore, (*arvore)->palavra_ingles);
+        }
+    } 
 }
