@@ -521,7 +521,7 @@ void remover_palavra_ingles_e_unidade(Rubronegra *raiz, char *palavra_ingles, in
     {
         // Chama recursivamente para a subárvore esquerda
         remover_palavra_ingles_e_unidade(raiz->esquerda, palavra_ingles, unidade);
-         remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
 
         // Verifica se o nó atual e a unidade são válidos antes de proceder
         if (raiz->info && raiz->info->unidade == unidade)
