@@ -6,6 +6,7 @@
 #include "../Binaria/ARV_BINARIA.h"
 
 
+// revise depois emilly do futuro 
 /**
  * @brief Aloca um novo nó para a árvore rubro-negra.
  *
@@ -19,35 +20,31 @@
  */
 Rubronegra *alocar_no(Informacao_VP *info){
     Rubronegra *no = (Rubronegra *)malloc(sizeof(Rubronegra)); 
-    if (no != NULL) {
+
+    if (no != NULL){
+
         no->info = (Informacao_VP *)malloc(sizeof(Informacao_VP));
-        if (no->info != NULL)
-        {
+
+        if (no->info != NULL){
+
             no->info->palavra_portugues = malloc(strlen(info->palavra_portugues) + 1);
-            if (no->info->palavra_portugues != NULL)
-            {
+            if (no->info->palavra_portugues != NULL){
                 strcpy(no->info->palavra_portugues, info->palavra_portugues);
-            }
-            else
-            {
+            }else{
                 printf("Erro ao alocar memória para 'palavra_portugues'!\n");
                 free(no->info);
                 free(no);
                 return NULL;
             }
-            no->info->unidade = info->unidade;
-            no->info->palavras_ingles = info->palavras_ingles;
-            no->cor = VERMELHO;
-            no->direita = NULL;
-            no->esquerda = NULL;
-        }
-        else
-        {
+                no->info->unidade = info->unidade;
+                no->info->palavras_ingles = info->palavras_ingles;
+                no->cor = VERMELHO;
+                no->direita = NULL;
+                no->esquerda = NULL;
+        }else{
             printf("Erro ao alocar memória para 'info'!\n");
         }
-    }
-    else
-    {
+    }else{
         printf("erro ao alocar memoria para nó !!\n");
         exit(1);
     }
@@ -70,32 +67,26 @@ Rubronegra *alocar_no(Informacao_VP *info){
 
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     Rubronegra *inserido = NULL;
-    if (*raiz == NULL)
-    {
+    if (*raiz == NULL){
         *raiz = alocar_no(info);
         inserido = *raiz;
     }
-    else
-    {
-        if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues) < 0)
-        {
-            // esquerda
+    else{
+        if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues) < 0){
+         
             inserido = inserir_rubro(&((*raiz)->esquerda), info);
         }
-        else if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues) > 0)
-        {
-            // direita
+        else if (strcmp(info->palavra_portugues, (*raiz)->info->palavra_portugues) > 0){
+         
             inserido = inserir_rubro(&((*raiz)->direita), info);
         }
-        else
-        {
+        else{
             insere_arvore_binaria(&((*raiz)->info->palavras_ingles), info->palavras_ingles->palavra_ingles, info->unidade);
             inserido = NULL;
         }
     }
 
-    if (inserido != NULL)
-    {
+    if (inserido != NULL){
         conferindo_regras(raiz);
     }
 
@@ -135,21 +126,15 @@ Rubronegra *conferindo_raiz(Rubronegra *raiz, Informacao_VP *info){
 void conferindo_regras(Rubronegra **raiz){
     if(*raiz != NULL){
 
-        // balencear se o filho da  e as esquerda preto direita for vermelho
-        if (Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->direita) == VERMELHO)
-        {
+        if (Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->direita) == VERMELHO){
             girar_esquerda(raiz);
         }
 
-        // balancear se o filho á esquerda e o neto são vermelhos
-        if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->esquerda->esquerda) == VERMELHO)
-        {
+        if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->esquerda->esquerda) == VERMELHO){
             girar_direita(raiz);
         }
-
-        // ver se os dois filhos são vermelhos
-        if (Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->direita) == VERMELHO)
-        {
+    
+        if (Qual_a_cor((*raiz)->esquerda) == VERMELHO && Qual_a_cor((*raiz)->direita) == VERMELHO){
             troca_cor(raiz);
         }
     }
@@ -184,7 +169,7 @@ int Qual_a_cor(Rubronegra *no) {
  */
 void troca_cor(Rubronegra **no){
     if(no != NULL){
-        (*no)->cor = !(*no)->cor; // inverte a cor 
+        (*no)->cor = !(*no)->cor; 
         if ((*no)->esquerda){
             (*no)->esquerda->cor= !(*no)->esquerda->cor; }
 
@@ -212,15 +197,13 @@ void girar_esquerda(Rubronegra **raiz){
     if(*raiz != NULL && (*raiz)->direita != NULL){
         Rubronegra *novo_no = (*raiz)->direita; 
         
-        // fiz a rotação aqui lek 
         (*raiz)->direita = novo_no->esquerda; 
         novo_no->esquerda = *raiz;
 
-        // ajustar cor
+     
         novo_no->cor = (*raiz)->cor;
         (*raiz)->cor = VERMELHO;
 
-        // atualiza a raiz
         *raiz = novo_no;
     }
 }
@@ -263,15 +246,13 @@ void girar_direita(Rubronegra **raiz){
     if(*raiz != NULL && (*raiz)->esquerda != NULL){
         Rubronegra *novo_no = (*raiz)->esquerda; 
 
-        // roda
         (*raiz)->esquerda = novo_no->direita;
         novo_no->direita = *raiz;
 
-        // troca cor
         novo_no->cor = (*raiz)->cor;
         (*raiz)->cor = VERMELHO;
 
-        // att raiz
+       
         *raiz = novo_no;
     }
 }
@@ -344,7 +325,7 @@ void remover_elemento_min(Rubronegra **raiz){
             if (Qual_a_cor((*raiz)->esquerda)  == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
                 move_esquerda(raiz);
             }
-            
+
             remover_elemento_min(&((*raiz)->esquerda));
 
         }
@@ -353,7 +334,6 @@ void remover_elemento_min(Rubronegra **raiz){
             conferindo_regras(raiz);
               
     }
-   
 
 }
 
@@ -375,44 +355,31 @@ int remover_no_rubro(Rubronegra **raiz, char *palavra){
             if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == PRETO && Qual_a_cor((*raiz)->esquerda->esquerda) == PRETO){
                 move_esquerda(raiz);
             }
-
             encontrado = remover_no_rubro(&((*raiz)->esquerda), palavra);
-        }
-        else
-        {
-            if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO)
-            {
+        }else{
+            if ((*raiz)->esquerda && Qual_a_cor((*raiz)->esquerda) == VERMELHO){
                 girar_direita(raiz);
             }
 
-            if (strcmp(palavra, (*raiz)->info->palavra_portugues) == 0 && (*raiz)->direita == NULL)
-            {
+            if (strcmp(palavra, (*raiz)->info->palavra_portugues) == 0 && (*raiz)->direita == NULL){
                 free(*raiz);
                 *raiz = NULL;
-            }
-            else
-            {
-                if ((*raiz)->direita && Qual_a_cor((*raiz)->direita) == PRETO && Qual_a_cor((*raiz)->direita->esquerda) == PRETO)
-                {
+            }else{
+                if ((*raiz)->direita && Qual_a_cor((*raiz)->direita) == PRETO && Qual_a_cor((*raiz)->direita->esquerda) == PRETO){
                     mover_direita(raiz);
                 }
 
-                if (strcmp(palavra, (*raiz)->info->palavra_portugues) == 0)
-                {
+                if (strcmp(palavra, (*raiz)->info->palavra_portugues) == 0){
                     encontrado = 1;
-                    Rubronegra *min = procurar_menor(&(*raiz)->direita); // aqui
+                    Rubronegra *min = procurar_menor(&(*raiz)->direita); 
                     (*raiz)->info = min->info;
                     remover_elemento_min(&((*raiz)->direita));
-                }
-                else
-                {
+                }else{
                     encontrado = remover_no_rubro(&((*raiz)->direita), palavra);
                 }
             }
         }
-
-        if (*raiz)
-        {
+        if (*raiz){
             conferindo_regras(raiz);
         }
     }
@@ -450,17 +417,13 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
 // mostrar informações tanto da rubro como da binaria de uma unidade especifica 
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
-    // Exibe a subárvore esquerda
-    mostrar_binaria_em_rubro(raiz->esquerda, unidade);
+        mostrar_binaria_em_rubro(raiz->esquerda, unidade);
 
-        // Se a unidade do nó corresponder à unidade fornecida, imprime a palavra
-        if (raiz->info->unidade == unidade)
-        {
+        if (raiz->info->unidade == unidade){
             mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
             printf("\n");
         }
 
-        // Exibe a subárvore direita
         mostrar_binaria_em_rubro(raiz->direita, unidade);
     }
 }
@@ -502,28 +465,26 @@ void mostrar_rubronegra(Rubronegra *raiz){
  */
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade) {
     Informacao_VP *info = malloc(sizeof(Informacao_VP));
-    if (info == NULL)
-    {
-        perror("Erro ao alocar memória");
-        exit(EXIT_FAILURE);
+
+    if (info != NULL){
+       
+        info->palavra_portugues = malloc(strlen(palavra_portugues) + 1);
+        if (info->palavra_portugues == NULL){
+            perror("Erro ao alocar memória para palavra_portugues");
+            exit(EXIT_FAILURE);
+        }
+        strcpy(info->palavra_portugues, palavra_portugues);
+
+        info->unidade = unidade;
+        info->palavras_ingles = NULL; 
+
+        
+        insere_arvore_binaria(&info->palavras_ingles, palavra_ingles, unidade);
+
+        return info;
     }
 
-    // Aloca memória para a palavra em português e copia a string
-    info->palavra_portugues = malloc(strlen(palavra_portugues) + 1);
-    if (info->palavra_portugues == NULL)
-    {
-        perror("Erro ao alocar memória para palavra_portugues");
-        exit(EXIT_FAILURE);
-    }
-    strcpy(info->palavra_portugues, palavra_portugues);
-
-    info->unidade = unidade;
-    info->palavras_ingles = NULL; // Inicializa a árvore binária como vazia
-
-    // Insere a palavra em inglês na árvore binária
-    insere_arvore_binaria(&info->palavras_ingles, palavra_ingles, unidade);
-
-    return info;
+    
 }
 
 /**
@@ -539,8 +500,7 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
-        if (raiz->info->unidade == unidade)
-        {
+        if (raiz->info->unidade == unidade){
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
             mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
@@ -548,8 +508,8 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
         }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
     }
-}
 
+}
 
 /**
  * @brief Imprime todas as palavras equivalentes em inglês para uma palavra em português específica na árvore rubro-negra.
@@ -563,21 +523,14 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
  */
 void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
     if(raiz != NULL){
-        
-    int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues); 
-
-        if (comparacao < 0)
-        {
-            // ela ta subárvore a esquerda
+        int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues); 
+        if (comparacao < 0){
             Imprimir_toda_palavras(raiz->esquerda, palavra_portugues);
         }
-        else if (comparacao > 0)
-        {
+        else if (comparacao > 0){
             Imprimir_toda_palavras(raiz->direita, palavra_portugues);
         }
-        else
-        {
-            // Palavra encontrada, exibe as palavras em inglês da árvore binária
+        else{
             printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em inglês equivalentes:\n");
             mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
@@ -599,27 +552,22 @@ void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
 Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues) {
     Rubronegra *resultado = NULL;
 
-    if (raiz != NULL)
-    {
+    if (raiz != NULL){
         int comparacao = strcmp(palavra_portugues, raiz->info->palavra_portugues);
 
-        if (comparacao == 0)
-        {
+        if (comparacao == 0){
             resultado = raiz;
         }
-        else if (comparacao < 0)
-        {
+        else if (comparacao < 0){
             resultado = buscar_palavra_rubro_negra(raiz->esquerda, palavra_portugues);
         }
-        else
-        {
+        else{
             resultado = buscar_palavra_rubro_negra(raiz->direita, palavra_portugues);
         }
     }
 
     return resultado;
 }
-
 
 /**
  * @brief Remove uma palavra completa da árvore rubro-negra.
@@ -634,40 +582,31 @@ Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues
  * @return int Retorna 1 se a remoção foi bem-sucedida, 0 caso contrário.
  */
 int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int unidade) {
-    int confere = 0; // Indicador de sucesso
 
+    int confere = 0; 
     Rubronegra *no = buscar_palavra_rubro_negra(*raiz, palavra_portugues);
 
-    if (no != NULL)
-    {
+    if (no != NULL){
 
         remover_todas_palavras_por_unidade(&(no->info->palavras_ingles), unidade);
 
-        if (no->info->palavras_ingles == NULL)
-        {
-
+        if (no->info->palavras_ingles == NULL){
             remover_na_arvore(raiz, palavra_portugues);
-
             printf("A palavra '%s' foi removida da árvore rubro-negra e da árvore binária.\n", palavra_portugues);
-        }
-        else
-        {
+        }else{
             printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
         }
 
-        confere = 1; // Indica que a remoção foi bem-sucedida
-    }
-    else
-    {
+        confere = 1; 
+    }else{
         printf("A palavra '%s' não foi encontrada ou a unidade não corresponde.\n", palavra_portugues);
     }
 
-    return confere; // Retorna 1 se a remoção foi bem-sucedida, 0 caso contrário
+    return confere; 
 }
 
 // rpz custoso melhora emilly do futuro
-void liberar_rubronegra_binaria(Informacao_VP *info)
-{
+void liberar_rubronegra_binaria(Informacao_VP *info){
 
     if (info)
     {
@@ -680,10 +619,8 @@ void liberar_rubronegra_binaria(Informacao_VP *info)
     }
 }
 
-void liberar_rubronegra(Rubronegra **raiz)
-{
-    if (*raiz)
-    {
+void liberar_rubronegra(Rubronegra **raiz){
+    if (*raiz){
         liberar_rubronegra(&(*raiz)->esquerda);
         liberar_rubronegra(&(*raiz)->direita);
         // liberar_rubronegra_binaria((*raiz)->info);
@@ -692,44 +629,39 @@ void liberar_rubronegra(Rubronegra **raiz)
     *raiz = NULL;
 }
 
-// informar uma palavra em inglês e e a unidade a qual a mesma pertence remove-la das árvores binárias
-// das quais ela pertence. Caso ela seja a única palavra em uma das árvores binárias, remover também da 
-// rubro negra
-void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade)
-{
-    if (*raiz == NULL)
-    {
-        return; // Árvore vazia, nada a remover
-    }
+/**
+ * @brief Remove uma palavra em inglês e sua unidade correspondente da árvore Rubro-Negra.
+ *
+ * Esta função percorre a árvore Rubro-Negra em profundidade e remove a palavra em inglês
+ * e sua unidade correspondente, se encontradas. Se a árvore binária associada ao nó
+ * ficar vazia após a remoção, o nó da árvore Rubro-Negra também é removido.
+ *
+ * @param raiz Ponteiro para a raiz da árvore Rubro-Negra.
+ * @param palavra_ingles Palavra em inglês a ser removida.
+ * @param unidade Unidade correspondente à palavra em inglês a ser removida.
+ */
+void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade){
+    if (*raiz != NULL){
+        
+        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
 
-    // Travessia em profundidade
-    remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-    remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
+   
+        if ((*raiz)->info && (*raiz)->info->unidade == unidade){
+        
+            remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
-    // Verifica se o nó atual tem palavras e unidade correspondente
-    if ((*raiz)->info && (*raiz)->info->unidade == unidade)
-    {
-        // Remove a palavra da árvore binária associada
-        remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
+            if ((*raiz)->info->palavras_ingles == NULL){
+                char palavra_portugues[100];
+                strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
 
-        // Verifica se a árvore binária ficou vazia após a remoção
-        if ((*raiz)->info->palavras_ingles == NULL)
-        {
-            // Captura a palavra em português antes de remover
-            char palavra_portugues[100];
-            strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
-
-            // Remove o nó da árvore Rubro-Negra
-            int sucesso = remover_na_arvore(raiz, palavra_portugues);
-            if (sucesso)
-            {
-
-                printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
-            }
-        }
-        else
-        {
+                int sucesso = remover_na_arvore(raiz, palavra_portugues);
+                    if (sucesso){
+                        printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
+                    }
+            }else{
             printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+           }
         }
-    }
+    } 
 }
