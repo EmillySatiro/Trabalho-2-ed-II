@@ -1,14 +1,14 @@
 % Unidade 1
     Bus: ônibus, barramento;
-    Bug: inseto, problema; 
+    Bug: inseto, problema;
     Bike: bicicleta;
     Coller: ventilador;
     Network: rede de computadores;
     System: sistema;
 % Unidade 2
-    Byeye: barramento; 
-    Bug: inseto; 
+    Byeye: barramento;
+    Bug: inseto;
     Bicycle: bicicleta;
-    Fan: ventilador; 
+    Fan: ventilador;
     ablublu: ola;
-    Network: rede de relacionamento; 
+    Network: rede de relacionamento;

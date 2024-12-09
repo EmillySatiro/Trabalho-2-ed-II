@@ -55,7 +55,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
         {
             if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
             {
-                 //printf("Unidade: %d\n", unidade);
+                //printf("Unidade: %d\n", unidade);
             }
         }
         else
