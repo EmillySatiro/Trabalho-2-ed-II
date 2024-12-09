@@ -15,12 +15,14 @@ int main()
 
     // printf("=============Palavras em portugues=============\n");
 
-    mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+    // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+    mostrar_rubronegra(raiz);
 
     printf("============================================================\n");
-    remover_palavra_ingles_e_unidade(raiz,"Bug", 1);
+    remover_palavra_ingles_e_unidade(&raiz,"Bug", 1);
+    mostrar_rubronegra(raiz);
 
-    mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
+    // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
     // buscar_palavra_portugues(raiz, "barramento");
 
     // buscar_palavra_portugues(raiz, "barramento");

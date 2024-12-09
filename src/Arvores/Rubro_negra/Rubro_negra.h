@@ -85,12 +85,12 @@ void remover_elemento_min(Rubronegra **raiz);
 int remover_no_rubro(Rubronegra **raiz, char *palavra);
 int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_rubronegra(Rubronegra *raiz);
-//void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info);
+void inserir_binaria_em_rubro(Rubronegra **raiz, Informacao_VP *info);
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade);
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
 void buscar_palavra_portugues(Rubronegra *raiz, char *palavra_portugues);
-void remover_palavra_ingles_e_unidade(Rubronegra *raiz, char *palavra_ingles, int unidade);
+void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade);
 
 
 #endif 
