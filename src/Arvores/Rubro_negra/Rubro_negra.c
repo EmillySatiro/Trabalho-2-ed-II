@@ -228,7 +228,7 @@ void remover_elemento_min(Rubronegra **raiz)
     {
         if ((*raiz)->esquerda == NULL)
         {
-            free(*raiz);
+            free(raiz);
             *raiz = NULL;
         }
         else
@@ -520,7 +520,8 @@ void remover_palavra_ingles_e_unidade(Rubronegra *raiz, char *palavra_ingles, in
     if (raiz)
     {
         // Chama recursivamente para a subárvore esquerda
-        remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade(raiz->esquerda, palavra_ingles, unidade);
+         remover_palavra_ingles_e_unidade(raiz->direita, palavra_ingles, unidade);
 
         // Verifica se o nó atual e a unidade são válidos antes de proceder
         if (raiz->info && raiz->info->unidade == unidade)
