@@ -70,6 +70,8 @@ Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues
 
 int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int unidade);
 
+void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade);
+
 // rpz custoso melhora emilly do futuro 
 void liberar_rubronegra_binaria(Informacao_VP *info);
 

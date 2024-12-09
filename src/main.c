@@ -20,6 +20,7 @@ int main()
 
     mostrar_rubronegra(raiz);
     remover_palavra_completa(&raiz, "ventilador", 2);
+    //remover_palavra_ingles_e_unidade(&raiz,"Bug",1);
     mostrar_rubronegra(raiz);
 
     // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
