@@ -25,8 +25,8 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
         arvore->unidade = unidade;
         arvore->esquerda = NULL;
         arvore->direita = NULL;
-        return arvore;
     }
+        return arvore;
 }
 
 
@@ -110,7 +110,7 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
  * @param arvore Ponteiro duplo para a árvore binária a ser liberada.
  */
 void libera_arvore_binaria(ARV_BINARIA **arvore){
-    if (*arvore != NULL){
+    if (*arvore){
         libera_arvore_binaria(&(*arvore)->esquerda);
         libera_arvore_binaria(&(*arvore)->direita);
         free(*arvore);
@@ -231,8 +231,8 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
                 resultado = remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles);
             }
         }
-        return resultado;
     }
+        return resultado;
     
 }
 

@@ -1,8 +1,8 @@
 #ifndef EXTRAIR_H
 #define EXTRAIR_H
 
-#include "Arvores/Arvore_2_3/ARV2_3.h"
+#include "../ARV2_3.h"
 
-void processar_arquivo(char *nome_txt, ARV2_3 **arvore2_3);
-
+ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz);
+char *trim_23(char *str);
 #endif

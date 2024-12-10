@@ -1,76 +1,65 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../../Binaria/ARV_BINARIA.h"
 #include "../../Arvore_2_3/ARV2_3.h"
+#include "../../Rubro_negra/Rubro_negra.h"
+
 
 #define Tamanho_linha 1024
+char *trim_23(char *str) {
+    if (str == NULL) return str;  // Garantir que o ponteiro não seja nulo
 
-// Função para processar o arquivo e inserir palavras na árvore 2-3
-void processar_arquivo(char *nome_txt, ARV2_3 **arvore2_3) {
-    FILE *arquivo = fopen(nome_txt, "r");
-    if (arquivo == NULL) {
-        printf("Erro ao abrir arquivo\n");
-        exit(1);
+    // Remove espaços do início
+    while (*str && (isspace((unsigned char)*str) || *str == '\t')) {
+        str++;
+    }
+
+    // Se a string for esvaziada, retorne diretamente
+    if (*str == '\0') {
+        return str;
+    }
+
+    // Remove espaços do final
+    char *end = str + strlen(str) - 1;
+    while (end > str && (isspace((unsigned char)*end) || *end == '\t')) {
+        end--;
+    }
+    *(end + 1) = '\0';  // Finaliza a string corretamente
+
+    return str;
+}
+
+ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz){
+  
+    FILE *arquivo = fopen("Dicionario.txt", "r");
+    if (!arquivo){
+        perror("Erro ao abrir o arquivo");
+        exit(EXIT_FAILURE);
     }
 
     char linha[Tamanho_linha];
-    int unidade_atual = -1;
+    int unidade;
+ 
 
-    while (fgets(linha, Tamanho_linha, arquivo)) {
-        // Arrumar a tabulação e espaços
-        char *linha_limpa = linha;
-        while (*linha_limpa == ' ' || *linha_limpa == '\t') linha_limpa++;
+    while (fgets(linha, sizeof(linha), arquivo)){
+        linha[strcspn(linha, "\n")] = '\0';
 
-        // Remover o caractere de nova linha
-        linha_limpa[strcspn(linha_limpa, "\n")] = '\0';
-
-        // Verificar se temos a marcação da unidade
-        if (strncmp(linha_limpa, "% Unidade", 9) == 0) {
-            unidade_atual = atoi(linha_limpa + 10); // Atualiza a unidade
-        } else if (unidade_atual != -1 && strlen(linha_limpa) > 0) {
-            // Se a unidade for válida e a linha não for vazia
-
-            // Separar o inglês da tradução
-            char *palavra_ingles = strtok(linha_limpa, ":");
-            char *traducoes = strtok(NULL, ":");
-
-            // Verificar se a palavra em inglês e a tradução existem
-            if (palavra_ingles && traducoes) {
-                Informacao Info;
-
-                // Criar um nó da árvore binária para a palavra em inglês
-                ARV_BINARIA *no_palavra_ingles = cria_arvore_binaria(palavra_ingles, 0);  // Aqui você pode passar a unidade ou outra informação, dependendo do seu caso
-                if (no_palavra_ingles == NULL) {
-                    printf("Erro ao criar árvore binária para a palavra: %s\n", palavra_ingles);
-                    continue; // Ignorar essa palavra e continuar com o próximo item
-                }
-
-                // Armazenar o nó binário na estrutura Informacao
-                Info.palavra_ingles = no_palavra_ingles;
-
-                // Copiar a tradução para português
-                if (traducoes) {
-                    strncpy(Info.palavra_portugues, traducoes, sizeof(Info.palavra_portugues) - 1);
-                    Info.palavra_portugues[sizeof(Info.palavra_portugues) - 1] = '\0';
-                } else {
-                    printf("Erro: tradução não encontrada para a palavra: %s\n", palavra_ingles);
-                    continue;
-                }
-
-                // Atribuir a unidade
-                Info.unidade = unidade_atual;
-
-                // Inserir na árvore 2-3
-                if (*arvore2_3 == NULL) {
-                    printf("Erro: árvore 2-3 não inicializada corretamente.\n");
-                    continue; // Evitar inserir em árvore nula
-                }
-
-                insere(arvore2_3, Info);
+        if (strstr(linha, "Unidade")){
+            if (sscanf(linha, "%% Unidade %d", &unidade) == 1){
+                //printf("Unidade: %d\n", unidade);
             }
+        }else{
+            char *palavra_portugues = strtok(linha, ":");
+            char *palavra_ingles = strtok(NULL, ":");
+
+            Informacao info = criar_info(palavra_portugues, palavra_ingles, unidade);
+            insere(raiz, info);
         }
     }
+    return *raiz;
 
-    fclose(arquivo); // Fechar o arquivo
+    fclose(arquivo);
 }
+// Função para processar o arquivo e inserir palavras na árvore 2-3

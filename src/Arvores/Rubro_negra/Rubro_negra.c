@@ -481,9 +481,9 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
         
         insere_arvore_binaria(&info->palavras_ingles, palavra_ingles, unidade);
 
-        return info;
     }
 
+        return info;
     
 }
 

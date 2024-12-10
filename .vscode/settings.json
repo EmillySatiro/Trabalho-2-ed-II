@@ -10,6 +10,10 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "utils.h": "c",
-        "arv_2_3.h": "c"
+        "arv_2_3.h": "c",
+        "rubro_negra.h": "c",
+        "extrair_rubro.h": "c",
+        "extrair.h": "c",
+        "arv_binaria.h": "c"
     }
 }

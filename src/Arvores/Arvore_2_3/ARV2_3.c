@@ -3,6 +3,8 @@
 #include <string.h>
 #include "ARV2_3.h"
 #include "../Binaria/ARV_BINARIA.h"
+#include "../Rubro_negra/Rubro_negra.h"
+
 
 ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
 {
@@ -138,7 +140,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                 else
                 {
                     maior = quebra_No(no, *sobe, &sobe_sup, &maior);
-                    if (*pai)
+                    if (pai)
                     {
                         *no = criar_no(sobe_sup, *no, maior);
                         maior = NULL; // limpar maior após criar o nó
