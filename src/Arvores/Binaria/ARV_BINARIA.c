@@ -16,7 +16,6 @@
  *
  * @note A função imprime uma mensagem de erro e termina o programa se a alocação de memória falhar.
  */
-
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
 
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
@@ -31,8 +30,6 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
     }
     return arvore;
 }
-
-
 
 /**
  * @brief Insere uma nova palavra na árvore binária.
@@ -186,8 +183,6 @@ int tem_dois_filhos(ARV_BINARIA *no){
     return (no->esquerda != NULL && no->direita != NULL);
 }
 
-
-
 /**
  * @brief Remove um nó de uma árvore binária de busca com base na palavra em inglês fornecida.
  *
@@ -239,7 +234,6 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
     return resultado;
     
 }
-
 
 /**
  * @brief Remove todas as palavras da árvore binária que correspondem à unidade fornecida.

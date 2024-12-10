@@ -1,6 +1,6 @@
 % Unidade 1
     Bus: ônibus, barramento;
-    Bug: inseto, problema;
+    Bug: problema;
     Bike: bicicleta;
     Coller: ventilador;
     Network: rede de computadores;

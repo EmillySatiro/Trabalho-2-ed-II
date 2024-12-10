@@ -414,7 +414,6 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
  * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
  * @param unidade Unidade específica cujas informações devem ser exibidas.
  */
-// mostrar informações tanto da rubro como da binaria de uma unidade especifica 
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
         mostrar_binaria_em_rubro(raiz->esquerda, unidade);
@@ -440,10 +439,10 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
 void mostrar_rubronegra(Rubronegra *raiz){
     if(raiz){
         mostrar_rubronegra(raiz->esquerda);
+        printf("\n");
         printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
         printf("Unidade: %d\n", raiz->info->unidade);
         printf("Arvore binaria da palavra(palavras em ingles): \n");
-        printf("\n");
         mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
         mostrar_rubronegra(raiz->direita);
     }
@@ -503,6 +502,7 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
             mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+            //mostrar_binaria_em_rubro(raiz, unidade);provavelmnte tem que ser essa 
             printf("\n");
         }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
@@ -663,4 +663,9 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
            }
         }
     } 
+}
+
+void limparBuffer(){
+    scanf("%*[^\n]"); 
+    getchar();        
 }

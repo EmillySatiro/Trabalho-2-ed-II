@@ -9,36 +9,32 @@
 #include <ctype.h>
 
 char *trim(char *str) {
-    if (str == NULL) return str;  // Garantir que o ponteiro não seja nulo
+    if (str == NULL) return str; 
 
-    // Remove espaços do início
+   
     while (*str && (isspace((unsigned char)*str) || *str == '\t')) {
         str++;
     }
 
-    // Se a string for esvaziada, retorne diretamente
+   
     if (*str == '\0') {
         return str;
     }
 
-    // Remove espaços do final
+    
     char *end = str + strlen(str) - 1;
     while (end > str && (isspace((unsigned char)*end) || *end == '\t')) {
         end--;
     }
-    *(end + 1) = '\0';  // Finaliza a string corretamente
-
+    *(end + 1) = '\0';  
     return str;
 }
 
 
-Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
-{
-    //printf("Entrou\n");
+Rubronegra *pegar_dados_arquivo(Rubronegra **arvore){
 
     FILE *arquivo = fopen("Dicionario.txt", "r");
-    if (!arquivo)
-    {
+    if (!arquivo){
         perror("Erro ao abrir o arquivo");
             exit(EXIT_FAILURE);
     }
@@ -53,8 +49,7 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
 
         if (strstr(linha, "Unidade"))
         {
-            if (sscanf(linha, "%% Unidade %d", &unidade) == 1)
-            {
+            if (sscanf(linha, "%% Unidade %d", &unidade) == 1){
                 //printf("Unidade: %d\n", unidade);
             }
         }
@@ -80,9 +75,9 @@ Rubronegra *pegar_dados_arquivo(Rubronegra **arvore)
                 }
             }
         }
-    }
+    } printf("Palavras extraidas do arquivo com sucesso!!\n");
 
     return *arvore;
-
+   
     fclose(arquivo);
 }

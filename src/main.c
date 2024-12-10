@@ -18,7 +18,6 @@ int main()
     // printf("=============Palavras em portugues=============\n");
 
     // mostrar_palavras_em_portugues_de_uma_unidade(raiz, 1);
-    libera_arvore_binaria(&raiz->info1.palavra_ingles);
-    liberar_arv2_3(raiz);
+ 
     return 0;
 }

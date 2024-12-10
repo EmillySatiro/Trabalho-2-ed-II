@@ -46,6 +46,6 @@ int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int uni
 void liberar_rubronegra_binaria(Informacao_VP *info);
 void liberar_rubronegra(Rubronegra **raiz);
 void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade);
-
+void limparBuffer();
 
 #endif 
