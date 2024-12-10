@@ -16,7 +16,9 @@
  *
  * @note A função imprime uma mensagem de erro e termina o programa se a alocação de memória falhar.
  */
+
 ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
+
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
     if (arvore != NULL){
         strncpy(arvore->palavra_ingles, palavra_ingles, sizeof(arvore->palavra_ingles) -1);
@@ -25,8 +27,9 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
         arvore->unidade = unidade;
         arvore->esquerda = NULL;
         arvore->direita = NULL;
+       
     }
-        return arvore;
+    return arvore;
 }
 
 
@@ -231,8 +234,9 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
                 resultado = remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles);
             }
         }
+        
     }
-        return resultado;
+    return resultado;
     
 }
 
