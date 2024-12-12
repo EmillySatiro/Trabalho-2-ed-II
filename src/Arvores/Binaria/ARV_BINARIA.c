@@ -223,7 +223,7 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
             resultado = remover_no_binaria(&(*arvore)->direita, palavra_ingles); 
 
         } else {
-            remover_unidade_na_lista(&(*arvore)->unidade, (*arvore)->unidade->unidade); 
+           remover_lista_unidade(&(*arvore)->unidade, (*arvore)->unidade->unidade); 
         
             if (eh_folha__binaria(*arvore)){
                 free(*arvore);
