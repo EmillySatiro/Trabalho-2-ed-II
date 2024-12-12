@@ -26,6 +26,7 @@ int main() {
         printf("==================================\n");
         printf("Escolha uma opção: ");
         scanf("%d", &opcao);
+        limparBuffer();
 
     
 

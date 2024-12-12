@@ -99,7 +99,7 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore) {
         
         lista_unidade *temp = arvore->unidade;
         while (temp != NULL) {
-            printf("%d ", temp->unidade);
+            printf("%d| ", temp->unidade);
             temp = temp->proximo;
         }
         printf("\n");
@@ -295,7 +295,6 @@ void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int
         }
     }
 }
-
 
 void inserir_lista_unidade(lista_unidade **lista, int unidade) {
     if (*lista == NULL) {
