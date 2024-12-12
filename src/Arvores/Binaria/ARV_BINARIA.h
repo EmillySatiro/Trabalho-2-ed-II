@@ -25,5 +25,6 @@ int tem_dois_filhos(ARV_BINARIA *no);
 ARV_BINARIA *buscar_palavra(ARV_BINARIA *arvore, char *palavra_ingles);
 void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade);
 void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade);
+void inserir_lista_unidade(lista_unidade **lista, int unidade);
 
 #endif

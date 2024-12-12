@@ -23,7 +23,8 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
         strncpy(arvore->palavra_ingles, palavra_ingles, sizeof(arvore->palavra_ingles) -1);
         arvore->palavra_ingles[sizeof(arvore->palavra_ingles) - 1] = '\0';
 
-        arvore->unidade->unidade  = unidade;
+        arvore->unidade = NULL;
+        inserir_lista_unidade(&(arvore->unidade), unidade); 
         arvore->esquerda = NULL;
         arvore->direita = NULL;
        
@@ -52,6 +53,9 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
         }
         else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0){
             insere_arvore_binaria(&(*arvore)->direita, palavra_ingles, unidade);
+        } else {
+           
+            inserir_lista_unidade(&(*arvore)->unidade, unidade);
         }
     }
 }
@@ -65,17 +69,21 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
  * @param arvore Ponteiro para a árvore binária (ARV_BINARIA) a ser exibida.
  * @param unidade Unidade a ser comparada com a unidade dos nós da árvore.
  */
-void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
-{
-    if (arvore != NULL){
+void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade) {
+    if (arvore != NULL) {
         mostrar_arvore_binaria(arvore->esquerda, unidade);
-        if (arvore->unidade->unidade == unidade){
-            printf("%s \n ", arvore->palavra_ingles);
+        
+        lista_unidade *temp = arvore->unidade;
+        while (temp != NULL) {
+            if (temp->unidade == unidade) {
+                printf("%s \n", arvore->palavra_ingles);  
+            }
+            temp = temp->proximo;
         }
         mostrar_arvore_binaria(arvore->direita, unidade);
     }
-
 }
+
 
 /**
  * @brief Exibe a árvore binária completa em ordem.
@@ -85,19 +93,26 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
  *
  * @param arvore Ponteiro para a raiz da árvore binária.
  */
-void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
-{
-    if (arvore != NULL){
-
-        mostrar_arvore_binaria_completa(arvore->esquerda);
-
-        printf("%s ", arvore->palavra_ingles);
-        printf("%d ", arvore->unidade->unidade);
+void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore) {
+    if (arvore != NULL) {
+        printf("Palavra: %s\nUnidades: ", arvore->palavra_ingles);
+        
+        lista_unidade *temp = arvore->unidade;
+        while (temp != NULL) {
+            printf("%d ", temp->unidade);
+            temp = temp->proximo;
+        }
         printf("\n");
-    
-        mostrar_arvore_binaria_completa(arvore->direita);
-    }
 
+        if (arvore->esquerda != NULL || arvore->direita != NULL) {
+            if (arvore->esquerda != NULL) {
+                mostrar_arvore_binaria_completa(arvore->esquerda); 
+            }
+            if (arvore->direita != NULL) {
+                mostrar_arvore_binaria_completa(arvore->direita);  
+            }
+        }
+    }
 }
 
 /**
@@ -281,3 +296,45 @@ void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int
     }
 }
 
+
+void inserir_lista_unidade(lista_unidade **lista, int unidade) {
+    if (*lista == NULL) {
+        *lista = (lista_unidade *)malloc(sizeof(lista_unidade));
+        if (*lista == NULL) {
+            printf("Erro ao alocar memória para nova unidade.\n");
+        } else {
+            (*lista)->unidade = unidade;
+            (*lista)->proximo = NULL;
+        }
+    } else {
+        lista_unidade *temp = *lista;
+        int unidade_existe = 0; 
+
+       
+        while (temp != NULL) {
+            if (temp->unidade == unidade) {
+                unidade_existe = 1; 
+            }
+            temp = temp->proximo;
+        }
+
+        if (!unidade_existe) {
+           
+            temp = *lista;
+            while (temp->proximo != NULL) {
+                temp = temp->proximo;
+            }
+
+            temp->proximo = (lista_unidade *)malloc(sizeof(lista_unidade));
+            if (temp->proximo == NULL) {
+                printf("Erro ao alocar memória para nova unidade.\n");
+            } else {
+                temp = temp->proximo;
+                temp->unidade = unidade;
+                temp->proximo = NULL;
+            }
+        } else {
+            printf("Unidade já existente na lista.\n");
+        }
+    }
+}
