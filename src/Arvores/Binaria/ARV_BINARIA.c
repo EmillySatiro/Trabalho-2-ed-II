@@ -84,7 +84,6 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade) {
     }
 }
 
-
 /**
  * @brief Exibe a árvore binária completa em ordem.
  *
@@ -224,7 +223,8 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
             resultado = remover_no_binaria(&(*arvore)->direita, palavra_ingles); 
 
         } else {
-
+            remover_unidade_na_lista(&(*arvore)->unidade, (*arvore)->unidade->unidade); 
+        
             if (eh_folha__binaria(*arvore)){
                 free(*arvore);
                 *arvore = NULL;
@@ -334,6 +334,33 @@ void inserir_lista_unidade(lista_unidade **lista, int unidade) {
             }
         } else {
             printf("Unidade já existente na lista.\n");
+        }
+    }
+}
+
+void remover_lista_unidade(lista_unidade **lista, int unidade) {
+    if (*lista == NULL) {
+        printf("A lista está vazia.\n");
+    } else {
+        lista_unidade *temp = *lista;
+        lista_unidade *anterior = NULL;
+
+      
+        if (temp != NULL && temp->unidade == unidade) {
+            *lista = temp->proximo; 
+            free(temp);
+        } else {
+            while (temp != NULL && temp->unidade != unidade) {
+                anterior = temp;
+                temp = temp->proximo;
+            }
+
+            if (temp == NULL) {
+                printf("Unidade %d não encontrada na lista.\n", unidade);
+            } else {
+                anterior->proximo = temp->proximo;
+                free(temp); 
+            }
         }
     }
 }
