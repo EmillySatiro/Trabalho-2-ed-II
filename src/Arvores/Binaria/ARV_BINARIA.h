@@ -1,9 +1,14 @@
 #ifndef ARV_BINARIA_H
 #define ARV_BINARIA_H
 
+typedef struct lista_unidade{
+   int unidade;
+   lista_unidade *proximo;
+}lista_unidade;
+
 typedef struct ARV_BINARIA{
     char palavra_ingles[100];
-    int unidade; 
+    lista_unidade *unidade; 
     struct ARV_BINARIA *esquerda; 
     struct ARV_BINARIA *direita; 
 }ARV_BINARIA;
