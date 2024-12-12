@@ -501,7 +501,7 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
         if (raiz->info->unidade == unidade){
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
-            mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+            mostrar_binaria_em_rubro(raiz, unidade);
             //mostrar_binaria_em_rubro(raiz, unidade);provavelmnte tem que ser essa 
             printf("\n");
         }
