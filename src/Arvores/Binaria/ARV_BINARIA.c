@@ -23,7 +23,7 @@ ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
         strncpy(arvore->palavra_ingles, palavra_ingles, sizeof(arvore->palavra_ingles) -1);
         arvore->palavra_ingles[sizeof(arvore->palavra_ingles) - 1] = '\0';
 
-        arvore->unidade = unidade;
+        arvore->unidade->unidade  = unidade;
         arvore->esquerda = NULL;
         arvore->direita = NULL;
        
@@ -69,7 +69,7 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
 {
     if (arvore != NULL){
         mostrar_arvore_binaria(arvore->esquerda, unidade);
-        if (arvore->unidade == unidade){
+        if (arvore->unidade->unidade == unidade){
             printf("%s \n ", arvore->palavra_ingles);
         }
         mostrar_arvore_binaria(arvore->direita, unidade);
@@ -92,7 +92,7 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
         mostrar_arvore_binaria_completa(arvore->esquerda);
 
         printf("%s ", arvore->palavra_ingles);
-        printf("%d ", arvore->unidade);
+        printf("%d ", arvore->unidade->unidade);
         printf("\n");
     
         mostrar_arvore_binaria_completa(arvore->direita);
@@ -252,7 +252,7 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
         remover_todas_palavras_por_unidade(&(*arvore)->esquerda, unidade);
         remover_todas_palavras_por_unidade(&(*arvore)->direita, unidade);
 
-        if ((*arvore)->unidade == unidade) {
+        if ((*arvore)->unidade->unidade == unidade) {
             remover_no_binaria(arvore, (*arvore)->palavra_ingles);
         }
     } 
@@ -274,7 +274,7 @@ void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int
         remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
         remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
 
-        if ((*arvore)->unidade == unidade) {
+        if ((*arvore)->unidade->unidade == unidade) {
         
             remover_no_binaria(arvore, palavra_ingles);
         }

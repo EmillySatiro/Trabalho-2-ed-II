@@ -3,7 +3,7 @@
 
 typedef struct lista_unidade{
    int unidade;
-   lista_unidade *proximo;
+   struct lista_unidade *proximo;
 }lista_unidade;
 
 typedef struct ARV_BINARIA{
