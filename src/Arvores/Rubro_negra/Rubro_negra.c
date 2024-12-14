@@ -598,30 +598,6 @@ int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int uni
     return confere; 
 }
 
-// rpz custoso melhora emilly do futuro
-void liberar_rubronegra_binaria(Informacao_VP *info){
-
-    if (info)
-    {
-        if (info->palavras_ingles)
-        {
-            //  liberar_binaria(&(*raiz)->info->palavras_ingles);
-            info->palavras_ingles = NULL;
-        }
-        free(info);
-    }
-}
-
-void liberar_rubronegra(Rubronegra **raiz){
-    if (*raiz){
-        liberar_rubronegra(&(*raiz)->esquerda);
-        liberar_rubronegra(&(*raiz)->direita);
-        // liberar_rubronegra_binaria((*raiz)->info);
-    }
-    free(*raiz);
-    *raiz = NULL;
-}
-
 /**
  * @brief Remove uma palavra em inglês e sua unidade correspondente da árvore Rubro-Negra.
  *
@@ -672,4 +648,29 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
 void limparBuffer(){
     scanf("%*[^\n]"); 
     getchar();        
+}
+
+
+void liberar_rubronegra_binaria(Informacao_VP *info) {
+    if (info) {
+        if (info->palavras_ingles) {
+            libera_arvore_binaria(&info->palavras_ingles);
+            info->palavras_ingles = NULL;
+        }
+        free(info);
+    }
+}
+
+void liberar_rubronegra(Rubronegra **raiz) {
+    if (*raiz) {
+       
+        liberar_rubronegra(&(*raiz)->esquerda);
+        liberar_rubronegra(&(*raiz)->direita);
+        if ((*raiz)->info) {
+            liberar_rubronegra_binaria((*raiz)->info);
+        }
+
+        free(*raiz);
+        *raiz = NULL;
+    }
 }

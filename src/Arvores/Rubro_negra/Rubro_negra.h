@@ -4,7 +4,7 @@
 
 #define VERMELHO 1 
 #define PRETO 0
-//informação do nó
+
 typedef struct Informacao_VP{
     char *palavra_portugues;
     int unidade; 
@@ -16,8 +16,6 @@ typedef struct Rubronegra{
     int cor; 
     struct Rubronegra *direita; 
     struct Rubronegra *esquerda; 
-
-    
 }Rubronegra;
 
 

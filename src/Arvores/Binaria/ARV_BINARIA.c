@@ -122,21 +122,26 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore) {
 }
 
 /**
- * @brief Libera a memória alocada para uma árvore binária.
+ * @brief Libera a memória alocada para uma árvore binária e suas listas de unidades.
  *
- * Esta função percorre a árvore binária de forma recursiva e libera a memória
- * alocada para cada nó, garantindo que o ponteiro para o nó liberado seja
- * definido como NULL.
+ * Esta função percorre a árvore binária de forma recursiva, liberando a memória alocada
+ * para cada nó, bem como a memória das listas de unidades associadas a cada nó.
  *
  * @param arvore Ponteiro duplo para a árvore binária a ser liberada.
  */
-void libera_arvore_binaria(ARV_BINARIA **arvore){
-    if (*arvore){
+void libera_arvore_binaria(ARV_BINARIA **arvore) {
+    if (*arvore) {
+        
+        libera_lista_unidade(&(*arvore)->unidade);
+        
+       
         libera_arvore_binaria(&(*arvore)->esquerda);
         libera_arvore_binaria(&(*arvore)->direita);
+        
+       
         free(*arvore);
-        *arvore = NULL; 
-    }
+        *arvore = NULL;  
+}
 }
 
 /**
@@ -215,7 +220,6 @@ int tem_dois_filhos(ARV_BINARIA *no){
  * @param palavra_ingles Palavra em inglês a ser removida da árvore.
  * @return int Retorna 1 se a remoção for bem-sucedida, 0 caso contrário.
  */
-
 int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
     int resultado = 0; 
 
@@ -394,5 +398,22 @@ void remover_lista_unidade(lista_unidade **lista, int unidade) {
                 free(temp); 
             }
         }
+    }
+}
+
+/**
+ * @brief Libera a memória da lista de unidades.
+ *
+ * Esta função percorre a lista de unidades de um nó e libera cada nó da lista.
+ *
+ * @param unidade Ponteiro para o ponteiro da lista de unidades a ser liberada.
+ */
+void libera_lista_unidade(lista_unidade **unidade) {
+    lista_unidade *temp;
+    
+    while (*unidade != NULL) {
+        temp = *unidade;
+        *unidade = (*unidade)->proximo;
+        free(temp);  
     }
 }
