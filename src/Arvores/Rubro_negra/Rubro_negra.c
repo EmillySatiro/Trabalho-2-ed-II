@@ -416,14 +416,10 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
  */
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
-        mostrar_binaria_em_rubro(raiz->esquerda, unidade);
-
         if (raiz->info->unidade == unidade){
-            mostrar_arvore_binaria(raiz->info->palavras_ingles, unidade);
+            mostrar_arvore_binaria(raiz->info->palavras_ingles,unidade);
             printf("\n");
         }
-
-        mostrar_binaria_em_rubro(raiz->direita, unidade);
     }
 }
 
@@ -502,7 +498,6 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
             mostrar_binaria_em_rubro(raiz, unidade);
-            //mostrar_binaria_em_rubro(raiz, unidade);provavelmnte tem que ser essa 
             printf("\n");
         }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
@@ -639,31 +634,45 @@ void liberar_rubronegra(Rubronegra **raiz){
  * @param palavra_ingles Palavra em inglês a ser removida.
  * @param unidade Unidade correspondente à palavra em inglês a ser removida.
  */
-void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade){
-    if (*raiz != NULL){
-        
-        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
+void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
+    if (*raiz == NULL) {
+        return; // Caso a árvore esteja vazia, sai da função.
+    }
 
-   
-        if ((*raiz)->info && (*raiz)->info->unidade == unidade){
-        
-            remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
+    // Se a unidade do nó atual for a que estamos buscando
+    if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
+        // Remover a palavra do campo 'palavras_ingles' se encontrada
+        int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
-            if ((*raiz)->info->palavras_ingles == NULL){
+        // Se a palavra foi removida de 'palavras_ingles'
+        if (sucesso) {
+            if ((*raiz)->info->palavras_ingles == NULL) {
+                // Caso não haja mais palavras em inglês associadas, removemos o nó da árvore binária
                 char palavra_portugues[100];
                 strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
 
-                int sucesso = remover_na_arvore(raiz, palavra_portugues);
-                    if (sucesso){
-                        printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
-                    }
-            }else{
-            printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
-           }
+                // Chama a função para remover o nó da árvore binária
+                int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
+                if (sucesso_remocao) {
+                    printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
+                } else {
+                    printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
+                }
+            } else {
+                // Se a palavra em inglês foi removida, mas ainda há palavras em português
+                printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+            }
         }
-    } 
+    }
+
+    // Recursão para explorar a árvore (de acordo com a estrutura da árvore binária ou rubro-negra)
+    if ((*raiz)->info && (*raiz)->info->unidade >= unidade) {
+        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+    } else {
+        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
+    }
 }
+
 
 void limparBuffer(){
     scanf("%*[^\n]"); 

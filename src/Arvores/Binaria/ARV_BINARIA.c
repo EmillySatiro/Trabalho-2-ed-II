@@ -71,7 +71,6 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
  */
 void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade) {
     if (arvore != NULL) {
-        mostrar_arvore_binaria(arvore->esquerda, unidade);
         
         lista_unidade *temp = arvore->unidade;
         while (temp != NULL) {
@@ -79,8 +78,16 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade) {
                 printf("%s \n", arvore->palavra_ingles);  
             }
             temp = temp->proximo;
+            
+        }if (arvore->esquerda != NULL || arvore->direita != NULL) {
+            if (arvore->esquerda != NULL) {
+                mostrar_arvore_binaria(arvore->esquerda,unidade); 
+            }
+            if (arvore->direita != NULL) {
+                mostrar_arvore_binaria(arvore->direita,unidade);  
+            }
         }
-        mostrar_arvore_binaria(arvore->direita, unidade);
+        
     }
 }
 
