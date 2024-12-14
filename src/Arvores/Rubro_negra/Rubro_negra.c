@@ -639,7 +639,6 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
         return; // Caso a árvore esteja vazia, sai da função.
     }
 
-    // Se a unidade do nó atual for a que estamos buscando
     if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
         // Remover a palavra do campo 'palavras_ingles' se encontrada
         int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
@@ -665,12 +664,11 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
         }
     }
 
-    // Recursão para explorar a árvore (de acordo com a estrutura da árvore binária ou rubro-negra)
-    if ((*raiz)->info && (*raiz)->info->unidade >= unidade) {
+
         remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-    } else {
+ 
         remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
-    }
+   
 }
 
 
