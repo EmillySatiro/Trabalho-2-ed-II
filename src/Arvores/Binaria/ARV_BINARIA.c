@@ -205,18 +205,17 @@ int tem_dois_filhos(ARV_BINARIA *no){
 }
 
 /**
- * @brief Remove um nó de uma árvore binária de busca com base na palavra em inglês fornecida.
+ * @brief Remove um nó da árvore binária que contém a palavra em inglês especificada.
  *
- * Esta função remove um nó de uma árvore binária de busca que contém a palavra em inglês especificada.
- * A função lida com três casos principais:
- * 1. O nó a ser removido é uma folha.
- * 2. O nó a ser removido tem apenas um filho.
- * 3. O nó a ser removido tem dois filhos.
+ * Esta função remove um nó da árvore binária que contém a palavra em inglês fornecida.
+ * Se a palavra não for encontrada, a função não faz nenhuma alteração na árvore.
+ * A função também lida com a remoção de nós que têm zero, um ou dois filhos.
  *
- * @param arvore Um ponteiro duplo para a árvore binária de busca.
- * @param palavra_ingles A palavra em inglês a ser removida da árvore.
- * @return int Retorna 1 se a remoção for bem-sucedida, caso contrário, retorna 0.
+ * @param arvore Ponteiro duplo para a árvore binária.
+ * @param palavra_ingles Palavra em inglês a ser removida da árvore.
+ * @return int Retorna 1 se a remoção for bem-sucedida, 0 caso contrário.
  */
+
 int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
     int resultado = 0; 
 
@@ -298,12 +297,11 @@ int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int 
     int resultado = 0;
     
     if (*arvore != NULL) {
-        // Caso a unidade do nó atual seja igual à unidade procurada
         if ((*arvore)->unidade->unidade == unidade) {
-            // Remover a palavra de inglês associada a este nó
-            resultado = remover_no_binaria(arvore, palavra_ingles);  // Certifique-se de que essa função está correta.
+           
+            resultado = remover_no_binaria(arvore, palavra_ingles);  
         } else {
-            // Se a unidade não for encontrada, continue a busca recursivamente nas subárvores
+           
             resultado = remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
             if (!resultado) {
                 resultado = remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
@@ -313,6 +311,16 @@ int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int 
     return resultado;
 }
 
+/**
+ * @brief Insere uma unidade na lista de unidades.
+ *
+ * Esta função insere uma nova unidade na lista de unidades, se ela ainda não estiver presente.
+ * Se a lista estiver vazia, uma nova unidade é alocada e adicionada como o primeiro elemento.
+ * Se a unidade já existir na lista, uma mensagem é exibida informando que a unidade já está presente.
+ *
+ * @param lista Ponteiro duplo para a lista de unidades.
+ * @param unidade Unidade a ser inserida na lista.
+ */
 void inserir_lista_unidade(lista_unidade **lista, int unidade) {
     if (*lista == NULL) {
         *lista = (lista_unidade *)malloc(sizeof(lista_unidade));
@@ -355,14 +363,22 @@ void inserir_lista_unidade(lista_unidade **lista, int unidade) {
     }
 }
 
+/**
+ * @brief Remove uma unidade específica da lista.
+ *
+ * Esta função remove a primeira ocorrência de uma unidade específica da lista
+ * encadeada de unidades. Se a lista estiver vazia ou a unidade não for encontrada,
+ * uma mensagem apropriada será exibida.
+ *
+ * @param lista Ponteiro para o ponteiro da lista de unidades.
+ * @param unidade O valor da unidade a ser removida da lista.
+ */
 void remover_lista_unidade(lista_unidade **lista, int unidade) {
     if (*lista == NULL) {
         printf("A lista está vazia.\n");
     } else {
         lista_unidade *temp = *lista;
         lista_unidade *anterior = NULL;
-
-      
         if (temp != NULL && temp->unidade == unidade) {
             *lista = temp->proximo; 
             free(temp);
@@ -371,7 +387,6 @@ void remover_lista_unidade(lista_unidade **lista, int unidade) {
                 anterior = temp;
                 temp = temp->proximo;
             }
-
             if (temp == NULL) {
                 printf("Unidade %d não encontrada na lista.\n", unidade);
             } else {

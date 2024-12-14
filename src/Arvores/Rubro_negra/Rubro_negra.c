@@ -64,7 +64,6 @@ Rubronegra *alocar_no(Informacao_VP *info){
  * @param info Ponteiro para a estrutura de informação a ser inserida.
  * @return Ponteiro para a raiz da árvore rubro-negra após a inserção.
  */
-
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     Rubronegra *inserido = NULL;
     if (*raiz == NULL){
@@ -626,52 +625,50 @@ void liberar_rubronegra(Rubronegra **raiz){
 /**
  * @brief Remove uma palavra em inglês e sua unidade correspondente da árvore Rubro-Negra.
  *
- * Esta função percorre a árvore Rubro-Negra em profundidade e remove a palavra em inglês
- * e sua unidade correspondente, se encontradas. Se a árvore binária associada ao nó
- * ficar vazia após a remoção, o nó da árvore Rubro-Negra também é removido.
+ * Esta função percorre a árvore Rubro-Negra e remove a palavra em inglês especificada
+ * e sua unidade correspondente. Se a palavra em inglês for removida com sucesso e não
+ * houver mais palavras em inglês associadas à palavra em português, a palavra em português
+ * também será removida da árvore Rubro-Negra.
  *
  * @param raiz Ponteiro para a raiz da árvore Rubro-Negra.
  * @param palavra_ingles Palavra em inglês a ser removida.
- * @param unidade Unidade correspondente à palavra em inglês a ser removida.
+ * @param unidade Unidade associada à palavra em inglês a ser removida.
  */
 void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
-    if (*raiz == NULL) {
-        return; // Caso a árvore esteja vazia, sai da função.
-    }
+    if (*raiz != NULL) { 
 
-    if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
-        // Remover a palavra do campo 'palavras_ingles' se encontrada
-        int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
+            if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
+                int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
-        // Se a palavra foi removida de 'palavras_ingles'
-        if (sucesso) {
-            if ((*raiz)->info->palavras_ingles == NULL) {
-                // Caso não haja mais palavras em inglês associadas, removemos o nó da árvore binária
-                char palavra_portugues[100];
-                strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
+                    if (sucesso) {
+                        if ((*raiz)->info->palavras_ingles == NULL) {
+                            char palavra_portugues[100];
+                            strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
 
-                // Chama a função para remover o nó da árvore binária
-                int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
-                if (sucesso_remocao) {
-                    printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
-                } else {
-                    printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
-                }
-            } else {
-                // Se a palavra em inglês foi removida, mas ainda há palavras em português
-                printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                            int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
+                                if (sucesso_remocao) {
+                                    printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
+                                } else {
+                                    printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
+                                }
+                        } else {
+                            printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                        }
+                    }
             }
-        }
+            remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+            remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
     }
-
-
-        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
- 
-        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
-   
 }
 
-
+/**
+ * @brief Limpa o buffer de entrada.
+ *
+ * Esta função descarta todos os caracteres no buffer de entrada até encontrar
+ * um caractere de nova linha ('\n') e, em seguida, lê e descarta esse caractere
+ * de nova linha. É útil para evitar problemas com entradas residuais ao usar
+ * funções de entrada como scanf.
+ */
 void limparBuffer(){
     scanf("%*[^\n]"); 
     getchar();        
