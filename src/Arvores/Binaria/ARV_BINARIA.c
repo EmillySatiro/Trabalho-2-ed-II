@@ -290,17 +290,23 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
  * @param palavra_ingles A palavra em inglês a ser removida da árvore.
  * @param unidade A unidade associada à palavra a ser removida.
  */
-void remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
+int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
+    int resultado = 0;
+    
     if (*arvore != NULL) {
-
-        remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
-        remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
-
+        // Caso a unidade do nó atual seja igual à unidade procurada
         if ((*arvore)->unidade->unidade == unidade) {
-        
-            remover_no_binaria(arvore, palavra_ingles);
+            // Remover a palavra de inglês associada a este nó
+            resultado = remover_no_binaria(arvore, palavra_ingles);  // Certifique-se de que essa função está correta.
+        } else {
+            // Se a unidade não for encontrada, continue a busca recursivamente nas subárvores
+            resultado = remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
+            if (!resultado) {
+                resultado = remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
+            }
         }
     }
+    return resultado;
 }
 
 void inserir_lista_unidade(lista_unidade **lista, int unidade) {
