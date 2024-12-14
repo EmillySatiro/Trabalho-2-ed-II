@@ -27,4 +27,5 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade);
 int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade);
 void inserir_lista_unidade(lista_unidade **lista, int unidade);
 void remover_lista_unidade(lista_unidade **lista, int unidade);
+void libera_lista_unidade(lista_unidade **unidade);
 #endif
