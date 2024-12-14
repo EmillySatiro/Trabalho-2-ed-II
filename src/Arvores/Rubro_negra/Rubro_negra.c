@@ -419,7 +419,7 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
         mostrar_binaria_em_rubro(raiz->esquerda, unidade);
 
         if (raiz->info->unidade == unidade){
-            mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+            mostrar_arvore_binaria(raiz->info->palavras_ingles, unidade);
             printf("\n");
         }
 
