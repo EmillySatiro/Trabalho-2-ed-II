@@ -637,6 +637,8 @@ void liberar_rubronegra(Rubronegra **raiz){
 void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
     if (*raiz != NULL) { 
 
+            remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+            remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
             if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
                 int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
@@ -645,8 +647,8 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
                             char palavra_portugues[100];
                             strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
 
-                            int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
-                                if (sucesso_remocao) {
+                                if (sucesso){
+                                    remover_na_arvore(raiz, palavra_portugues);
                                     printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
                                 } else {
                                     printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
@@ -656,8 +658,6 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
                         }
                     }
             }
-            remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-            remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
     }
 }
 
