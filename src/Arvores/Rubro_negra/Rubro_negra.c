@@ -416,14 +416,10 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra){
  */
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
     if (raiz  != NULL){
-        mostrar_binaria_em_rubro(raiz->esquerda, unidade);
-
         if (raiz->info->unidade == unidade){
-            mostrar_arvore_binaria(raiz->info->palavras_ingles, raiz->info->unidade);
+            mostrar_arvore_binaria(raiz->info->palavras_ingles,unidade);
             printf("\n");
         }
-
-        mostrar_binaria_em_rubro(raiz->direita, unidade);
     }
 }
 
@@ -502,7 +498,6 @@ void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade)
             printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em ingles: \n");
             mostrar_binaria_em_rubro(raiz, unidade);
-            //mostrar_binaria_em_rubro(raiz, unidade);provavelmnte tem que ser essa 
             printf("\n");
         }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
