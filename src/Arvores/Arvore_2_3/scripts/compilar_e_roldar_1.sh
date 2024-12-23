@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # Diretório base do projeto
-BASE_DIR="/home/Trabalho-2-ed-II"
+BASE_DIR="/home/walison/Trabalho-2-ed-II"
 
 # Nome do executável
 EXECUTAVEL="programa_quest_1"
 
 # Arquivos necessários
-MAIN_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/main_quest_2.c"
+MAIN_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/main_quest_1.c"
 BINARIA_FILE="$BASE_DIR/src/Arvores/Binaria/ARV_BINARIA.c"
 Arvore_2_3_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/ARV2_3.c"
 EXTRAIR_2_3="$BASE_DIR/src/Arvores/Arvore_2_3/Arquivo/Extrair.c"
