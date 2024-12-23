@@ -341,24 +341,30 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade)
  * @param palavra_ingles A palavra em inglês a ser removida da árvore.
  * @param unidade A unidade associada à palavra a ser removida.
  */
-int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade)
-{
-    int resultado = 0; 
+int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
+    int resultado = 0;
 
-    if (*arvore != NULL) 
-    {
-        if ((*arvore)->unidade != NULL && (*arvore)->unidade->unidade == unidade)
-        {
-            resultado = remover_no_binaria(arvore, palavra_ingles);
+    if (*arvore != NULL) {
+       
+        if ((*arvore)->unidade != NULL) {
+            lista_unidade *unidade_atual = (*arvore)->unidade;
+            
+            while (unidade_atual != NULL) {
+                if (unidade_atual->unidade == unidade) {
+                    resultado = remover_no_binaria(arvore, palavra_ingles);
+                    if (resultado) {
+                        break;
+                    }
+                }
+                unidade_atual = unidade_atual->proximo;
+            }
         }
 
-        if (!resultado) 
-        {
+        if (resultado == 0) {
             resultado = remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
         }
-
-        if (!resultado)
-        {
+        
+        if (resultado == 0) {
             resultado = remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
         }
     }
@@ -366,8 +372,18 @@ int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int 
     return resultado;
 }
 
-
-
+/**
+ * @brief Insere uma unidade na lista de unidades.
+ *
+ * Esta função insere uma nova unidade na lista de unidades, caso ela ainda não exista na lista.
+ * Se a lista estiver vazia, a função aloca memória para a nova unidade e a insere como o primeiro
+ * elemento da lista. Se a lista já contiver elementos, a função verifica se a unidade já existe
+ * na lista. Se a unidade não existir, a função a insere no final da lista. Caso contrário, uma
+ * mensagem informando que a unidade já existe é exibida.
+ *
+ * @param lista Ponteiro duplo para a lista de unidades.
+ * @param unidade Unidade a ser inserida na lista.
+ */
 void inserir_lista_unidade(lista_unidade **lista, int unidade)
 {
     if (*lista == NULL)
@@ -425,6 +441,16 @@ void inserir_lista_unidade(lista_unidade **lista, int unidade)
     }
 }
 
+/**
+ * @brief Remove uma unidade da lista.
+ *
+ * Esta função remove a primeira ocorrência de uma unidade específica da lista.
+ * Se a lista estiver vazia, uma mensagem será exibida. Se a unidade não for
+ * encontrada na lista, uma mensagem será exibida.
+ *
+ * @param lista Ponteiro para o ponteiro da lista de unidades.
+ * @param unidade Unidade a ser removida da lista.
+ */
 void remover_lista_unidade(lista_unidade **lista, int unidade)
 {
     if (*lista == NULL)
