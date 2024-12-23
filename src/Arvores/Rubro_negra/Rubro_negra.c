@@ -638,6 +638,7 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
     if (*raiz == NULL) {
         return; // Caso a árvore esteja vazia, sai da função.
     }
+        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
 
     if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
         // Remover a palavra do campo 'palavras_ingles' se encontrada
@@ -665,7 +666,6 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
     }
 
 
-        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
  
         remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
    
