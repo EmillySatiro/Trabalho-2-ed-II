@@ -636,40 +636,32 @@ void liberar_rubronegra(Rubronegra **raiz){
  */
 void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
     if (*raiz == NULL) {
-        return; // Caso a árvore esteja vazia, sai da função.
+        return;
     }
-        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
 
+    // Processa o nó atual primeiro
     if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
-        // Remover a palavra do campo 'palavras_ingles' se encontrada
         int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
 
-        // Se a palavra foi removida de 'palavras_ingles'
         if (sucesso) {
             if ((*raiz)->info->palavras_ingles == NULL) {
-                // Caso não haja mais palavras em inglês associadas, removemos o nó da árvore binária
                 char palavra_portugues[100];
                 strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
-
-                // Chama a função para remover o nó da árvore binária
                 int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
                 if (sucesso_remocao) {
-                    printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
-                } else {
-                    printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
+                    printf("Palavra '%s' foi removida.\n", palavra_portugues);
                 }
             } else {
-                // Se a palavra em inglês foi removida, mas ainda há palavras em português
-                printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                printf("Palavra '%s' em inglês removida.\n", palavra_ingles);
             }
         }
     }
 
-
- 
-        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
-   
+    // Recorre para a esquerda e direita
+    remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+    remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
 }
+
 
 
 void limparBuffer(){
