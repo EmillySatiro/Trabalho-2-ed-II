@@ -4,7 +4,7 @@
 BASE_DIR="/home/Trabalho-2-ed-II"
 
 # Nome do executável
-EXECUTAVEL="programa"
+EXECUTAVEL="programa_quest_2"
 
 # Arquivos necessários
 MAIN_FILE="$BASE_DIR/src/Arvores/Rubro_negra/main_quest_2.c"
