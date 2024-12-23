@@ -31,35 +31,49 @@ char *trim_23(char *str) {
     return str;
 }
 
-ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz){
-  
+ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz) {
     FILE *arquivo = fopen("Dicionario.txt", "r");
-    if (!arquivo){
+    if (!arquivo) {
         perror("Erro ao abrir o arquivo");
         exit(EXIT_FAILURE);
     }
 
-    char linha[Tamanho_linha];
+    char linha[100];
     int unidade;
- 
+    char palavra_ingles[100];
 
-    while (fgets(linha, sizeof(linha), arquivo)){
+    while (fgets(linha, sizeof(linha), arquivo)) {
         linha[strcspn(linha, "\n")] = '\0';
 
-        if (strstr(linha, "Unidade")){
-            if (sscanf(linha, "%% Unidade %d", &unidade) == 1){
+        if (strstr(linha, "Unidade")) {
+            if (sscanf(linha, "%% Unidade %d", &unidade) == 1) {
                 //printf("Unidade: %d\n", unidade);
             }
-        }else{
-            char *palavra_portugues = strtok(linha, ":");
-            char *palavra_ingles = strtok(NULL, ":");
+        } else {
+            char *pt = strtok(linha, ":,;");
+            pt = trim_23(pt);
 
-            Informacao info = criar_info(palavra_portugues, palavra_ingles, unidade);
-            insere(raiz, info);
+            if (pt) {
+                strcpy(palavra_ingles, pt);
+                //printf("Palavra em ingles: %s\n", palavra_ingles);
+                while ((pt = strtok(NULL, ":,;")) != NULL) {
+                    pt = trim_23(pt);
+                    Informacao info = criar_info(pt, palavra_ingles, unidade);
+                    if (&info != NULL) {
+                        //printf("Palavra em portugues: %s\n", info->palavra_portugues);
+                        insere(raiz, info);
+                    } else {
+                        fprintf(stderr, "Erro ao criar Informacao_VP\n");
+                    }
+                }
+            }
         }
     }
-    return *raiz;
+
+    printf("Palavras extraídas do arquivo com sucesso!!\n");
 
     fclose(arquivo);
+    return *raiz;
 }
+
 // Função para processar o arquivo e inserir palavras na árvore 2-3

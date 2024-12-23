@@ -117,7 +117,7 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
 {
     if (arvore != NULL)
     {
-        printf("Palavra: %s\nUnidades: ", arvore->palavra_ingles);
+        printf("%s\nUnidades: ", arvore->palavra_ingles);
 
         lista_unidade *temp = arvore->unidade;
         while (temp != NULL)
