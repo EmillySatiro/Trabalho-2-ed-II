@@ -1,6 +1,7 @@
 #ifndef ARV2_3_H 
 #define ARV2_3_H 
 #include "../Binaria/ARV_BINARIA.h"
+#include "../Rubro_negra/Rubro_negra.h"
 
 
 typedef struct Informacao{
@@ -33,7 +34,15 @@ void mostrar(ARV2_3 *raiz);
 void liberar_2_3_binaria(Informacao *info);
 //void liberar_2_3(ARV2_3 *raiz);
 void liberar_arv2_3(ARV2_3 *raiz);
+<<<<<<< HEAD:Arvores/Arvore_2_3/ARV2_3.h
 
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade);
 void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles);
+=======
+Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade);
+void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles);
+void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues);
+
+void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade);
+>>>>>>> 29df7465d044d311d0ef31f934fe1d1facb1edef:src/Arvores/Arvore_2_3/ARV2_3.h
 #endif 
