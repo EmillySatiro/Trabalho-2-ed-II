@@ -504,3 +504,16 @@ void libera_lista_unidade(lista_unidade **unidade) {
         free(temp);  
     }
 }
+
+/**
+ * @brief Limpa o buffer de entrada.
+ *
+ * Esta função descarta todos os caracteres no buffer de entrada até encontrar
+ * um caractere de nova linha ('\n') e, em seguida, lê e descarta esse caractere
+ * de nova linha. É útil para evitar problemas com entradas residuais ao usar
+ * funções de entrada como scanf.
+ */
+void limparBuffer(){
+    scanf("%*[^\n]"); 
+    getchar();        
+}

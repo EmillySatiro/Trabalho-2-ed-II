@@ -637,18 +637,6 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
     }
 }
 
-/**
- * @brief Limpa o buffer de entrada.
- *
- * Esta função descarta todos os caracteres no buffer de entrada até encontrar
- * um caractere de nova linha ('\n') e, em seguida, lê e descarta esse caractere
- * de nova linha. É útil para evitar problemas com entradas residuais ao usar
- * funções de entrada como scanf.
- */
-void limparBuffer(){
-    scanf("%*[^\n]"); 
-    getchar();        
-}
 
 /**
  * @brief Libera a memória alocada para a estrutura Informacao_VP e sua árvore binária de palavras em inglês.
