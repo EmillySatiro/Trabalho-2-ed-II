@@ -59,10 +59,6 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
     return maior_info;
 }
 
-int eh_folha(ARV2_3 *no){
-    return (no->esquerda == NULL);
-}
-
 void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
 {
 
@@ -352,16 +348,17 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
 
 
 
+int eh_folha(ARV2_3 *no){
+    return (no->esquerda == NULL);
+}
 
 int eh_info1(ARV2_3 no, int info){
     return info == no.info1.palavra_portugues;
 }
 
-
 int eh_info2(ARV2_3 no , int info){
     return no.quant_infos == 2 & info == no.info2.palavra_portugues;
 }
-
 
 void troca_infos(Informacao *info1, Informacao *info2){
     Informacao aux = *info1; 
@@ -369,59 +366,76 @@ void troca_infos(Informacao *info1, Informacao *info2){
     *info2 = aux;
 }
 
-void no_2_3_descolar(ARV2_3 **no){
+void no_2_3_desacolar(ARV2_3 **no){
 
     free(*no);
     *no = NULL;
 }
 
 // todo na folha o nó possui ** 
-
 ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **filho3){
 
 }
 
-void arvore23_exibir_pre(ARV2_3 *raiz)
-{
-    if(raiz != NULL)
-    {
-        printf("[1º] %d -> ", raiz->info1.palavra_portugues);
-        if(raiz->quant_infos == 2)
-            printf("[2º] %d -> ", raiz->info2.palavra_portugues);
+ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *menor_info){ 
+    ARV2_3 *filho;
+    filho = raiz; 
 
-        arvore23_exibir_pre(raiz->esquerda);
-        arvore23_exibir_pre(raiz->centro);
-        if(raiz->quant_infos == 2)
-            arvore23_exibir_pre(raiz->direita);
+    while (!eh_folha(filho)) {
+        *pai = filho; 
+        filho = filho->esquerda;
     }
+    
+    if(filho!= NULL){
+        *menor_info = filho->info1;
+    }
+
+    return filho; 
 }
 
-void arvore23_exibir_ordem(ARV2_3 *raiz)
-{
-    if(raiz != NULL)
-    {
-        arvore23_exibir_ordem(raiz->esquerda);
-        printf("[1º] %d -> ", raiz->info1.palavra_portugues);
-        arvore23_exibir_ordem(raiz->centro);
-
-        if(raiz->quant_infos == 2)
-        {
-            printf("[2º] %d -> ", raiz->info2.palavra_portugues);
-            arvore23_exibir_ordem(raiz->direita);
-        }
-    }
+ARV2_3 *maior_filho(ARV2_3 *raiz){ 
+    return raiz->quant_infos == 2 ? raiz->direita : raiz->centro;
 }
-void arvore23_exibir_pos(ARV2_3 *raiz){
-    if(raiz != NULL){
-        arvore23_exibir_pos(raiz->esquerda); 
-        arvore23_exibir_pos(raiz->centro); 
-        if (raiz->quant_infos == 2){
-            arvore23_exibir_pos(raiz->direita);
-        }
-        printf("[1] %d ->", raiz->info1.palavra_portugues);
-        if (raiz->quant_infos == 2){
-            printf("[2] %d ->", raiz->info2.palavra_portugues);
+
+ARV2_3 *buscar_maior_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *maior_info){
+    ARV2_3 *filho; 
+    filho = raiz; 
+
+    while (!eh_folha(filho)){
+        *pai = filho; 
+        filho = maior_filho(filho); 
+    }
+
+    if (filho != NULL){
+       *maior_info = filho->quant_infos == 2 ? filho->info2 : filho->info1;
+    }
+    
+    return filho; 
+}
+
+ARV2_3 *buscar_pai(ARV2_3 *raiz, int info){
+    ARV2_3 *pai; 
+    pai = NULL; 
+
+    if (raiz != NULL){
+        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info)){
+            if (strcmp(info, raiz->info1.palavra_portugues)> 0)
+            {
+                pai = buscar_pai(raiz->esquerda, info); 
+
+            }else if (raiz->quant_infos == 1 || (strcmp(info, raiz->info2.palavra_portugues) < 0) ){
+                pai = buscar_pai(raiz->centro, info);
+            }else{
+                pai = buscar_pai(raiz->direita, info);
+            }
+            
+            if(pai == NULL){
+                pai = raiz; 
+            }
         }
         
     }
+
+    return pai; 
 }
+
