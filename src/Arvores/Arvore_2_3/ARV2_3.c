@@ -37,15 +37,13 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
         // criando um no para o maior que no caso é meu novo elemento( esse filho ? * filho: null é se o filho não for nulo ele executa e manda(*filho)  para o criar e se não for manda null)
 
         // cado 2: o novo elemento é oq sobe pois ele esta entre info 1 e info 2
-    }
-    else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
+    }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
     {
         *sobe = info; // novo elemento sobe
 
         maior_info = criar_no((*no)->info2, filho ? *filho : NULL, (*no)->direita);
         // msm coisa do outro só que quem sobe é info 2
-    }
-    else
+    }else
     {                         // caso 3 info menor info 1
         *sobe = (*no)->info1; // quem vai subir é info 1
 
@@ -61,21 +59,17 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
     return maior_info;
 }
 
-int eh_folha(ARV2_3 *no)
-{
+int eh_folha(ARV2_3 *no){
     return (no->esquerda == NULL);
 }
 
 void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
 {
 
-    if (strcmp(Info.palavra_portugues, no->info1.palavra_portugues) > 0)
-    {
+    if (strcmp(Info.palavra_portugues, no->info1.palavra_portugues) > 0){
         no->info2 = Info;
         no->direita = filho;
-    }
-    else
-    {
+    }else{
         no->info2 = no->info1;
         no->direita = no->centro;
         no->info1 = Info;
@@ -90,56 +84,42 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     ARV2_3 *maior = NULL;
 
     // se é nullo cria né
-    if (*no == NULL)
-    {
+    if (*no == NULL){
         *no = criar_no(info, NULL, NULL);
     }
-    else
-    {
+    else{
         // caso seja folha
-        if (eh_folha(*no))
-        {
-            if ((*no)->quant_infos == 1)
-            {
+        if (eh_folha(*no)){
+            if ((*no)->quant_infos == 1){
                 add_elementos(*no, info, NULL);
-            }
-            else
-            {
+            }else{
                 maior = quebra_No(no, info, sobe, NULL);
                 // se não houver pai, cria um novo só superior
-                if (pai && !(*pai))
-                {
+                if (pai && !(*pai)){
                     *no = criar_no(*sobe, *no, maior);
                     maior = NULL; // só pra limpar o maior
                 }
             }
         }
-        else
-        { // caso não seja uma folha procrura onde vamos inserir né
-            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0)
-            {
+        else{ // caso não seja uma folha procrura onde vamos inserir né
+            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no);
             }
-            else if (((*no)->quant_infos == 1) || (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues)) < 0)
-            {
+            else if (((*no)->quant_infos == 1) || (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues)) < 0){
                 maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no);
             }
-            else
-            {
+            else{
                maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
             }
 
             // se maior foi retornado, o nó pode precisar ser atualizado ou quebrado
-            if (maior)
-            {
-                if ((*no)->quant_infos == 1)
-                {
+            if (maior){
+                if ((*no)->quant_infos == 1){
                     add_elementos(*no, *sobe, maior);
                     maior = NULL; // limpa maior após adicionar
-                }
-                else
-                {
+                }else{
                     maior = quebra_No(no, *sobe, &sobe_sup, &maior);
+
                     if (pai)
                     {
                         *no = criar_no(sobe_sup, *no, maior);
@@ -182,43 +162,6 @@ void mostrar(ARV2_3 *raiz)
             mostrar(raiz->direita);
         }
     }
-}
-
-void liberar_2_3_binaria(Informacao *info)
-{
-    // liberar binaria
-    free(info->palavra_portugues);
-}
-
-// void liberar_2_3(ARV2_3 *raiz)
-// {
-//     if (raiz)
-//     {
-//         liberar_2_3(raiz->esquerda);
-//         liberar_2_3(raiz->centro);
-//         if (raiz->quant_infos == 2)
-//         {
-//             liberar_2_3(raiz->direita);
-//             liberar_2_3_binaria(&raiz->info2);
-//         }
-//         liberar_2_3_binaria(&raiz->info1);
-//         free(raiz);
-//     }
-// }
-
-void liberar_arv2_3(ARV2_3 *raiz) {
-    if (raiz == NULL) return;
-    // Liberar as subárvores binárias associadas a cada palavra
-     libera_arvore_binaria(&raiz->info1.palavra_ingles);
-     libera_arvore_binaria(&raiz->info2.palavra_ingles);
-
-
-    // Liberar as subárvores 2-3
-    liberar_arv2_3(raiz->esquerda);
-    liberar_arv2_3(raiz->centro);
-    liberar_arv2_3(raiz->direita);
-
-    free(raiz);  // Liberar o próprio nó da árvore 2-3
 }
 
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade)
@@ -288,3 +231,197 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int eh_info1(ARV2_3 no, int info){
+    return info == no.info1.palavra_portugues;
+}
+
+
+int eh_info2(ARV2_3 no , int info){
+    return no.quant_infos == 2 & info == no.info2.palavra_portugues;
+}
+
+
+void troca_infos(Informacao *info1, Informacao *info2){
+    Informacao aux = *info1; 
+    *info1 = *info2; 
+    *info2 = aux;
+}
+
+void no_2_3_descolar(ARV2_3 **no){
+
+    free(*no);
+    *no = NULL;
+}
+
+// todo na folha o nó possui ** 
+
+ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **filho3){
+
+}
+
+void arvore23_exibir_pre(ARV2_3 *raiz)
+{
+    if(raiz != NULL)
+    {
+        printf("[1º] %d -> ", raiz->info1.palavra_portugues);
+        if(raiz->quant_infos == 2)
+            printf("[2º] %d -> ", raiz->info2.palavra_portugues);
+
+        arvore23_exibir_pre(raiz->esquerda);
+        arvore23_exibir_pre(raiz->centro);
+        if(raiz->quant_infos == 2)
+            arvore23_exibir_pre(raiz->direita);
+    }
+}
+
+void arvore23_exibir_ordem(ARV2_3 *raiz)
+{
+    if(raiz != NULL)
+    {
+        arvore23_exibir_ordem(raiz->esquerda);
+        printf("[1º] %d -> ", raiz->info1.palavra_portugues);
+        arvore23_exibir_ordem(raiz->centro);
+
+        if(raiz->quant_infos == 2)
+        {
+            printf("[2º] %d -> ", raiz->info2.palavra_portugues);
+            arvore23_exibir_ordem(raiz->direita);
+        }
+    }
+}
+void arvore23_exibir_pos(ARV2_3 *raiz){
+    if(raiz != NULL){
+        arvore23_exibir_pos(raiz->esquerda); 
+        arvore23_exibir_pos(raiz->centro); 
+        if (raiz->quant_infos == 2){
+            arvore23_exibir_pos(raiz->direita);
+        }
+        printf("[1] %d ->", raiz->info1.palavra_portugues);
+        if (raiz->quant_infos == 2){
+            printf("[2] %d ->", raiz->info2.palavra_portugues);
+        }
+        
+    }
+}
