@@ -243,3 +243,48 @@ void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade,
     insere(raiz, info_2_3);  // A inserção é feita com os dados da informação criada
 }
 
+void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
+    if (raiz == NULL) {
+        return;
+    }
+
+    imprimir_palavras_unidade(raiz->esquerda, unidade);
+
+    if (raiz->info1.unidade == unidade) {
+        printf("Português: %s,", raiz->info1.palavra_portugues);
+        printf(" Inglês: ");
+        mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
+    }
+    if (raiz->quant_infos == 2 && raiz->info2.unidade == unidade) {
+        printf("Português: %s,", raiz->info2.palavra_portugues);
+        printf(" Inglês:");
+        mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
+
+    }
+
+    imprimir_palavras_unidade(raiz->centro, unidade);
+    imprimir_palavras_unidade(raiz->direita, unidade);
+}
+
+void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
+    if (raiz == NULL) {
+        return;
+    }
+
+    imprimir_palavras_ingles(raiz->esquerda, palavra_portugues);
+
+    if (strcmp(raiz->info1.palavra_portugues, palavra_portugues) == 0) {
+        printf("Inglês: ");
+        mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
+    }
+    if (raiz->quant_infos == 2 && strcmp(raiz->info2.palavra_portugues, palavra_portugues) == 0) {
+        printf("Inglês: ");
+        mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
+    }
+
+    imprimir_palavras_ingles(raiz->centro, palavra_portugues);
+    imprimir_palavras_ingles(raiz->direita, palavra_portugues);
+}
+
+
+

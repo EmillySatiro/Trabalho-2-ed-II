@@ -34,7 +34,9 @@ void mostrar(ARV2_3 *raiz);
 void liberar_2_3_binaria(Informacao *info);
 //void liberar_2_3(ARV2_3 *raiz);
 void liberar_arv2_3(ARV2_3 *raiz);
-
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade);
 void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles);
+void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues);
+
+void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade);
 #endif 
