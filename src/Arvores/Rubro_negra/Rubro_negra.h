@@ -36,6 +36,7 @@ int remover_na_arvore(Rubronegra **raiz, char *palavra);
 void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
 void mostrar_rubronegra(Rubronegra *raiz);
 Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade);
+//esta função não esa buscando corretamene
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade);
 void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues);
 Rubronegra *buscar_palavra_rubro_negra(Rubronegra *raiz, char *palavra_portugues);

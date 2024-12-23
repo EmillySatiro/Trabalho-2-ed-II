@@ -650,7 +650,6 @@ void limparBuffer(){
     getchar();        
 }
 
-
 void liberar_rubronegra_binaria(Informacao_VP *info) {
     if (info) {
         if (info->palavras_ingles) {
