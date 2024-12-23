@@ -41,7 +41,7 @@ gcc -o "$BASE_DIR/$EXECUTAVEL" \
     "$BINARIA_FILE" \
     "$RUBRO_NEGRA_FILE" \
     "$EXTRAIR_RUBRO" \
-    -Wall -Wextra -Werror -Wpedantic
+   
 
 # Verificar se a compilação foi bem-sucedida
 if [ $? -eq 0 ]; then

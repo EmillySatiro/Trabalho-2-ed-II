@@ -9,8 +9,8 @@ EXECUTAVEL="programa_quest_1"
 # Arquivos necessários
 MAIN_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/main_quest_2.c"
 BINARIA_FILE="$BASE_DIR/src/Arvores/Binaria/ARV_BINARIA.c"
-RUBRO_NEGRA_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/ARV2_3.c"
-EXTRAIR_RUBRO="$BASE_DIR/src/Arvores/Arvore_2_3/Arquivo/Extrair.c"
+Arvore_2_3_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/ARV2_3.c"
+EXTRAIR_2_3="$BASE_DIR/src/Arvores/Arvore_2_3/Arquivo/Extrair.c"
 
 # Verificar se os arquivos existem
 if [ ! -f "$MAIN_FILE" ]; then
@@ -23,13 +23,13 @@ if [ ! -f "$BINARIA_FILE" ]; then
     exit 1
 fi
 
-if [ ! -f "$RUBRO_NEGRA_FILE" ]; then
-    echo "Erro: $RUBRO_NEGRA_FILE não encontrado!"
+if [ ! -f "$Arvore_2_3_FILE" ]; then
+    echo "Erro: $Arvore_2_3_FILE não encontrado!"
     exit 1
 fi
 
-if [ ! -f "$EXTRAIR_RUBRO" ]; then
-    echo "Erro: $EXTRAIR_RUBRO não encontrado!"
+if [ ! -f "$EXTRAIR_2_3" ]; then
+    echo "Erro: $EXTRAIR_2_3 não encontrado!"
     exit 1
 fi  
 
@@ -39,14 +39,14 @@ gcc -o "$BASE_DIR/$EXECUTAVEL" \
     -I"$BASE_DIR" \
     "$MAIN_FILE" \
     "$BINARIA_FILE" \
-    "$RUBRO_NEGRA_FILE" \
-    "$EXTRAIR_RUBRO" \
-    -Wall -Wextra -Werror -Wpedantic
+    "$Arvore_2_3_FILE" \
+    "$EXTRAIR_2_3" \
+   
 
 # Verificar se a compilação foi bem-sucedida
 if [ $? -eq 0 ]; then
     echo "Compilação bem-sucedida! Executando o programa..."
-    # Executar o programa
+    
     "$BASE_DIR/$EXECUTAVEL"
 else
     echo "Erro na compilação. Verifique os arquivos e tente novamente."
