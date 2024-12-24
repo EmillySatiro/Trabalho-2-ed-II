@@ -6,8 +6,6 @@ typedef struct Informacao {
     char state; // 'L' para livre, 'O' para ocupado
     int block_inicio; // Bloco inicial
     int block_fim;   // Bloco final
-    unsigned long endereco_inicio; // Endereço inicial
-    unsigned long endereco_fim;   // Endereço final
 } Informacao;
 
 typedef struct ARVORE2_3 {
@@ -20,8 +18,7 @@ typedef struct ARVORE2_3 {
 } ARVORE2_3;
 
 
-ARVORE2_3* criarNo(Informacao info);
-
+ARVORE2_3 *criarNo(Informacao info);
 void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco);
 
 
