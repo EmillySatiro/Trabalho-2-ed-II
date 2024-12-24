@@ -226,138 +226,45 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int eh_folha(ARV2_3 *no){
-    return (no->esquerda == NULL);
+void no_2_3_adicionar_info(ARV2_3 *no, Informacao info, ARV2_3 *filho_maior)
+{
+    if((strcmp( info.palavra_portugues, no->info1.palavra_portugues) > 0 )){
+        no->info2 = info;
+        no->direita = filho_maior;
+    }
+    else{
+        no->info2 = no->info1;
+        no->direita = no->centro;
+        no->centro = filho_maior;
+        no->info1 = info;
+    }
+    no->quant_infos = 2;
 }
 
-int eh_info1(ARV2_3 no, int info){
+int eh_folha(ARV2_3 *no){
+    return no->esquerda == NULL;
+}
+
+int eh_info1(ARV2_3 no, char info){
     return info == no.info1.palavra_portugues;
 }
 
-int eh_info2(ARV2_3 no , int info){
+int eh_info2(ARV2_3 no , char info){
     return no.quant_infos == 2 & info == no.info2.palavra_portugues;
+}
+
+ARV2_3 *no_2_3_alocar(){
+    ARV2_3 *no; 
+    no = (ARV2_3 *)malloc(sizeof(ARV2_3)); 
+
+    if (!no){
+        
+        printf("erro ao alocar nó da arvore");
+        exit(EXIT_FAILURE);
+    }
+    
+    return no; 
+
 }
 
 void troca_infos(Informacao *info1, Informacao *info2){
@@ -367,29 +274,26 @@ void troca_infos(Informacao *info1, Informacao *info2){
 }
 
 void no_2_3_desacolar(ARV2_3 **no){
-
     free(*no);
     *no = NULL;
 }
 
-void arvore_2_3_desalocar(ARV2_3 **raiz){
-    if(*raiz != NULL){
+ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **raiz)
+{
+    if(filho1->quant_infos == 2)
+        filho1->quant_infos = 1;
         
-        arvore23_desalocar(&((*raiz)->esquerda));
-        arvore23_desalocar(&((*raiz)->centro));
+    no_2_3_adicionar_info(filho1, info, maior);
 
-        if((*raiz)->quant_infos == 2)
-            arvore23_desalocar(&((*raiz)->direita));
+    (*raiz)->quant_infos--;
 
+    if((*raiz)->quant_infos == 0)
         no_2_3_desacolar(raiz);
-    }
+
+    return filho1;
 }
 
-ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **filho3){
-
-}
-
-ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *menor_info){ 
+ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai){ 
     ARV2_3 *filho;
     filho = raiz; 
 
@@ -398,10 +302,6 @@ ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *menor_info){
         filho = filho->esquerda;
     }
     
-    if(filho!= NULL){
-        *menor_info = filho->info1;
-    }
-
     return filho; 
 }
 
@@ -409,29 +309,33 @@ Informacao maior_info(ARV2_3 *raiz){
     return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
 }
 
-ARV2_3 *buscar_maior_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *maior_info){
-    ARV2_3 *filho; 
-    filho = raiz; 
+ARV2_3 *buscar_maior_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *maior_valor)
+{
+    ARV2_3 *filho;
+    filho = raiz;
 
-    while (!eh_folha(filho)){
-        *pai = filho; 
-        filho = maior_filho(filho); 
+    while(!eh_folha(filho))
+    {
+        *pai = filho;
+        if(filho->quant_infos == 1)
+            filho = filho->centro;
+        else
+            filho = filho->direita;
     }
 
-    if (filho != NULL){
-       *maior_info = filho->quant_infos == 2 ? filho->info2 : filho->info1;
-    }
-    
-    return filho; 
+    if(filho != NULL)
+        *maior_valor = maior_info(filho);
+
+    return filho;
 }
 
-ARV2_3 *buscar_pai(ARV2_3 *raiz, int info){
+ARV2_3 *buscar_pai(ARV2_3 *raiz, char info){
     ARV2_3 *pai; 
     pai = NULL; 
 
     if (raiz != NULL){
         if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info)){
-            if (strcmp(info, raiz->info1.palavra_portugues)> 0)
+            if (strcmp(info, raiz->info1.palavra_portugues)< 0)
             {
                 pai = buscar_pai(raiz->esquerda, info); 
 
@@ -451,18 +355,76 @@ ARV2_3 *buscar_pai(ARV2_3 *raiz, int info){
     return pai; 
 }
 
-ARV2_3 *buscar_maior_pai(ARV2_3 *origem, ARV2_3 *pai, int info){
-    while (pai != NULL && ((pai->quant_infos == 1 && (strcmp(info, pai->info1.palavra_portugues)< 0))|| (pai->quant_infos == 2 && (strcmp(info,pai->info2.palavra_portugues)<0)))){
-        pai = buscar_pai(origem, pai->info1.palavra_portugues);
+ARV2_3 *buscar_maior_pai(ARV2_3 *raiz, char info)
+{
+    ARV2_3 *pai;
+    pai = NULL;
+
+    if(raiz != NULL)
+    {
+        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        {
+            if((strcmp( info,raiz->info1.palavra_portugues) < 0))
+                pai = buscar_maior_pai(raiz->esquerda, info);
+            else if(raiz->quant_infos == 1 || (strcmp( info,raiz->info2.palavra_portugues)< 0))
+                pai = buscar_maior_pai(raiz->centro, info);
+            else
+                pai = buscar_maior_pai(raiz->direita, info);
+
+            if(pai == NULL && ((raiz->quant_infos == 1 && (strcmp(raiz->info1.palavra_portugues,info)> 0) ) || (raiz->quant_infos == 2 && (strcmp(raiz->info2.palavra_portugues,info))> 0)))
+                pai = raiz;
+        }
     }
+
     return pai;
 }
 
-ARV2_3 *buscar_menor_pai(ARV2_3 *origem, ARV2_3*pai, int info){
-    while (pai != NULL && (strcmp(info, pai->info1.palavra_portugues))){
-        pai = buscar_pai(origem, pai->info1.palavra_portugues);
+ARV2_3 *buscar_menor_pai(ARV2_3 *raiz, char info)
+{
+    ARV2_3 *pai;
+    pai = NULL;
+
+    if(raiz != NULL)
+    {
+        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        {
+            if((strcmp(info, raiz->info1.palavra_portugues) < 0))
+                pai = buscar_menor_pai(raiz->esquerda, info);
+            else if(raiz->quant_infos == 1 || (strcmp(info, raiz->info2.palavra_portugues)< 0))
+                pai = buscar_menor_pai(raiz->centro, info);
+            else
+                pai = buscar_menor_pai(raiz->direita, info);
+
+            if(pai == NULL && (strcmp(raiz->info1.palavra_portugues,info)< 0 ))
+                pai = raiz;
+        }
     }
-    
+
+    return pai;
+}
+
+ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char info)
+{
+    ARV2_3 *pai;
+    pai = NULL;
+
+    if(raiz != NULL)
+    {
+        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        {
+            if((strcmp(info, raiz->info1.palavra_portugues) < 0))
+                pai = buscar_menor_pai_2_info(raiz->esquerda, info);
+            else if(raiz->quant_infos == 1 || (strcmp(info, raiz->info2.palavra_portugues)< 0))
+                pai = buscar_menor_pai_2_info(raiz->centro, info);
+            else
+                pai = buscar_menor_pai_2_info(raiz->direita, info);
+
+            if(pai == NULL && (strcmp(raiz->info1.palavra_portugues,info)< 0 ))
+                pai = raiz;
+        }
+    }
+
+    return pai;
 }
 
 int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior){
@@ -477,7 +439,21 @@ int ondinha_esq2dir(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 
     return removeu; 
 }
 
-int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
+void arvore_2_3_desalocar(ARV2_3 **raiz)
+{
+    if(*raiz != NULL)
+    {
+        arvore_2_3_desalocar(&((*raiz)->esquerda));
+        arvore_2_3_desalocar(&((*raiz)->centro));
+
+        if((*raiz)->quant_infos == 2)
+            arvore_2_3_desalocar(&((*raiz)->direita));
+
+        no_2_3_desacolar(raiz);
+    }
+}
+
+int _1_remover_2_3(ARV2_3 **raiz, char info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
 {
     int removeu = 0;
 
@@ -493,14 +469,15 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                 if((*raiz)->quant_infos== 2)
                 {
                     if(info1)
-                        troca_infos(&((*raiz)->info1), &((*raiz)->info2));
+                        (*raiz)->info1 = (*raiz)->info2 ;
 
                     (*raiz)->quant_infos = 1;
                 }
                 else
                 {
-                    if(pai != NULL){
-                        
+                    if (pai == NULL)
+                        no_2_3_desacolar(raiz);
+                    else{
                         if(*raiz == pai->esquerda || (pai->quant_infos == 2 && *raiz == pai->centro)){
                             pai_aux = buscar_pai(*origem, pai->info1.palavra_portugues);
                             
@@ -508,14 +485,22 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                                 removeu = ondinha_1(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior);
                             else 
                                 removeu = ondinha_1(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior);
-                        }
-                        else
-                        {
+                        }else{// filho do centro(com pai de 1 info)ou da direita 
+
                             Informacao info_pai;
-                            pai_aux = buscar_maior_pai(*origem, pai, (*raiz)->info1.palavra_portugues);
-                            if(pai_aux != NULL && pai->quant_infos == 1)
+                            pai_aux = buscar_maior_pai(*origem,(*raiz)->info1.palavra_portugues);
+
+                            ARV2_3 *menor_pai; 
+                            menor_pai = buscar_menor_pai(*origem, (*raiz)->info1.palavra_portugues);
+
+                            if(pai_aux == NULL || (pai_aux != pai && menor_pai != NULL))
                             {
-                                if((strcmp(pai_aux->info1.palavra_portugues,(*raiz)->info1.palavra_portugues)> 0))
+                                *maior = pai;
+                                (*raiz)->quant_infos = 0;
+                                removeu = -1;
+                            }
+                            else{
+                                if((strcmp(pai_aux->info1.palavra_portugues,(*raiz)->info1.palavra_portugues) > 0))
                                     info_pai = pai_aux->info1;
                                 else
                                     info_pai = pai_aux->info2;
@@ -524,20 +509,10 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                                 avo = buscar_pai(*origem, info_pai.palavra_portugues);
                                 removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior);
                             }
-                            else
-                            {
-                                *maior = pai;
-                                (*raiz)->quant_infos = 0;
-                                removeu = -1;
-                            }
                         }
-                    }
-                    else
-                        no_2_3_desalocar(raiz);
                 }
             }
-            else
-            {
+        }else{
                 ARV2_3 *filho, *filho2;
                 filho2 = NULL;
                 Informacao info_filho;
@@ -548,7 +523,7 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                     ARV2_3 *pai_aux2;
                     pai_aux2 = *raiz;
 
-                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux, NULL);
+                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux);
 
                     if(filho->quant_infos == 1)
                         filho2 = buscar_maior_filho((*raiz)->centro, &pai_aux2, &info_filho);
@@ -572,23 +547,24 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                     }
                     else
                     {
-                        filho = buscar_menor_filho((*raiz)->centro, &pai_aux, NULL);
+                        filho = buscar_menor_filho((*raiz)->centro, &pai_aux);
                         removeu = ondinha_1(filho->info1, &((*raiz)->info1), pai_aux, origem, &filho, maior);
                     }
                 }
             }
         }
-        else
-        {
-            if(info < (*raiz)->info1.palavra_portugues)
+        else{
+            if((strcmp(info,(*raiz)->info1.palavra_portugues)< 0))
                 removeu = _1_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
             else if((*raiz)->quant_infos == 1 || (strcmp(info,(*raiz)->info2.palavra_portugues)< 0) )
                 removeu = _1_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
                 removeu = _1_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
-        }
-    }
+           }
+    
     return removeu;
+  }
+
 }
 
 int _2_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
@@ -630,7 +606,7 @@ int _2_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                         else
                         {
                             Informacao info_pai;
-                            pai_aux = buscar_menor_pai(*origem, pai, (*raiz)->info1.palavra_portugues);
+                            pai_aux = buscar_menor_pai(*origem,(*raiz)->info1.palavra_portugues);
                             if(pai_aux != NULL && pai->quant_infos == 1)
                             {
                                 if(pai_aux->quant_infos == 2 && (strcmp(pai_aux->info2.palavra_portugues,(*raiz)->info1.palavra_portugues) < 0))
@@ -661,7 +637,7 @@ int _2_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
 
                 if(info2)
                 {
-                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux,NULL);
+                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux);
 
                     // TODO revisar
                     if(filho->quant_infos == 2)
@@ -678,7 +654,7 @@ int _2_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                 }
                 else if(info1)
                 {
-                    filho = buscar_menor_filho((*raiz)->centro, &pai_aux,NULL);
+                    filho = buscar_menor_filho((*raiz)->centro, &pai_aux);
 
                     if(filho->quant_infos == 2)
                     {
@@ -734,7 +710,7 @@ int arvore_2_3_remover(ARV2_3 **raiz, int info)
             else
                 entrada = &(posicao_juncao->direita->info1);
 
-            removeu = ondinha_esq2dir(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2);
+            //removeu = ondinha_esq2dir(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2);
         }
             //removeu = _2_remover_2_3(raiz, posicao_juncao->info1.palavra_portugues, NULL, raiz, &posicao_juncao);
 
@@ -752,7 +728,8 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, int info, ARV2_3 **maior)
     {
         if(!eh_folha(*raiz))
         {
-            if((*raiz)->quant_infos == 2 && !eh_info1(**raiz, info) && !eh_info2(**raiz, info))
+           // if((*raiz)->quant_infos == 2 && !eh_info1(**raiz, info) && !eh_info2(**raiz, info))
+           if ((*raiz)->quant_infos == 2 && (*raiz)->centro->quant_infos == 2)
                 balanceou = -1;
             else
             {
@@ -768,9 +745,9 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, int info, ARV2_3 **maior)
                     if((*raiz)->centro == NULL || (*raiz)->centro->quant_infos == 0)
                     {
                         if((*raiz)->centro != NULL)
-                            no_2_3_desalocar(&((*raiz)->centro));
+                            no_2_3_desacolar(&((*raiz)->centro));
 
-                        *maior = no_2_3_juntar((*raiz)->esquerda,(*raiz)->centro, &maior);
+                        *maior = no_2_3_juntar((*raiz)->esquerda,(*raiz)->info1, &maior, raiz);
                         balanceou = 1;
                     }
                 }
@@ -779,9 +756,9 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, int info, ARV2_3 **maior)
                     if((*raiz)->direita == NULL || (*raiz)->direita->quant_infos == 0)
                     {
                         if((*raiz)->direita != NULL)
-                            no_2_3_desalocar(&((*raiz)->direita));
+                            no_2_3_desacolar(&((*raiz)->direita));
 
-                        *maior = no_2_3_juntar((*raiz)->centro, (*raiz)->direita, &maior);
+                        *maior = no_2_3_juntar((*raiz)->centro,(*raiz)->info2, &maior, raiz);
                         balanceou = 1;
                     }
                 }
