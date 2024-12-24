@@ -505,9 +505,9 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                             pai_aux = buscar_pai(*origem, pai->info1.palavra_portugues);
                             
                             if(*raiz == pai->esquerda)
-                                removeu = movimento_onda(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                removeu = ondinha_1(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior);
                             else 
-                                removeu = movimento_onda(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                removeu = ondinha_1(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior);
                         }
                         else
                         {
@@ -522,7 +522,7 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
 
                                 ARV2_3 *avo;
                                 avo = buscar_pai(*origem, info_pai.palavra_portugues);
-                                removeu = movimento_onda(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior);
+                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior);
                             }
                             else
                             {
@@ -533,7 +533,7 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                         }
                     }
                     else
-                        no23_desalocar(raiz);
+                        no_2_3_desalocar(raiz);
                 }
             }
             else
@@ -559,7 +559,7 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                         filho2->quant_infos = 1;
                     }
                     else
-                        removeu = movimento_onda(filho->info1, &((*raiz)->info2), pai_aux, origem, &filho, maior);
+                        removeu = ondinha_1(filho->info1, &((*raiz)->info2), pai_aux, origem, &filho, maior);
                 }
                 else if(info1)
                 {
@@ -573,7 +573,7 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
                     else
                     {
                         filho = buscar_menor_filho((*raiz)->centro, &pai_aux, NULL);
-                        removeu = movimento_onda(filho->info1, &((*raiz)->info1), pai_aux, origem, &filho, maior);
+                        removeu = ondinha_1(filho->info1, &((*raiz)->info1), pai_aux, origem, &filho, maior);
                     }
                 }
             }
@@ -581,11 +581,11 @@ int _1_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
         else
         {
             if(info < (*raiz)->info1.palavra_portugues)
-                removeu = arvore23_remover1(&(*raiz)->esquerda, info, *raiz, origem, maior);
+                removeu = _1_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
             else if((*raiz)->quant_infos == 1 || (strcmp(info,(*raiz)->info2.palavra_portugues)< 0) )
-                removeu = arvore23_remover1(&(*raiz)->centro, info, *raiz, origem, maior);
+                removeu = _1_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
-                removeu = arvore23_remover1(&(*raiz)->direita, info, *raiz, origem, maior);
+                removeu = _1_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
         }
     }
     return removeu;
@@ -661,7 +661,7 @@ int _2_remover_2_3(ARV2_3 **raiz, int info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3
 
                 if(info2)
                 {
-                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux);
+                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux,NULL);
 
                     // TODO revisar
                     if(filho->quant_infos == 2)
