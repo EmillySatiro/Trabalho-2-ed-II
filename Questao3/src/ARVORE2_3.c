@@ -29,15 +29,13 @@ void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco) {
     scanf("%d", &bloco_fim);
 
     info.state = state;
-    info.block_inicio = bloco_inicio;
-    info.block_fim = bloco_fim;
-    info.endereco_inicio = bloco_inicio * 1024 * 1024;  // Calculando endereço inicial
-    info.endereco_fim = (bloco_fim + 1) * 1024 * 1024 - 1; // Calculando endereço final
+    info.block_inicio = bloco_inicio * 1024 * 1024;
+    info.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
 
     *raiz = criarNo(info);
     ARVORE2_3* atual = *raiz;
 
-    while (info.endereco_fim < ultimo_endereco) {
+    while (info.block_fim < ultimo_endereco) {
         bloco_inicio = info.block_fim + 1;
         printf("Informe o bloco final do próximo nó: ");
         scanf("%d", &bloco_fim);
@@ -46,10 +44,8 @@ void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco) {
 
         Informacao novaInfo;
         novaInfo.state = state;
-        novaInfo.block_inicio = bloco_inicio;
-        novaInfo.block_fim = bloco_fim;
-        novaInfo.endereco_inicio = bloco_inicio * 1024 * 1024; // Calculando endereço inicial
-        novaInfo.endereco_fim = (bloco_fim + 1) * 1024 * 1024 - 1; // Calculando endereço final
+        novaInfo.block_inicio = bloco_inicio * 1024 * 1024;
+        novaInfo.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
 
         if (atual->quant_infos == 1) {
             atual->info2 = novaInfo;

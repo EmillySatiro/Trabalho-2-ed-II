@@ -6,8 +6,6 @@ typedef struct Informacao {
     char state; // 'L' para livre, 'O' para ocupado
     int block_inicio; // Bloco inicial
     int block_fim;   // Bloco final
-    unsigned long endereco_inicio; // Endereço inicial
-    unsigned long endereco_fim;   // Endereço final
 } Informacao;
 
 typedef struct ARVORE2_3 {
@@ -22,16 +20,7 @@ typedef struct ARVORE2_3 {
 #include <stdio.h>
 #include <stdlib.h>
 
-ARVORE2_3* criarNo(Informacao info) {
-    ARVORE2_3* novoNo = (ARVORE2_3*)malloc(sizeof(ARVORE2_3));
-    novoNo->info1 = info;
-    novoNo->quant_infos = 1;
-    novoNo->esquerda = novoNo->centro = novoNo->direita = NULL;
-    return novoNo;
-}
-
-
-ARVORE2_3 criarNo(ARVORE2_3** raiz, Informacao info);
+ARVORE2_3 *criarNo(Informacao info);
 void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco);
 
 
