@@ -3,7 +3,7 @@
 #include <string.h>
 #include "ARVORE2_3.h"
 
-ARVORE2_3* criarNo(Informacao info) {
+ARVORE2_3* criarNo(Informacao_memoria info) {
     ARVORE2_3* novoNo = (ARVORE2_3*)malloc(sizeof(ARVORE2_3));
     if (!novoNo) {
         printf("Erro de alocação de memória.\n");
@@ -17,7 +17,7 @@ ARVORE2_3* criarNo(Informacao info) {
 
 
 void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco) {
-    Informacao info;
+    Informacao_memoria info;
     char state;
     int bloco_inicio = 0, bloco_fim;
     unsigned long endereco_fim;
@@ -42,7 +42,7 @@ void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco) {
 
         state = (info.state == 'L') ? 'O' : 'L';
 
-        Informacao novaInfo;
+        Informacao_memoria novaInfo;
         novaInfo.state = state;
         novaInfo.block_inicio = bloco_inicio * 1024 * 1024;
         novaInfo.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
