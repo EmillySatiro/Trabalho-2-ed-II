@@ -20,7 +20,9 @@ typedef struct ARVORE2_3 {
 
 
 ARVORE2_3 *criarNo(Informacao_memoria info);
-void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco);
+void cadastrarNos(ARVORE2_3** raiz, int ultimo_endereco);
+void alocarNos(ARVORE2_3** raiz, int quantidade_blocos);
+void exibirNos(ARVORE2_3* raiz);
 
-
+void liberarNos(ARVORE2_3* raiz);
 #endif 
