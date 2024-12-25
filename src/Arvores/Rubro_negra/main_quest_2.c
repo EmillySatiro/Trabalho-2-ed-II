@@ -84,8 +84,8 @@ int main() {
         printf("\n"); // Linha extra para melhorar a apresentação
     } while (opcao != 0); // Continua o menu até o usuário escolher 0 (Sair)
 
-    return 0;
     liberar_rubronegra(&arvore_rubro_negra);
+    return 0;
 }
 
 

@@ -6,6 +6,7 @@
     Network: rede de computadores;
     System: sistema;
 % Unidade 2
+    ava: aaaa;
     Byeye: barramento;
     Bug: inseto;
     Bicycle: bicicleta;
