@@ -113,15 +113,15 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
  *
  * @param arvore Ponteiro para a raiz da árvore binária.
  */
-void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
-{
-    if (arvore != NULL)
-    {
-        printf("%s\nUnidades: ", arvore->palavra_ingles);
-
+void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore){
+    if (arvore != NULL){
+        printf("\n=====================================\n");
+        printf("Palavra em Inglês: %s\n", arvore->palavra_ingles);
+        printf("Unidades Associadas: ");
+        
         lista_unidade *temp = arvore->unidade;
-        while (temp != NULL)
-        {
+        while (temp != NULL){
+
             printf("%d| ", temp->unidade);
             temp = temp->proximo;
         }
