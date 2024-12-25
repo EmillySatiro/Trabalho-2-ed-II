@@ -79,48 +79,60 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     Informacao sobe_sup;
     ARV2_3 *maior = NULL;
 
-    // se é nullo cria né
+    // Se o nó for NULL, cria um novo nó com a informação
     if (*no == NULL){
         *no = criar_no(info, NULL, NULL);
     }
-    else{
-        // caso seja folha
-        if (eh_folha(*no)){
-            
-            if ((*no)->quant_infos == 1){
-                add_elementos(*no, info, NULL);
-            }else{
-                maior = quebra_No(no, info, sobe, NULL);
-                // se não houver pai, cria um novo só superior
-                if (pai && !(*pai)){
-                    *no = criar_no(*sobe, *no, maior);
-                    maior = NULL; // só pra limpar o maior
+    else {
+        // Caso seja uma folha
+        if (eh_folha(*no)) {
+            // Se o nó tiver apenas um elemento, adiciona a nova informação
+            if ((*no)->quant_infos == 1) {
+                // Verifica se a palavra já existe antes de adicionar
+                if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) != 0) {
+                    add_elementos(*no, info, NULL);
+                }else {
+                    insere_arvore_binaria((&(*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
                 }
+            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) != 0){ // Caso o nó tenha 2 informações
+                maior = quebra_No(no, info, sobe, NULL);
+                // Se não houver pai, cria um novo nó superior
+                if (pai == NULL) {
+                    *no = criar_no(*sobe, *no, maior);
+                    maior = NULL; // Limpa o maior
+                }
+            }else{
+                insere_arvore_binaria((&(*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
             }
         }
-        else{ // caso não seja uma folha procrura onde vamos inserir né
-            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0){
-                maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no);
-            }
-            else if (((*no)->quant_infos == 1) || (strcmp((info.palavra_portugues), (*no)->info2.palavra_portugues)) < 0){
-                maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no);
-            }
-            else{
-               maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
-            }
+        else { // Caso não seja folha, procura o local para inserir
+            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0) {
+                    maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no);
+                }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) == 0) {
+                    insere_arvore_binaria(&((*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
+                    maior = NULL;  
+                }else if ((*no)->quant_infos == 1 || strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) < 0) {
+                    maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no);
+                }else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) == 0) {
+                    insere_arvore_binaria(&((*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
+                    maior = NULL;  
+                }
+                else {
+                    maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
+                }
 
-            // se maior foi retornado, o nó pode precisar ser atualizado ou quebrado
-            if (maior){
-                if ((*no)->quant_infos == 1){
+            // Se maior foi retornado, o nó pode precisar ser atualizado ou quebrado
+            if (maior) {
+                // Se o nó tem apenas 1 informação, adiciona a informação
+                if ((*no)->quant_infos == 1) {
                     add_elementos(*no, *sobe, maior);
-                    maior = NULL; // limpa maior após adicionar
-                }else{
+                    maior = NULL; // Limpa maior após adicionar
+                } else { // Caso o nó tenha 2 informações
                     maior = quebra_No(no, *sobe, &sobe_sup, &maior);
 
-                    if (pai)
-                    {
+                    if (pai) {
                         *no = criar_no(sobe_sup, *no, maior);
-                        maior = NULL; // limpar maior após criar o nó
+                        maior = NULL; // Limpa maior após criar o nó
                     }
                 }
             }
@@ -128,6 +140,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     }
     return maior;
 }
+
 
 void insere(ARV2_3 **raiz, Informacao info)
 {
@@ -138,6 +151,32 @@ void insere(ARV2_3 **raiz, Informacao info)
         *raiz = criar_no(sobe, *raiz, novo_no);
     }
 }
+
+Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade)
+{
+    ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
+    Informacao info;
+
+    strcpy(info.palavra_portugues, palavra_portugues);
+    // Insere a palavra na árvore binária, que é criada fora da função
+    insere_arvore_binaria(&arvore, palavra_ingles, unidade);
+    // Atribuindo a árvore binária à estrutura de informação
+    info.palavra_ingles = arvore;
+    info.unidade = unidade;
+    
+    return info;
+}
+
+void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles){
+    Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade); 
+
+    Informacao sobe;
+    ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info_2_3, &sobe, NULL);
+    if (novo_no)
+        *raiz = criar_no(sobe, *raiz, novo_no);
+    
+}
+
 
 void mostrar(ARV2_3 *raiz){
    
@@ -171,30 +210,6 @@ void mostrar(ARV2_3 *raiz){
         if (raiz->quant_infos == 2)
             mostrar(raiz->direita);
     }
-}
-
-
-
-Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade)
-{
-    ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
-    Informacao info;
-
-    strcpy(info.palavra_portugues, palavra_portugues);
-    // Insere a palavra na árvore binária, que é criada fora da função
-    insere_arvore_binaria(&arvore, palavra_ingles, unidade);
-    // Atribuindo a árvore binária à estrutura de informação
-    info.palavra_ingles = arvore;
-    info.unidade = unidade;
-    
-    return info;
-}
-
-void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles)
-{
-    Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade);  // Agora a árvore binária é associada corretamente
-    criar_no(info_2_3, NULL, NULL);  // O nó de ARV2_3 é criado com as informações corretas
-    insere(raiz, info_2_3);  // A inserção é feita com os dados da informação criada
 }
 
 void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
@@ -239,7 +254,6 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
     imprimir_palavras_ingles(raiz->centro, palavra_portugues);
     imprimir_palavras_ingles(raiz->direita, palavra_portugues);
 }
-
 
 void no_2_3_adicionar_info(ARV2_3 *no, Informacao info, ARV2_3 *filho_maior)
 {
