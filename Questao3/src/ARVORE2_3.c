@@ -23,40 +23,40 @@ void cadastrarNos(ARVORE2_3** raiz, unsigned long ultimo_endereco) {
     unsigned long endereco_fim;
 
 
-//     printf("Informe o estado do primeiro nó (L para livre, O para ocupado): ");
-//     scanf(" %c", &state);
-//     printf("Informe o bloco final do primeiro nó: ");
-//     scanf("%d", &bloco_fim);
+    printf("Informe o estado do primeiro nó (L para livre, O para ocupado): ");
+    scanf(" %c", &state);
+    printf("Informe o bloco final do primeiro nó: ");
+    scanf("%d", &bloco_fim);
 
-//     info.state = state;
-//     info.block_inicio = bloco_inicio * 1024 * 1024;
-//     info.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
+    info.state = state;
+    info.block_inicio = bloco_inicio * 1024 * 1024;
+    info.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
 
-//     *raiz = criarNo(info);
-//     ARVORE2_3* atual = *raiz;
+    *raiz = criarNo(info);
+    ARVORE2_3* atual = *raiz;
 
-//     while (info.block_fim < ultimo_endereco) {
-//         bloco_inicio = info.block_fim + 1;
-//         printf("Informe o bloco final do próximo nó: ");
-//         scanf("%d", &bloco_fim);
+    while (info.block_fim < ultimo_endereco) {
+        bloco_inicio = info.block_fim + 1;
+        printf("Informe o bloco final do próximo nó: ");
+        scanf("%d", &bloco_fim);
 
-//         state = (info.state == 'L') ? 'O' : 'L';
+        state = (info.state == 'L') ? 'O' : 'L';
 
         Informacao_memoria novaInfo;
         novaInfo.state = state;
         novaInfo.block_inicio = bloco_inicio * 1024 * 1024;
         novaInfo.block_fim = (bloco_fim + 1) * 1024 * 1024 - 1;
 
-//         if (atual->quant_infos == 1) {
-//             atual->info2 = novaInfo;
-//             atual->quant_infos = 2;
-//         } else {
-//             ARVORE2_3* novoNo = criarNo(novaInfo);
-//             atual->direita = novoNo;
-//             atual = novoNo;
-//         }
+        if (atual->quant_infos == 1) {
+            atual->info2 = novaInfo;
+            atual->quant_infos = 2;
+        } else {
+            ARVORE2_3* novoNo = criarNo(novaInfo);
+            atual->direita = novoNo;
+            atual = novoNo;
+        }
 
-//         info = novaInfo;
-//     }
-// }
+        info = novaInfo;
+    }
+}
 
