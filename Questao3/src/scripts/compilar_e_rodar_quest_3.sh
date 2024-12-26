@@ -20,7 +20,7 @@ fi
 if [ ! -f "$ARVORE2_3_FILE" ]; then
     echo "Erro: $ARVORE2_3_FILE não encontrado!"
     exit 1
-fi  
+fi
 
 # Compilar o programa
 echo "Compilando o programa..."

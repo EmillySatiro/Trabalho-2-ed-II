@@ -21,8 +21,17 @@ typedef struct ARVORE2_3 {
 
 ARVORE2_3 *criarNo(Informacao_memoria info);
 void cadastrarNos(ARVORE2_3** raiz, int ultimo_endereco);
-void alocarNos(ARVORE2_3** raiz, int quantidade_blocos);
+void alocarNos(ARVORE2_3** raiz, int quantidade_blocos);//conferir se realmente precisa do balancear 
 void exibirNos(ARVORE2_3* raiz);
 
+int eh_folha_Q3(ARVORE2_3 *no);
+void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior);
+void no_2_3_desacolar_Q3(ARVORE2_3 **no);
+ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_3 *maior, ARVORE2_3 **raiz);
+int arvore_2_3_rebalancear_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 **maior);
+static int balanceamento_Q3(ARVORE2_3 **raiz, ARVORE2_3 *filho1, ARVORE2_3 **filho2, Informacao_memoria info, ARVORE2_3 **maior);
+
+
 void liberarNos(ARVORE2_3* raiz);
+
 #endif 
