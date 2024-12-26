@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Diretório base do projeto
-BASE_DIR="/home/walison/Trabalho-2-ed-II"
+BASE_DIR="/home/Trabalho-2-ed-II"
 
 # Nome do executável
 EXECUTAVEL="programa_quest_3"
