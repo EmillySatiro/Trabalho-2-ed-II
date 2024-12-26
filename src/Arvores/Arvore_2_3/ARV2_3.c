@@ -831,20 +831,34 @@ int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int uni
     ARV2_3 *no = buscar_palavra_2_3(*raiz, palavra_portugues);
 
     if (no != NULL) {
-        remover_todas_palavras_por_unidade(&(no->info1.palavra_ingles), unidade);
+        if (strcmp(no->info1.palavra_portugues, palavra_portugues) == 0) {
+            remover_todas_palavras_por_unidade(&(no->info1.palavra_ingles), unidade);
 
-        if (no->info1.palavra_ingles == NULL) {
-            arvore_2_3_remover(raiz, palavra_portugues);
-            printf("A palavra '%s' foi removida da árvore rubro-negra e da árvore binária.\n", palavra_portugues);
-        } else {
-            printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
+            if (no->info1.palavra_ingles == NULL) {
+                arvore_2_3_remover(raiz, palavra_portugues);
+                printf("A palavra '%s' foi removida da árvore 2-3 e da árvore binária.\n", palavra_portugues);
+            } else {
+                printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
+            }
+
+            confere = 1;
+        } else if (strcmp(no->info2.palavra_portugues, palavra_portugues) == 0) {
+            remover_todas_palavras_por_unidade(&(no->info2.palavra_ingles), unidade);
+
+            if (no->info2.palavra_ingles == NULL) {
+                arvore_2_3_remover(raiz, palavra_portugues);
+                printf("A palavra '%s' foi removida da árvore 2-3 e da árvore binária.\n", palavra_portugues);
+            } else {
+                printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
+            }
+
+            confere = 1;
         }
-
-        confere = 1; 
     } else {
         printf("A palavra '%s' não foi encontrada ou a unidade não corresponde.\n", palavra_portugues);
     }
 
     return confere; 
 }
+
 
