@@ -798,12 +798,44 @@ static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informa
     return balanceou;
 }
 
+void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, int unidade) {
+    if (*raiz != NULL) { 
+        
+        if (*raiz) {
+            int sucesso = remover_palavra_por_unidade(&((*raiz)->info1.palavra_ingles), palavra_ingles, unidade);
+            if (sucesso) {
+                if ((*raiz)->info1.palavra_ingles == NULL) {
+                    char palavra_portugues[100];
+                    strcpy(palavra_portugues, (*raiz)->info1.palavra_portugues);
+                    arvore_2_3_remover(raiz, palavra_portugues);
+                    printf("Palavra '%s' foi removida da árvore 2-3 e da árvore binária.\n", palavra_portugues);
+                } else {
+                    printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                }
+            }
+        }
+        if ( *raiz ) {
+            int sucesso = remover_palavra_por_unidade(&((*raiz)->info2.palavra_ingles), palavra_ingles, unidade);
+            if (sucesso) {
+                if ((*raiz)->info2.palavra_ingles == NULL) {
+                    char palavra_portugues[100];
+                    strcpy(palavra_portugues, (*raiz)->info2.palavra_portugues);
+                    arvore_2_3_remover(raiz, palavra_portugues);
+                    printf("Palavra '%s' foi removida da árvore 2-3 e da árvore binária.\n", palavra_portugues);
+                } else {
+                    printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                }
+            }
+        }
+
+      
+        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->esquerda), palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->direita), palavra_ingles, unidade);
+    }
+}
 
 
-// )informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto 
-// deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma 
-// unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da 
-// árvore 2-3. 
+
 
 ARV2_3 *buscar_palavra_2_3(ARV2_3 *raiz, char *palavra_portugues) {
     ARV2_3 *resultado = NULL;
