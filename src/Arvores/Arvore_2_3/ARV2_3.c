@@ -141,7 +141,6 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     return maior;
 }
 
-
 void insere(ARV2_3 **raiz, Informacao info)
 {
     Informacao sobe;
@@ -176,7 +175,6 @@ void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade,
         *raiz = criar_no(sobe, *raiz, novo_no);
     
 }
-
 
 void mostrar(ARV2_3 *raiz){
    
@@ -834,9 +832,6 @@ void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, i
     }
 }
 
-
-
-
 ARV2_3 *buscar_palavra_2_3(ARV2_3 *raiz, char *palavra_portugues) {
     ARV2_3 *resultado = NULL;
 
@@ -894,3 +889,27 @@ int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int uni
 }
 
 
+void liberar_arvore_2_3_binaria(Informacao *info) {
+    if (info) {
+        if (info->palavra_ingles) {
+            libera_arvore_binaria(&info->palavra_ingles);
+            info->palavra_ingles = NULL;
+        }
+    }
+    free(info);
+}
+
+void liberar_arvore_2_3(ARV2_3 **raiz) {
+    if (*raiz) {
+        liberar_arvore_2_3(&(*raiz)->esquerda);
+        liberar_arvore_2_3(&(*raiz)->centro);
+        liberar_arvore_2_3(&(*raiz)->direita);
+
+       
+        liberar_arvore_2_3_binaria(&(*raiz)->info1);
+        liberar_arvore_2_3_binaria(&(*raiz)->info2);
+
+        free(*raiz);
+        *raiz = NULL;
+    }
+}
