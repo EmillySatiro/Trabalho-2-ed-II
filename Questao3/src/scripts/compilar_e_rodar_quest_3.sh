@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Diretório base do projeto
-BASE_DIR="/home/Trabalho-2-ed-II"
+BASE_DIR="/home/walison/Trabalho-2-ed-II"
 
 # Nome do executável
 EXECUTAVEL="programa_quest_3"
@@ -20,7 +20,7 @@ fi
 if [ ! -f "$ARVORE2_3_FILE" ]; then
     echo "Erro: $ARVORE2_3_FILE não encontrado!"
     exit 1
-fi  
+fi
 
 # Compilar o programa
 echo "Compilando o programa..."

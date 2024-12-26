@@ -64,6 +64,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
 int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior);
 int arvore_2_3_remover(ARV2_3 **raiz, char *info);
 int arvore_2_3_rebalancear(ARV2_3 **raiz, char *info, ARV2_3 **maior);
+
 static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior);
 
 

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "/home/Trabalho-2-ed-II/Questao3/src/ARVORE2_3.h"
+#include "/home/walison/Trabalho-2-ed-II/Questao3/src/ARVORE2_3.h"
 
 int main() {
     ARVORE2_3* raiz = NULL;
@@ -25,8 +25,19 @@ int main() {
     }
     
     alocarNos(&raiz, quantidade_blocos);
+    printf("\n=============== Nós após a alocação ==================\n");
+    exibirNos(raiz);
 
-    printf("\nNós após a alocação ==================\n");
+  
+
+    printf("\nInforme a quantidade de blocos a serem liberados: ");
+    if (scanf("%d", &quantidade_blocos) != 1 || quantidade_blocos <= 0) {
+        printf("Quantidade inválida.\n");
+        return 1; 
+    }
+
+    liberarBlocos(&raiz,quantidade_blocos);
+
     exibirNos(raiz);
 
     liberarNos(raiz);
