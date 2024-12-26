@@ -15,6 +15,7 @@
         "extrair_rubro.h": "c",
         "extrair.h": "c",
         "arv_binaria.h": "c",
-        "arvore2_3.h": "c"
+        "arvore2_3.h": "c",
+        "string.h": "c"
     }
 }
