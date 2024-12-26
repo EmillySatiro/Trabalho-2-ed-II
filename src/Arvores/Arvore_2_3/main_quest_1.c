@@ -57,7 +57,7 @@ int main() {
                 printf("Digite a palavra em ingles: ");
                 fgets(palavra_removida, sizeof(palavra_removida), stdin); 
                 palavra_removida[strcspn(palavra_removida, "\n")] = '\0'; 
-                remover_palavra_ingles_e_unidade_23(&arvore2_3, palavra_removida, unidade) ;
+                //remover_palavra_ingles_e_unidade_23(&arvore2_3, palavra_removida, unidade) ;
                 printf("saindo aqui ");
                 break;
             case 5:
@@ -69,8 +69,7 @@ int main() {
                 printf("Digite a palavra em portugues: ");
                 fgets(palavra_removida, sizeof(palavra_removida), stdin); 
                 palavra_removida[strcspn(palavra_removida, "\n")] = '\0'; 
-               
-
+                remover_palavra_completa_2_3(&arvore2_3, palavra_removida, unidade);
                 break;
             case 6:
                 printf("Você escolheu a Opção 6!\n");
