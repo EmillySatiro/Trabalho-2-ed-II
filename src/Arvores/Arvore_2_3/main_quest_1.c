@@ -57,7 +57,8 @@ int main() {
                 printf("Digite a palavra em ingles: ");
                 fgets(palavra_removida, sizeof(palavra_removida), stdin); 
                 palavra_removida[strcspn(palavra_removida, "\n")] = '\0'; 
-
+                remover_palavra_ingles_e_unidade_23(&arvore2_3, palavra_removida, unidade) ;
+                printf("saindo aqui ");
                 break;
             case 5:
                 printf("Você escolheu a Opção 5!\n");
@@ -73,7 +74,7 @@ int main() {
                 break;
             case 6:
                 printf("Você escolheu a Opção 6!\n");
-               
+                mostrar(arvore2_3);
                 break;
             case 0:
                 printf("Saindo do programa...\n");
@@ -82,8 +83,8 @@ int main() {
                 printf("Opção inválida! Tente novamente.\n");
         }
 
-        printf("\n"); // Linha extra para melhorar a apresentação
-    } while (opcao != 0); // Continua o menu até o usuário escolher 0 (Sair)
+        printf("\n"); 
+    } while (opcao != 0); 
 
     
 
