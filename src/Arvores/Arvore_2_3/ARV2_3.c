@@ -797,3 +797,54 @@ static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informa
     }
     return balanceou;
 }
+
+
+
+// )informar uma palavra em português e a unidade a qual a mesma pertence e então remove-la, para isto 
+// deve remover a palavra em inglês da árvore binária correspondente a palavra em português da mesma 
+// unidade. Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da 
+// árvore 2-3. 
+
+ARV2_3 *buscar_palavra_2_3(ARV2_3 *raiz, char *palavra_portugues) {
+    ARV2_3 *resultado = NULL;
+
+    if (raiz != NULL) {
+        int comparacao1 = strcmp(palavra_portugues, raiz->info1.palavra_portugues);
+        int comparacao2 = (raiz->quant_infos == 2) ? strcmp(palavra_portugues, raiz->info2.palavra_portugues) : -1;
+
+        if (comparacao1 == 0 || comparacao2 == 0) {
+            resultado = raiz;
+        } else if (comparacao1 < 0) {
+            resultado = buscar_palavra_2_3(raiz->esquerda, palavra_portugues);
+        } else if (comparacao2 > 0) {
+            resultado = buscar_palavra_2_3(raiz->direita, palavra_portugues);
+        } else {
+            resultado = buscar_palavra_2_3(raiz->centro, palavra_portugues);
+        }
+    }
+
+    return resultado;
+}
+
+int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade) {
+    int confere = 0; 
+    ARV2_3 *no = buscar_palavra_2_3(*raiz, palavra_portugues);
+
+    if (no != NULL) {
+        remover_todas_palavras_por_unidade(&(no->info1.palavra_ingles), unidade);
+
+        if (no->info1.palavra_ingles == NULL) {
+            arvore_2_3_remover(raiz, palavra_portugues);
+            printf("A palavra '%s' foi removida da árvore rubro-negra e da árvore binária.\n", palavra_portugues);
+        } else {
+            printf("As palavras em inglês foram removidas, mas a palavra em português permanece.\n");
+        }
+
+        confere = 1; 
+    } else {
+        printf("A palavra '%s' não foi encontrada ou a unidade não corresponde.\n", palavra_portugues);
+    }
+
+    return confere; 
+}
+
