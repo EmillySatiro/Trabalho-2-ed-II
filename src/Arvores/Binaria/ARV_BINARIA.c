@@ -15,8 +15,7 @@
  *
  * @note A função imprime uma mensagem de erro e termina o programa se a alocação de memória falhar.
  */
-ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
-{
+ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
 
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
     if (arvore != NULL)
@@ -77,8 +76,7 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
  * @param arvore Ponteiro para a árvore binária (ARV_BINARIA) a ser exibida.
  * @param unidade Unidade a ser comparada com a unidade dos nós da árvore.
  */
-void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
-{
+void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade){
     if (arvore != NULL)
     {
 
@@ -320,7 +318,6 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
     }
 
 }
-
 
 /**
  * @brief Remove uma palavra de um nó da árvore binária com base na unidade especificada.
