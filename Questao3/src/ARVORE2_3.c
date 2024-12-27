@@ -9,7 +9,7 @@ ARVORE2_3 *criarNo(Informacao_memoria info)
     if (!novoNo)
     {
         printf("Erro de alocação de memória.\n");
-        // exit(1);
+        exit(1);
     }
     novoNo->info1 = info;
     novoNo->quant_infos = 1;
@@ -100,15 +100,7 @@ void intercalarNos(ARVORE2_3 **raiz)
                 }
                 else
                 {
-                    // Troca os estados para alternar
-                    if (atual->info1.state == 'L')
-                    {
-                        atual->direita->info1.state = 'O';
-                    }
-                    else
-                    {
-                        atual->direita->info1.state = 'L';
-                    }
+                    atual->direita->info1.state = (atual->info1.state == 'L') ? 'O' : 'L';
                 }
             }
 
