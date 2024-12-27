@@ -1,7 +1,7 @@
 #ifndef ARV2_3_H 
 #define ARV2_3_H 
 #include "../Binaria/ARV_BINARIA.h"
-#include "../Rubro_negra/Rubro_negra.h"
+
 
 
 typedef struct Informacao{

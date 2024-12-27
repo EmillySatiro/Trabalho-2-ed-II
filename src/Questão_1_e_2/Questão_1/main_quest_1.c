@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../Binaria/ARV_BINARIA.h"
-#include "../Arvore_2_3/ARV2_3.h"
-#include "../Arvore_2_3/Arquivo/Extrair.h"
+#include "../Questão_1/ARV2_3.h"
+#include "../../Questão_1_e_2/Questão_1/Arquivo/Extrair.h"
+
 
 int main() {
     ARV2_3 *arvore2_3 = NULL;

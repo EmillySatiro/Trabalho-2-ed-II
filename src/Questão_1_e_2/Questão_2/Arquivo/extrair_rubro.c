@@ -1,12 +1,12 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "../../Binaria/ARV_BINARIA.h"
 #include "../Rubro_negra.h"
 #include "./extrair_rubro.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+
 
 char *trim(char *str) {
     if (str == NULL) return str; 

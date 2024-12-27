@@ -3,7 +3,7 @@
 #include <string.h>
 #include "ARV2_3.h"
 #include "../Binaria/ARV_BINARIA.h"
-#include "../Rubro_negra/Rubro_negra.h"
+
 
 
 /**

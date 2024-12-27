@@ -3,8 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "../../Binaria/ARV_BINARIA.h"
-#include "../../Arvore_2_3/ARV2_3.h"
-#include "../../Rubro_negra/Rubro_negra.h"
+#include "../../Questão_1/ARV2_3.h"
 
 
 #define Tamanho_linha 1024
@@ -76,4 +75,3 @@ ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz) {
     return *raiz;
 }
 
-// Função para processar o arquivo e inserir palavras na árvore 2-3

@@ -7,10 +7,10 @@ BASE_DIR="/home/Trabalho-2-ed-II"
 EXECUTAVEL="programa_quest_1"
 
 # Arquivos necessários
-MAIN_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/main_quest_1.c"
-BINARIA_FILE="$BASE_DIR/src/Arvores/Binaria/ARV_BINARIA.c"
-Arvore_2_3_FILE="$BASE_DIR/src/Arvores/Arvore_2_3/ARV2_3.c"
-EXTRAIR_2_3="$BASE_DIR/src/Arvores/Arvore_2_3/Arquivo/Extrair.c"
+MAIN_FILE="$BASE_DIR/src/Questão_1_e_2/Questão_1/main_quest_1.c"
+BINARIA_FILE="$BASE_DIR/src/Questão_1_e_2/Binaria/ARV_BINARIA.c"
+Arvore_2_3_FILE="$BASE_DIR/src/Questão_1_e_2/Questão_1/ARV2_3.c"
+EXTRAIR_2_3="$BASE_DIR/src/Questão_1_e_2/Questão_1/Arquivo/Extrair.c"
 
 # Verificar se os arquivos existem
 if [ ! -f "$MAIN_FILE" ]; then
