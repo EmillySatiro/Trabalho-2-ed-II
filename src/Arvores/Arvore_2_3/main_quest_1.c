@@ -50,7 +50,7 @@ int main() {
                 break;
             case 4:
                 printf("Você escolheu a Opção 4!\n");
-                printf("Informações importantes: \n Caso ela seja a única palavra em uma das árvores binárias, ela também será removida da arvore Rubro_negra\n");
+                printf("Informações importantes: \n Caso ela seja a única palavra em uma das árvores binárias, ela também será removida da arvore 2_3\n");
                 printf("Infome a unidade: \n");
                 scanf("%d", &unidade);
                 limparBuffer();
@@ -62,7 +62,7 @@ int main() {
                 break;
             case 5:
                 printf("Você escolheu a Opção 5!\n");
-                printf("Informações importantes:\n Para remover  a palavra em portugues, deve ser removida a palavra em inglês da árvore binária correspondente a palavra em português da mesma unidade.\n Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da árvore Rubro- negra!\n");
+                printf("Informações importantes:\n Para remover  a palavra em portugues, deve ser removida a palavra em inglês da árvore binária correspondente a palavra em português da mesma unidade.\n Caso ela seja a única palavra na árvore binária, a palavra em português deve ser removida da árvore 2_3 !\n");
                 printf("Infome a unidade: \n");
                 scanf("%d", &unidade);
                 limparBuffer();

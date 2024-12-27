@@ -6,6 +6,17 @@
 #include "../Rubro_negra/Rubro_negra.h"
 
 
+/**
+ * @brief Cria um novo nó para a árvore 2-3.
+ *
+ * Esta função aloca memória para um novo nó da árvore 2-3 e inicializa
+ * seus campos com as informações fornecidas.
+ *
+ * @param info Informação a ser armazenada no nó.
+ * @param filho_esquerda Ponteiro para o filho à esquerda do nó.
+ * @param filho_centro Ponteiro para o filho do centro do nó.
+ * @return Ponteiro para o novo nó criado, ou NULL se a alocação falhar.
+ */
 ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
 {
     ARV2_3 *no = (ARV2_3 *)malloc(sizeof(ARV2_3));
@@ -24,6 +35,23 @@ ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
     return no;
 }
 
+/**
+ * @brief Função para quebrar um nó em uma árvore 2-3.
+ *
+ * Esta função quebra um nó da árvore 2-3 em dois nós, ajustando as informações
+ * e os ponteiros de acordo com a nova informação inserida.
+ *
+ * @param no Ponteiro duplo para o nó a ser quebrado.
+ * @param info Informação a ser inserida na árvore.
+ * @param sobe Ponteiro para a informação que irá subir para o nó pai.
+ * @param filho Ponteiro para o filho que será ajustado na quebra do nó.
+ * @return ARV2_3* Retorna o novo nó criado com a maior informação.
+ *
+ * @note A função considera três casos:
+ *       1. A nova informação é maior que a info2 do nó.
+ *       2. A nova informação está entre info1 e info2 do nó.
+ *       3. A nova informação é menor que a info1 do nó.
+ */
 ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho)
 {
     ARV2_3 *maior_info;
@@ -59,6 +87,16 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
     return maior_info;
 }
 
+/**
+ * @brief Adiciona um elemento a um nó da árvore 2-3.
+ *
+ * Esta função adiciona um novo elemento (Info) a um nó (no) da árvore 2-3,
+ * ajustando os ponteiros dos filhos conforme necessário.
+ *
+ * @param no Ponteiro para o nó da árvore 2-3 onde o elemento será adicionado.
+ * @param Info Estrutura contendo a informação a ser adicionada ao nó.
+ * @param filho Ponteiro para o filho que será ajustado após a adição do elemento.
+ */
 void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
 {
 
@@ -74,6 +112,19 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
     no->quant_infos = 2;
 }
 
+/**
+ * @brief Insere um elemento na árvore 2-3.
+ *
+ * Esta função insere um novo elemento na árvore 2-3, mantendo suas propriedades.
+ * Se o nó for uma folha, a função adiciona a nova informação diretamente ou quebra o nó se necessário.
+ * Se o nó não for uma folha, a função procura o local apropriado para inserir a nova informação.
+ *
+ * @param no Ponteiro para o nó atual da árvore.
+ * @param info Informação a ser inserida na árvore.
+ * @param sobe Ponteiro para a informação que pode subir para o nó pai em caso de quebra.
+ * @param pai Ponteiro para o nó pai do nó atual.
+ * @return Ponteiro para o maior nó resultante da quebra, ou NULL se não houver quebra.
+ */
 ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai)
 {
     Informacao sobe_sup;
@@ -141,6 +192,15 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
     return maior;
 }
 
+/**
+ * @brief Insere uma nova informação na árvore 2-3.
+ *
+ * Esta função insere um novo elemento na árvore 2-3. Se a inserção causar um 
+ * estouro no nó raiz, um novo nó raiz é criado.
+ *
+ * @param raiz Ponteiro para o ponteiro da raiz da árvore 2-3.
+ * @param info Informação a ser inserida na árvore.
+ */
 void insere(ARV2_3 **raiz, Informacao info)
 {
     Informacao sobe;
@@ -151,6 +211,16 @@ void insere(ARV2_3 **raiz, Informacao info)
     }
 }
 
+/**
+ * @brief Cria uma estrutura de informação contendo uma palavra em português, 
+ *        uma árvore binária com a palavra em inglês e uma unidade.
+ *
+ * @param palavra_portugues A palavra em português a ser armazenada.
+ * @param palavra_ingles A palavra em inglês a ser inserida na árvore binária.
+ * @param unidade Um valor inteiro representando a unidade associada.
+ * @return Uma estrutura Informacao contendo a palavra em português, 
+ *         a árvore binária com a palavra em inglês e a unidade.
+ */
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade)
 {
     ARV_BINARIA *arvore = NULL;  // A árvore binária será criada localmente
@@ -166,6 +236,18 @@ Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade
     return info;
 }
 
+/**
+ * @brief Insere um elemento binário em uma árvore 2-3.
+ *
+ * Esta função insere uma nova informação na árvore 2-3. A informação é composta por uma palavra em português,
+ * uma palavra em inglês e uma unidade. Se a inserção resultar na necessidade de um novo nó raiz, a árvore é ajustada
+ * adequadamente.
+ *
+ * @param raiz Ponteiro para o ponteiro da raiz da árvore 2-3.
+ * @param palavra_portugues Palavra em português a ser inserida.
+ * @param unidade Unidade associada à palavra.
+ * @param palavra_ingles Palavra em inglês a ser inserida.
+ */
 void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles){
     Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade); 
 
@@ -176,22 +258,27 @@ void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade,
     
 }
 
+/**
+ * @brief Exibe a estrutura da árvore 2-3.
+ *
+ * Esta função percorre a árvore 2-3 e exibe as informações contidas em cada nó,
+ * incluindo a quantidade de informações, as palavras em português, suas unidades
+ * e as árvores binárias associadas a cada palavra.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ */
 void mostrar(ARV2_3 *raiz){
    
     if (raiz)
     {
-    
         printf("\n+--- Nó Atual ---+\n");
         printf("| Quantidade de Informações: %d\n", raiz->quant_infos);
 
-    
-       
         printf("| Palavra 1 (PT): %s\n", raiz->info1.palavra_portugues);
         printf("| Unidade : %d\n", raiz->info1.unidade);
         printf("| Árvore Binária Associada à Palavra 1:\n");
         mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
 
-   
         if (raiz->quant_infos == 2)
         {
             printf("| Palavra 2 (PT): %s\n", raiz->info2.palavra_portugues);
@@ -210,6 +297,17 @@ void mostrar(ARV2_3 *raiz){
     }
 }
 
+/**
+ * imprimir_palavras_unidade - Imprime as palavras em português e suas traduções em inglês para uma unidade específica.
+ * @raiz: Ponteiro para a raiz da árvore 2-3.
+ * @unidade: Unidade que será usada para filtrar as palavras a serem impressas.
+ * 
+ * Esta função percorre recursivamente a árvore 2-3 e verifica se a unidade da palavra em português corresponde à unidade
+ * fornecida. Quando encontra uma palavra com a unidade correspondente, a função imprime a palavra em português, seguida
+ * pela tradução em inglês, que é exibida utilizando a função `mostrar_arvore_binaria_completa`.
+ * A função trata tanto a primeira quanto a segunda informação de cada nó e imprime as informações de todas as palavras
+ * da unidade especificada.
+ */
 void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
     if (raiz) {
 
@@ -237,6 +335,16 @@ void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
   
 }
 
+/**
+ * imprimir_palavras_ingles - Imprime as palavras em inglês associadas a uma palavra em português em uma árvore 2-3.
+ * @raiz: Ponteiro para a raiz da árvore 2-3.
+ * @palavra_portugues: Palavra em português cuja tradução em inglês será impressa.
+ * 
+ * Esta função percorre recursivamente a árvore 2-3 em busca da palavra em português especificada e, quando a encontra,
+ * imprime a tradução correspondente em inglês. A função examina tanto a primeira quanto a segunda informação de cada nó,
+ * imprimindo a tradução para o inglês quando a palavra em português correspondente for encontrada.
+ * A função também utiliza a função `mostrar_arvore_binaria_completa` para exibir a tradução.
+ */
 void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
     if (raiz == NULL) {
         return;
@@ -257,6 +365,17 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
     imprimir_palavras_ingles(raiz->direita, palavra_portugues);
 }
 
+/**
+ * no_2_3_adicionar_info - Adiciona uma nova informação a um nó em uma árvore 2-3.
+ * @no: Ponteiro para o nó onde a informação será adicionada.
+ * @info: A informação a ser adicionada ao nó.
+ * @filho_maior: Ponteiro para o nó filho maior, que será associado ao nó em caso de redistribuição.
+ * 
+ * Esta função adiciona uma nova informação a um nó de uma árvore 2-3, ajustando os ponteiros dos filhos conforme necessário.
+ * Se a nova informação for maior que a primeira informação do nó, ela será colocada na segunda posição, e o nó filho maior será associado à direita.
+ * Caso contrário, a primeira informação será deslocada para a segunda posição e o nó filho maior será colocado no lugar do centro, enquanto a nova informação ocupará a primeira posição.
+ * Após a adição, o nó passa a ter duas informações.
+ */
 void no_2_3_adicionar_info(ARV2_3 *no, Informacao info, ARV2_3 *filho_maior)
 {
     if((strcmp( info.palavra_portugues, no->info1.palavra_portugues) > 0 )){
@@ -272,19 +391,57 @@ void no_2_3_adicionar_info(ARV2_3 *no, Informacao info, ARV2_3 *filho_maior)
     no->quant_infos = 2;
 }
 
+/**
+ * eh_folha - Verifica se um nó é uma folha em uma árvore 2-3.
+ * @no: Ponteiro para o nó que será verificado.
+ * 
+ * Retorno: 1 se o nó for uma folha (não possui filhos), 0 caso contrário.
+ * 
+ * Esta função verifica se o nó é uma folha, ou seja, se ele não possui filhos à esquerda (o ponteiro 'esquerda' é NULL).
+ * Se o nó for uma folha, a função retorna 1, caso contrário, retorna 0.
+ */
 int eh_folha(ARV2_3 *no){
     return no->esquerda == NULL;
 }
 
+/**
+ * eh_info1 - Verifica se uma informação corresponde ao primeiro item de um nó em uma árvore 2-3.
+ * @no: Nó da árvore 2-3 que contém as informações a serem verificadas.
+ * @info: A informação (palavra em português) a ser comparada.
+ * 
+ * Retorno: 1 se a informação corresponde ao primeiro item do nó, 0 caso contrário.
+ * 
+ * Esta função compara a informação fornecida com o primeiro item de um nó. 
+ * Se a informação fornecida for igual ao primeiro item do nó, a função retorna 1, indicando que a condição foi satisfeita.
+ * Caso contrário, retorna 0.
+ */
 int eh_info1(ARV2_3 no, char *info){
     return strcmp(info,no.info1.palavra_portugues )  == 0;
 }
 
+/**
+ * eh_info2 - Verifica se uma informação corresponde ao segundo item de um nó em uma árvore 2-3.
+ * @no: Nó da árvore 2-3 que contém as informações a serem verificadas.
+ * @info: A informação (palavra em português) a ser comparada.
+ * 
+ * Retorno: 1 se a informação corresponde ao segundo item do nó, 0 caso contrário.
+ * 
+ * Esta função compara a informação fornecida com o segundo item de um nó que contém duas informações (caso o nó tenha duas informações). 
+ * Se a informação fornecida for igual ao segundo item do nó, a função retorna 1, indicando que a condição foi satisfeita.
+ * Caso contrário, retorna 0.
+ */
 int eh_info2(ARV2_3 no, char *info) {
     return (no.quant_infos == 2 && strcmp(info, no.info2.palavra_portugues) == 0);
 }
 
-
+/**
+ * no_2_3_alocar - Aloca dinamicamente um nó de uma árvore 2-3.
+ * 
+ * Retorna: Um ponteiro para o nó recém-alocado da árvore 2-3.
+ *
+ * Esta função aloca dinamicamente um nó do tipo `ARV2_3` utilizando a função `malloc`. Se a alocação falhar, a função imprime uma mensagem de erro e finaliza o programa.
+ * O nó alocado é inicializado com valores padrão para ser utilizado na árvore.
+ */
 ARV2_3 *no_2_3_alocar(){
     ARV2_3 *no; 
     no = (ARV2_3 *)malloc(sizeof(ARV2_3)); 
@@ -299,17 +456,46 @@ ARV2_3 *no_2_3_alocar(){
 
 }
 
+/**
+ * troca_infos - Troca as informações entre dois objetos do tipo `Informacao`.
+ * @info1: Ponteiro para o primeiro objeto de tipo `Informacao` a ser trocado.
+ * @info2: Ponteiro para o segundo objeto de tipo `Informacao` a ser trocado.
+ *
+ * Esta função troca os valores das informações contidas nos dois objetos `info1` e `info2` utilizando uma variável auxiliar.
+ * Após a execução, o conteúdo de `info1` será o de `info2`, e o conteúdo de `info2` será o de `info1`.
+ */
 void troca_infos(Informacao *info1, Informacao *info2){
     Informacao aux = *info1; 
     *info1 = *info2; 
     *info2 = aux;
 }
 
+/**
+ * no_2_3_desacolar - Desacopla (libera a memória) de um nó em uma árvore 2-3.
+ * @no: Ponteiro duplo para o nó a ser desacoplado.
+ *
+ * Esta função libera a memória alocada para o nó passado como argumento e define o ponteiro do nó como NULL,
+ * efetivamente removendo-o da árvore e garantindo que não haja referência a um nó de memória já liberada.
+ */
 void no_2_3_desacolar(ARV2_3 **no){
     free(*no);
     *no = NULL;
 }
 
+/**
+ * no_2_3_juntar - Junta informações de um nó em uma árvore 2-3.
+ * @filho1: Ponteiro para o nó filho que receberá a informação.
+ * @info: Informação a ser adicionada ao nó.
+ * @maior: Ponteiro para o maior nó da árvore.
+ * @raiz: Ponteiro duplo para a raiz da árvore.
+ *
+ * Esta função verifica se o nó filho possui duas informações e, caso possua, reduz a quantidade de informações para uma.
+ * Em seguida, a nova informação é adicionada ao nó filho. Após a operação, a quantidade de informações da raiz é decrementada.
+ * Se a raiz ficar sem informações, o nó raiz é desacoplado.
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó filho após a operação de junção.
+ */
 ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **raiz)
 {
     if(filho1->quant_infos == 2)
@@ -325,6 +511,17 @@ ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **r
     return filho1;
 }
 
+/**
+ * buscar_menor_filho - Busca o menor filho de um nó em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó da árvore onde a busca será iniciada.
+ * @pai: Ponteiro duplo para armazenar o pai do nó encontrado.
+ *
+ * Esta função percorre a árvore em direção à esquerda até encontrar o nó folha com o menor valor.
+ * Durante o percurso, o nó pai é atualizado para o nó atual.
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó folha com o menor valor encontrado.
+ */
 ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai){ 
     ARV2_3 *filho;
     filho = raiz; 
@@ -337,10 +534,33 @@ ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai){
     return filho; 
 }
 
+/**
+ * maior_info - Retorna a maior informação de um nó em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó da árvore de onde a maior informação será extraída.
+ *
+ * Esta função verifica o número de informações presentes no nó. Se o nó contiver duas informações,
+ * retorna a segunda informação (a maior). Caso contrário, retorna a primeira informação.
+ *
+ * Retorno:
+ * Retorna a maior informação presente no nó, que pode ser a `info1` ou `info2` dependendo da quantidade de informações.
+ */
 Informacao maior_info(ARV2_3 *raiz){ 
     return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
 }
 
+/**
+ * buscar_maior_filho - Busca o maior filho de um nó em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó raiz da subárvore onde a busca será realizada.
+ * @pai: Ponteiro duplo para armazenar o nó pai do maior filho encontrado.
+ * @maior_valor: Ponteiro para armazenar a maior informação encontrada no nó filho.
+ *
+ * Esta função percorre a árvore 2-3 a partir do nó raiz fornecido, indo para o filho da direita 
+ * até encontrar um nó folha. Durante a travessia, o nó pai do maior filho encontrado é atualizado
+ * e a maior informação armazenada no nó folha é copiada para o parâmetro `maior_valor`.
+ *
+ * Retorno:
+ * Retorna o ponteiro para o maior filho encontrado na subárvore ou NULL se nenhum filho for encontrado.
+ */
 ARV2_3 *buscar_maior_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *maior_valor)
 {
     ARV2_3 *filho;
@@ -361,6 +581,19 @@ ARV2_3 *buscar_maior_filho(ARV2_3 *raiz, ARV2_3 **pai, Informacao *maior_valor)
     return filho;
 }
 
+/**
+ * buscar_pai - Busca o pai de um nó que contém a informação fornecida em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó raiz da subárvore onde a busca será realizada.
+ * @info: Informação que está sendo buscada na árvore.
+ *
+ * Esta função percorre a árvore 2-3 de forma recursiva para encontrar o pai de um nó
+ * que contém a informação fornecida. O algoritmo compara a informação fornecida com as palavras 
+ * em português armazenadas nos nós e faz a busca no filho apropriado (esquerdo, centro ou direito).
+ * Quando encontra o nó que contém a informação fornecida ou um nó próximo, ele retorna o nó pai.
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó pai que contém a informação fornecida ou NULL caso o nó pai não seja encontrado.
+ */
 ARV2_3 *buscar_pai(ARV2_3 *raiz, char *info){
     ARV2_3 *pai; 
     pai = NULL; 
@@ -386,6 +619,20 @@ ARV2_3 *buscar_pai(ARV2_3 *raiz, char *info){
     return pai; 
 }
 
+/**
+ * buscar_maior_pai - Busca o pai de um nó que contém a maior informação menor que a fornecida em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó raiz da subárvore onde a busca será realizada.
+ * @info: Informação que está sendo buscada na árvore.
+ *
+ * Esta função percorre a árvore 2-3 de forma recursiva para encontrar o pai de um nó
+ * que contém a maior informação menor que a fornecida. O algoritmo compara a informação 
+ * fornecida com as palavras em português armazenadas nos nós e faz a busca no filho apropriado 
+ * (esquerdo, centro ou direito).
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó pai que contém a maior informação menor que a fornecida, 
+ * ou NULL caso não exista tal nó na árvore.
+ */
 ARV2_3 *buscar_maior_pai(ARV2_3 *raiz, char *info)
 {
     ARV2_3 *pai;
@@ -410,6 +657,20 @@ ARV2_3 *buscar_maior_pai(ARV2_3 *raiz, char *info)
     return pai;
 }
 
+/**
+ * buscar_menor_pai - Busca o pai de um nó que contém a menor informação maior que a fornecida em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó raiz da subárvore onde a busca será realizada.
+ * @info: Informação que está sendo buscada na árvore.
+ *
+ * Esta função percorre a árvore 2-3 de forma recursiva para encontrar o pai de um nó
+ * que contém a menor informação maior que a fornecida. O algoritmo compara a informação 
+ * fornecida com as palavras em português armazenadas nos nós e faz a busca no filho apropriado 
+ * (esquerdo, centro ou direito).
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó pai que contém a menor informação maior que a fornecida, 
+ * ou NULL caso não exista tal nó na árvore.
+ */
 ARV2_3 *buscar_menor_pai(ARV2_3 *raiz, char *info)
 {
     ARV2_3 *pai;
@@ -434,6 +695,19 @@ ARV2_3 *buscar_menor_pai(ARV2_3 *raiz, char *info)
     return pai;
 }
 
+/**
+ * buscar_menor_pai_2_info - Busca o pai de um nó que contém a menor informação em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó raiz da subárvore onde a busca será realizada.
+ * @info: Informação que está sendo buscada na árvore.
+ *
+ * Esta função percorre a árvore 2-3 para localizar o nó pai que contém a menor informação
+ * maior que a informação fornecida. A busca é feita recursivamente, comparando a informação
+ * nos nós e direcionando a busca para o filho adequado (esquerdo, centro ou direito).
+ *
+ * Retorno: 
+ * Retorna o ponteiro para o nó pai que contém a menor informação maior que a fornecida,
+ * ou NULL caso a informação não seja encontrada.
+ */
 ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
 {
     ARV2_3 *pai;
@@ -458,18 +732,61 @@ ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
     return pai;
 }
 
+/**
+ * ondinha_1 - Realiza o ajuste estrutural na árvore 2-3 durante a remoção de um nó.
+ * @saindo: Informação que está sendo removida da árvore.
+ * @entrada: Ponteiro para a nova informação que será ajustada na estrutura.
+ * @pai: Ponteiro para o nó pai na árvore.
+ * @origem: Ponteiro duplo para a raiz original da árvore.
+ * @raiz: Ponteiro duplo para a raiz da subárvore atual.
+ * @maior: Ponteiro duplo para o maior nó encontrado na estrutura.
+ *
+ * Esta função realiza a remoção de um nó em uma árvore 2-3 e ajusta sua estrutura
+ * substituindo a informação do nó removido por uma nova entrada, caso necessário.
+ * O ajuste é realizado por meio da função auxiliar `_1_remover_2_3`, e a entrada é atualizada 
+ * com a informação que estava sendo removida.
+ *
+ * Retorno: 
+ * 1 se a remoção foi bem-sucedida,
+ * -1 se houve um problema durante a remoção,
+ * 0 se a informação não foi encontrada na árvore.
+ */
 int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior){
     int removeu =  _1_remover_2_3(raiz, saindo.palavra_portugues, pai, origem,maior); 
     *entrada = saindo; 
     return removeu; 
 }
 
+/**
+ * @brief Função que realiza a remoção de um elemento de uma árvore 2-3 e ajusta a entrada.
+ *
+ * Esta função remove um elemento da árvore 2-3 e ajusta a entrada com a informação do elemento removido.
+ *
+ * @param saindo Estrutura do tipo Informacao que contém a palavra a ser removida.
+ * @param entrada Ponteiro para a estrutura do tipo Informacao onde será armazenada a informação do elemento removido.
+ * @param pai Ponteiro para a árvore 2-3 que representa o nó pai.
+ * @param origem Ponteiro duplo para a árvore 2-3 que representa a origem da remoção.
+ * @param raiz Ponteiro duplo para a árvore 2-3 que representa a raiz da árvore.
+ * @param maior Ponteiro duplo para a árvore 2-3 que representa o maior elemento.
+ * @return Retorna um inteiro indicando se a remoção foi bem-sucedida.
+ */
 int ondinha_esq2dir(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior){
     int removeu = _2_remover_2_3(raiz, saindo.palavra_portugues, pai, origem, maior); 
     *entrada = saindo; 
     return removeu; 
 }
 
+/**
+ * @brief Desaloca a árvore 2-3 a partir da raiz fornecida.
+ *
+ * Esta função percorre a árvore 2-3 de forma recursiva e desaloca todos os nós,
+ * começando pela raiz fornecida. A função verifica se a raiz não é nula antes
+ * de proceder com a desalocação. Ela chama recursivamente a si mesma para
+ * desalocar os subárvores esquerda, centro e, se aplicável, direita. Após
+ * desalocar os subárvores, a função desaloca o nó atual.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3 a ser desalocada.
+ */
 void arvore_2_3_desalocar(ARV2_3 **raiz)
 {
     if(*raiz != NULL)
@@ -484,6 +801,20 @@ void arvore_2_3_desalocar(ARV2_3 **raiz)
     }
 }
 
+/**
+ * _1_remover_2_3 - Remove um nó de uma árvore 2-3.
+ * @raiz: Ponteiro duplo para a raiz da árvore.
+ * @info: Informação a ser removida.
+ * @pai: Ponteiro para o nó pai.
+ * @origem: Ponteiro duplo para a raiz original da árvore.
+ * @maior: Ponteiro duplo para o maior nó.
+ *
+ * Esta função remove um nó de uma árvore 2-3, ajustando a estrutura da árvore conforme necessário.
+ * A função retorna 1 se a remoção foi bem-sucedida, -1 se houve um problema durante a remoção,
+ * e 0 se a informação não foi encontrada na árvore.
+ *
+ * Retorno: 1 se a remoção foi bem-sucedida, -1 se houve um problema, 0 se a informação não foi encontrada.
+ */
 int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
 {
     int removeu = 0;
@@ -598,6 +929,25 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
 
 }
 
+/**
+ * @brief Remove um nó de uma árvore 2-3.
+ * 
+ * Esta função remove um nó de uma árvore 2-3 que contém a informação especificada.
+ * 
+ * @param raiz Ponteiro duplo para a raiz da árvore.
+ * @param info Informação a ser removida.
+ * @param pai Ponteiro para o nó pai.
+ * @param origem Ponteiro duplo para a origem da árvore.
+ * @param maior Ponteiro duplo para o maior nó da árvore.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, caso contrário, retorna 0.
+ * 
+ * A função percorre a árvore para encontrar o nó que contém a informação a ser removida.
+ * Se o nó for uma folha, ele é removido diretamente. Caso contrário, a função realiza
+ * uma série de operações para manter as propriedades da árvore 2-3.
+ * 
+ * A função também lida com casos especiais, como quando o nó a ser removido é a raiz
+ * ou quando o nó pai tem apenas uma informação.
+ */
 int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
 {
     int removeu = 0;
@@ -719,6 +1069,29 @@ int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
     return removeu;
 }
 
+/**
+ * @brief Remove um elemento de uma árvore 2-3 e mantém seu balanceamento.
+ * 
+ * Esta função remove um elemento identificado pela chave fornecida (`info`) 
+ * de uma árvore 2-3. Durante o processo, verifica se a remoção causa 
+ * desequilíbrio na árvore e tenta rebalanceá-la, realizando ajustes 
+ * necessários, como redistribuição de chaves ou junção de nós.
+ * 
+ * A remoção é realizada em duas etapas principais:
+ * 1. Tentativa de remoção direta do elemento com a função `_1_remover_2_3`.
+ * 2. Caso haja necessidade de rebalanceamento, utiliza-se a função 
+ * `arvore_2_3_rebalancear` e outras sub-rotinas para corrigir a estrutura 
+ * da árvore.
+ * 
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3. Pode ser atualizado 
+ * caso a estrutura da árvore seja alterada.
+ * @param info Chave que identifica o elemento a ser removido.
+ * 
+ * @return int Indica o status da operação:
+ * - `0`: Remoção bem-sucedida sem necessidade de rebalanceamento.
+ * - `-1`: Falha na remoção, possivelmente devido à ausência da chave ou 
+ * necessidade de rebalanceamento que não foi resolvida.
+ */
 int arvore_2_3_remover(ARV2_3 **raiz, char *info)
 {   
     ARV2_3 *maior, *posicao_juncao;
@@ -752,6 +1125,16 @@ int arvore_2_3_remover(ARV2_3 **raiz, char *info)
     return removeu;
 }
 
+/**
+ * @brief Rebalanceia uma árvore 2-3.
+ *
+ * Esta função reequilibra uma árvore 2-3 a partir de um nó raiz fornecido.
+ * 
+ * @param raiz Ponteiro duplo para o nó raiz da árvore 2-3.
+ * @param info Informação a ser utilizada no rebalanceamento.
+ * @param maior Ponteiro duplo para armazenar o maior nó após o rebalanceamento.
+ * @return Retorna 0 se o rebalanceamento foi bem-sucedido, -1 se não foi possível rebalancear.
+ */
 int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior)
 {
     int balanceou = 0;
@@ -782,6 +1165,20 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior)
     return balanceou;
 }
 
+/**
+ * @brief Realiza o balanceamento de uma árvore 2-3.
+ *
+ * Esta função verifica se o segundo filho é nulo ou se não possui informações.
+ * Se for o caso, remove o nó do segundo filho e junta o primeiro filho com a informação
+ * fornecida, ajustando a raiz e o maior nó conforme necessário.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore.
+ * @param filho1 Ponteiro para o primeiro filho.
+ * @param filho2 Ponteiro duplo para o segundo filho.
+ * @param info Informação a ser inserida na árvore.
+ * @param maior Ponteiro duplo para o maior nó.
+ * @return Retorna 1 se o balanceamento foi realizado, caso contrário, retorna 0.
+ */
 static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior)
 {
     int balanceou = 0;
@@ -796,6 +1193,18 @@ static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informa
     return balanceou;
 }
 
+/**
+ * @brief Remove uma palavra em inglês e sua unidade correspondente de uma árvore 2-3.
+ * 
+ * Esta função percorre uma árvore 2-3 e remove a palavra em inglês especificada, 
+ * juntamente com sua unidade correspondente. Se a palavra em inglês for removida 
+ * e a palavra em português correspondente estiver vazia, a entrada inteira é removida 
+ * da árvore 2-3.
+ * 
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param palavra_ingles Palavra em inglês a ser removida.
+ * @param unidade Unidade correspondente à palavra em inglês a ser removida.
+ */
 void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, int unidade) {
     if (*raiz != NULL) { 
         
@@ -832,6 +1241,15 @@ void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, i
     }
 }
 
+/**
+ * @brief Busca uma palavra em uma árvore 2-3.
+ *
+ * Esta função realiza a busca de uma palavra em uma árvore 2-3, retornando o nó que contém a palavra, se encontrada.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param palavra_portugues Palavra em português a ser buscada na árvore.
+ * @return Ponteiro para o nó que contém a palavra buscada, ou NULL se a palavra não for encontrada.
+ */
 ARV2_3 *buscar_palavra_2_3(ARV2_3 *raiz, char *palavra_portugues) {
     ARV2_3 *resultado = NULL;
 
@@ -853,6 +1271,18 @@ ARV2_3 *buscar_palavra_2_3(ARV2_3 *raiz, char *palavra_portugues) {
     return resultado;
 }
 
+/**
+ * @brief Remove uma palavra completa da árvore 2-3.
+ *
+ * Esta função busca uma palavra em português na árvore 2-3 e remove todas as suas traduções em inglês
+ * associadas a uma unidade específica. Se todas as traduções em inglês forem removidas, a palavra em português
+ * também é removida da árvore 2-3.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param palavra_portugues Palavra em português a ser removida.
+ * @param unidade Unidade associada às traduções em inglês a serem removidas.
+ * @return Retorna 1 se a palavra foi removida com sucesso, caso contrário, retorna 0.
+ */
 int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade) {
     int confere = 0; 
     ARV2_3 *no = buscar_palavra_2_3(*raiz, palavra_portugues);
@@ -888,7 +1318,15 @@ int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int uni
     return confere; 
 }
 
-
+/**
+ * @brief Libera a memória alocada para uma árvore 2-3 binária.
+ *
+ * Esta função libera a memória alocada para a estrutura de informação
+ * associada a uma árvore 2-3 binária. Se a estrutura de informação contém
+ * uma árvore binária de palavras em inglês, essa árvore também é liberada.
+ *
+ * @param info Ponteiro para a estrutura de informação a ser liberada.
+ */
 void liberar_arvore_2_3_binaria(Informacao *info) {
     if (info) {
         if (info->palavra_ingles) {
@@ -899,6 +1337,16 @@ void liberar_arvore_2_3_binaria(Informacao *info) {
     free(info);
 }
 
+/**
+ * @brief Libera a memória alocada para uma árvore 2-3.
+ *
+ * Esta função percorre a árvore 2-3 de forma recursiva, liberando a memória
+ * alocada para cada nó e seus respectivos filhos (esquerda, centro e direita).
+ * Além disso, também libera a memória alocada para as informações binárias
+ * contidas nos nós (info1 e info2).
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3 a ser liberada.
+ */
 void liberar_arvore_2_3(ARV2_3 **raiz) {
     if (*raiz) {
         liberar_arvore_2_3(&(*raiz)->esquerda);
