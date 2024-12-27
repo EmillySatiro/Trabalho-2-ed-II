@@ -64,8 +64,7 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
     }
 }
 
-Informacao_memoria maior_info(ARVORE2_3 *raiz)
-{
+Informacao_memoria maior_info(ARVORE2_3 *raiz){
     return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
 }
 
@@ -73,210 +72,205 @@ Informacao_memoria maior_info(ARVORE2_3 *raiz)
 
 void intercalarNos(ARVORE2_3 **raiz)
 {
-    if (!*raiz)
-    {
-        printf("Árvore vazia.\n");
-        return;
-    }
-
-    ARVORE2_3 *atual = *raiz;
-
-    while (atual && atual->direita)
-    {
-        // Se info1 e info2 do nó atual tiverem o mesmo estado, ajusta
-        if (atual->quant_infos == 2 && atual->info1.state == atual->info2.state)
+    if (*raiz){
+        ARVORE2_3 *atual = *raiz;
+        while (atual && atual->direita)
         {
-            // Move info2 para a direita
-            ARVORE2_3 *novoNo = criarNo(atual->info2);
-            novoNo->direita = atual->direita;
-            atual->direita = novoNo;
-            atual->quant_infos = 1;
-        }
-
-        // Se o estado do nó atual for o mesmo do nó à direita, ajusta
-        if (atual->info1.state == atual->direita->info1.state)
-        {
-            if (atual->direita->quant_infos == 1)
+            // Se info1 e info2 do nó atual tiverem o mesmo estado, ajusta
+            if (atual->quant_infos == 2 && atual->info1.state == atual->info2.state)
             {
-                // Move info1 do nó à direita para a info2 do nó atual
-                atual->info2 = atual->direita->info1;
-                atual->quant_infos = 2;
-                ARVORE2_3 *temp = atual->direita;
-                atual->direita = atual->direita->direita;
-                free(temp);
+                // Move info2 para a direita
+                ARVORE2_3 *novoNo = criarNo(atual->info2);
+                novoNo->direita = atual->direita;
+                atual->direita = novoNo;
+                atual->quant_infos = 1;
             }
-            else
+
+            // Se o estado do nó atual for o mesmo do nó à direita, ajusta
+            if (atual->info1.state == atual->direita->info1.state)
             {
-                // Troca os estados para alternar
-                if (atual->info1.state == 'L')
+                if (atual->direita->quant_infos == 1)
                 {
-                    atual->direita->info1.state = 'O';
+                    // Move info1 do nó à direita para a info2 do nó atual
+                    atual->info2 = atual->direita->info1;
+                    atual->quant_infos = 2;
+                    ARVORE2_3 *temp = atual->direita;
+                    atual->direita = atual->direita->direita;
+                    free(temp);
                 }
                 else
                 {
-                    atual->direita->info1.state = 'L';
+                    // Troca os estados para alternar
+                    if (atual->info1.state == 'L')
+                    {
+                        atual->direita->info1.state = 'O';
+                    }
+                    else
+                    {
+                        atual->direita->info1.state = 'L';
+                    }
                 }
             }
-        }
 
-        atual = atual->direita;
+            atual = atual->direita;
+        }
+        
+    }else{
+        printf("Árvore vazia.\n");
     }
+
+    
 }
 
-void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos)
-{
-    if (!*raiz)
-    {
-        printf("Árvore vazia.\n");
-        return;
-    }
+void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
+    if (*raiz){
+        ARVORE2_3 *atual = *raiz;
+        int contador = 0;
 
-    ARVORE2_3 *atual = *raiz;
-    int contador = 0;
-
-    printf("Blocos a serem alocados: %d\n", quantidade_blocos);
-    while (atual && contador < quantidade_blocos)
-    {
-        if (atual->info1.state == 'L' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
+        printf("Blocos a serem alocados: %d\n", quantidade_blocos);
+        while (atual && contador < quantidade_blocos)
         {
-            Informacao_memoria novoInfo = {'O', atual->info1.block_inicio, atual->info1.block_fim};
-            atual->info1 = novoInfo;
+            if (atual->info1.state == 'L' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
+            {
+                Informacao_memoria novoInfo = {'O', atual->info1.block_inicio, atual->info1.block_fim};
+                atual->info1 = novoInfo;
 
-            printf("====================================\n");
-            printf("Status: %c\n", atual->info1.state);
-            printf("Bloco inicial: %d\n", atual->info1.block_inicio);
-            printf("Bloco final: %d\n", atual->info1.block_fim);
-            printf("====================================\n");
-        }
-        else if (atual->quant_infos == 2 && atual->info2.state == 'L' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
-        {
-            Informacao_memoria novoInfo = {'O', atual->info2.block_inicio, atual->info2.block_fim};
-            atual->info2 = novoInfo;
-
-            printf("====================================\n");
-            printf("Status: %c\n", atual->info2.state);
-            printf("Bloco inicial: %d\n", atual->info2.block_inicio);
-            printf("Bloco final: %d\n", atual->info2.block_fim);
-            printf("====================================\n");
-        }
-
-        // Concatenar nós adjacentes livres
-        if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L')) {
-            if (atual->quant_infos == 1 && atual->direita->info1.state == 'L') {
-                atual->info1.block_fim = atual->direita->info1.block_fim;
-            } else if (atual->quant_infos == 2) {
-                if (atual->info2.state == 'L' && atual->direita->info1.state == 'L') {
-                    atual->info2.block_fim = atual->direita->info1.block_fim;
-                } else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L') {
-                    atual->info2.block_fim = atual->direita->info2.block_fim;
-                }
+                printf("====================================\n");
+                printf("Status: %c\n", atual->info1.state);
+                printf("Bloco inicial: %d\n", atual->info1.block_inicio);
+                printf("Bloco final: %d\n", atual->info1.block_fim);
+                printf("====================================\n");
             }
-    
+            else if (atual->quant_infos == 2 && atual->info2.state == 'L' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
+            {
+                Informacao_memoria novoInfo = {'O', atual->info2.block_inicio, atual->info2.block_fim};
+                atual->info2 = novoInfo;
+
+                printf("====================================\n");
+                printf("Status: %c\n", atual->info2.state);
+                printf("Bloco inicial: %d\n", atual->info2.block_inicio);
+                printf("Bloco final: %d\n", atual->info2.block_fim);
+                printf("====================================\n");
+            }
+
+            // Concatenar nós adjacentes livres
+            if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L')) {
+                if (atual->quant_infos == 1 && atual->direita->info1.state == 'L') {
+                    atual->info1.block_fim = atual->direita->info1.block_fim;
+                } else if (atual->quant_infos == 2) {
+                    if (atual->info2.state == 'L' && atual->direita->info1.state == 'L') {
+                        atual->info2.block_fim = atual->direita->info1.block_fim;
+                    } else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L') {
+                        atual->info2.block_fim = atual->direita->info2.block_fim;
+                    }
+                }
+        
+            }
+
+            printf("Valor atual após a concatenação, se houve:\n");
+            printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
+            if (atual->quant_infos == 2) {
+                printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
+            }
+
+            atual = atual->direita;
+            contador++;
         }
 
-        printf("Valor atual após a concatenação, se houve:\n");
-        printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-        if (atual->quant_infos == 2) {
-            printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
-        }
-
-        atual = atual->direita;
-        contador++;
+        printf("Finalização da alocação de blocos.\n");
+        intercalarNos(raiz);
+    }else{
+        printf("Árvore vazia.\n");
     }
 
-    printf("Finalização da alocação de blocos.\n");
-    intercalarNos(raiz);
+    
 }
 
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos)
 {
-    if (!*raiz)
-    {
+    if (*raiz){
+        ARVORE2_3 *atual = *raiz;
+        int contador = 0;
+
+        printf("Blocos a serem liberados: %d\n", quantidade_blocos);
+        while (atual && contador < quantidade_blocos)
+        {
+            if (atual->info1.state == 'O' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
+            {
+                atual->info1.state = 'L';
+                printf("====================================\n");
+                printf("Status: %c\n", atual->info1.state);
+                printf("Bloco inicial: %d\n", atual->info1.block_inicio);
+                printf("Bloco final: %d\n", atual->info1.block_fim);
+                printf("====================================\n");
+            }
+            else if (atual->quant_infos == 2 && atual->info2.state == 'O' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
+            {
+                atual->info2.state = 'L';
+                printf("====================================\n");
+                printf("Status: %c\n", atual->info2.state);
+                printf("Bloco inicial: %d\n", atual->info2.block_inicio);
+                printf("Bloco final: %d\n", atual->info2.block_fim);
+                printf("====================================\n");
+            }
+
+            // Concatenar nós adjacentes livres
+            if (atual->direita && atual->direita->info1.state == 'L') {
+                if (atual->quant_infos == 1) {
+                    atual->info1.block_fim = atual->direita->info1.block_fim;
+                } else if (atual->quant_infos == 2 && atual->info2.state == 'L') {
+                    atual->info2.block_fim = atual->direita->info1.block_fim;
+                }
+            }
+
+            if (atual->direita && atual->quant_infos == 2 && atual->direita->info1.state == 'L') {
+                if (atual->info2.state == 'L') {
+                    atual->info2.block_fim = atual->direita->info1.block_fim;
+                }
+            }
+
+            printf("Valor atual após a concatenação, se houve:\n");
+            printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
+            if (atual->quant_infos == 2) {
+                printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
+            }
+
+            atual = atual->direita;
+            contador++;
+        }
+
+        printf("Finalização da liberação de blocos.\n");
+
+        
+        intercalarNos(raiz);
+            
+    }else{
         printf("Árvore vazia.\n");
-        return;
     }
 
-    ARVORE2_3 *atual = *raiz;
-    int contador = 0;
-
-    printf("Blocos a serem liberados: %d\n", quantidade_blocos);
-    while (atual && contador < quantidade_blocos)
-    {
-        if (atual->info1.state == 'O' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
-        {
-            atual->info1.state = 'L';
-            printf("====================================\n");
-            printf("Status: %c\n", atual->info1.state);
-            printf("Bloco inicial: %d\n", atual->info1.block_inicio);
-            printf("Bloco final: %d\n", atual->info1.block_fim);
-            printf("====================================\n");
-        }
-        else if (atual->quant_infos == 2 && atual->info2.state == 'O' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
-        {
-            atual->info2.state = 'L';
-            printf("====================================\n");
-            printf("Status: %c\n", atual->info2.state);
-            printf("Bloco inicial: %d\n", atual->info2.block_inicio);
-            printf("Bloco final: %d\n", atual->info2.block_fim);
-            printf("====================================\n");
-        }
-
-        // Concatenar nós adjacentes livres
-        if (atual->direita && atual->direita->info1.state == 'L') {
-            if (atual->quant_infos == 1) {
-                atual->info1.block_fim = atual->direita->info1.block_fim;
-            } else if (atual->quant_infos == 2 && atual->info2.state == 'L') {
-                atual->info2.block_fim = atual->direita->info1.block_fim;
-            }
-        }
-
-        if (atual->direita && atual->quant_infos == 2 && atual->direita->info1.state == 'L') {
-            if (atual->info2.state == 'L') {
-                atual->info2.block_fim = atual->direita->info1.block_fim;
-            }
-        }
-
-        printf("Valor atual após a concatenação, se houve:\n");
-        printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-        if (atual->quant_infos == 2) {
-            printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
-        }
-
-        atual = atual->direita;
-        contador++;
-    }
-
-    printf("Finalização da liberação de blocos.\n");
-
-    // Chame a função de intercalação após a liberação dos blocos
-    intercalarNos(raiz);
+    
 }
 
-
-
-void exibirNos(ARVORE2_3 *raiz)
-{
-    if (!raiz)
-    {
-        return;
+void exibirNos(ARVORE2_3 *raiz){
+    if (raiz){
+        exibirNos(raiz->esquerda);
+        printf("====================================\n");
+        printf("Estado: %c\n", raiz->info1.state);
+        printf("Bloco Inicial: %d\n", raiz->info1.block_inicio);
+        printf("Bloco Final: %d\n", raiz->info1.block_fim);
+        printf("====================================\n");
+        if (raiz->quant_infos == 2)
+        {
+            printf("====================================\n");
+            printf("Estado: %c\n", raiz->info2.state);
+            printf("Bloco Inicial: %d\n", raiz->info2.block_inicio);
+            printf("Bloco Final: %d\n", raiz->info2.block_fim);
+            printf("====================================\n");
+        }
+        exibirNos(raiz->centro);
+        exibirNos(raiz->direita); 
     }
 
-    exibirNos(raiz->esquerda);
-    printf("====================================\n");
-    printf("Estado: %c\n", raiz->info1.state);
-    printf("Bloco Inicial: %d\n", raiz->info1.block_inicio);
-    printf("Bloco Final: %d\n", raiz->info1.block_fim);
-    printf("====================================\n");
-    if (raiz->quant_infos == 2)
-    {
-        printf("====================================\n");
-        printf("Estado: %c\n", raiz->info2.state);
-        printf("Bloco Inicial: %d\n", raiz->info2.block_inicio);
-        printf("Bloco Final: %d\n", raiz->info2.block_fim);
-        printf("====================================\n");
-    }
-    exibirNos(raiz->centro);
-    exibirNos(raiz->direita);
 }
 
 // void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior)
@@ -366,15 +360,11 @@ void exibirNos(ARVORE2_3 *raiz)
 //     return balanceou;
 // }
 
-void liberarNos(ARVORE2_3 *raiz)
-{
-    if (!raiz)
-    {
-        return;
+void liberarNos(ARVORE2_3 *raiz){
+    if (raiz){
+        liberarNos(raiz->esquerda);
+        liberarNos(raiz->centro);
+        liberarNos(raiz->direita);
+        free(raiz);
     }
-
-    liberarNos(raiz->esquerda);
-    liberarNos(raiz->centro);
-    liberarNos(raiz->direita);
-    free(raiz);
 }

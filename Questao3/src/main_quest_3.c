@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "/home/walison/Trabalho-2-ed-II/Questao3/src/ARVORE2_3.h"
-
+#include "../../Questao3/src/ARVORE2_3.h"
 int main() {
     ARVORE2_3* raiz = NULL;
     int quantidade_blocos, ultimo_endereco;
