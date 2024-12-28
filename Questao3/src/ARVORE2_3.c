@@ -16,20 +16,39 @@
  * @note Em caso de falha na alocação de memória, a função imprime uma mensagem
  *       de erro e encerra o programa.
  */
-ARVORE2_3 *criarNo(Informacao_memoria info)
-{
-    ARVORE2_3 *novoNo = (ARVORE2_3 *)malloc(sizeof(ARVORE2_3));
-    if (!novoNo)
-    {
-        printf("Erro de alocação de memória.\n");
-        exit(1);
-    }
-    novoNo->info1 = info;
-    novoNo->quant_infos = 1;
-    novoNo->esquerda = novoNo->centro = novoNo->direita = NULL;
-    return novoNo;
+ARVORE2_3* criar_no_Q3(Informacao_memoria info, ARVORE2_3* esq, ARVORE2_3* centro, ARVORE2_3* dir) {
+    ARVORE2_3* novo = (ARVORE2_3*) malloc(sizeof(ARVORE2_3));
+
+    // Inicializa o novo nó com a informação e filhos passados
+    novo->info1 = info;
+    novo->quant_infos = 1;  // Inicialmente, o nó tem uma informação
+
+    novo->esquerda = esq;
+    novo->centro = centro;
+    novo->direita = dir;
+
+    return novo;
 }
 
+void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
+{
+    Informacao_memoria sobe;
+    ARVORE2_3 *novo_no = inserir_Elemento_Q3(raiz, info, &sobe, NULL);
+    if (novo_no)
+    {
+        *raiz = criar_no_Q3(sobe, *raiz, novo_no, NULL);
+    }
+}
+
+Informacao_memoria criar_info(int state, int block_inicio, int block_fim)
+{
+    Informacao_memoria info;
+    info.state = state;
+    info.block_inicio = block_inicio;
+    info.block_fim = block_fim;
+
+    return info;
+}
 
 /**
  * @brief Cadastra nós em uma árvore 2-3.
@@ -41,96 +60,211 @@ ARVORE2_3 *criarNo(Informacao_memoria info)
  * @param raiz Ponteiro para a raiz da árvore 2-3.
  * @param ultimo_endereco Endereço do último bloco na memória.
  */
-void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco) {
+void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
+{
     Informacao_memoria info;
     char state;
     int bloco_inicio = 0, bloco_fim;
 
-    // Entrada inicial
+    // Entrada inicial com validação do estado
     printf("Informe o estado do primeiro nó (L para livre, O para ocupado): ");
-    scanf(" %c", &state);
-    printf("Informe o bloco final do primeiro nó: ");
-    scanf("%d", &bloco_fim);
+    while (1)
+    {
+        scanf(" %c", &state);
+        if (state == 'L' || state == 'O')
+        {
+            break;
+        }
+        printf("Entrada inválida. Informe L ou O: ");
+    }
 
-    info.state = state;
-    info.block_inicio = bloco_inicio;
-    info.block_fim = bloco_fim;
-
-    inserir_Elemento_ARV_2_3(raiz, info);
-
-    // Continuar cadastrando até o último endereço
-    while (info.block_fim != ultimo_endereco) {
-        bloco_inicio = info.block_fim + 1;
-
-        printf("Informe o bloco final do próximo nó: ");
+    // Primeira entrada de bloco_fim
+    while (1)
+    {
+        printf("Informe o bloco final do primeiro nó (deve ser >= 0 e <= %d): ", ultimo_endereco);
         scanf("%d", &bloco_fim);
 
+        // Validação do bloco_fim
+        if (bloco_fim >= 0 && bloco_fim <= ultimo_endereco)
+        {
+            break;
+        }
+
+        printf("Bloco final inválido. Deve ser maior ou igual a 0 e menor ou igual a %d.\n", ultimo_endereco);
+    }
+
+    // Cria o primeiro nó
+    info = criar_info(state, bloco_inicio, bloco_fim);
+    insere_Q3(&(*raiz), info);
+
+    // Imprime os valores do nó criado
+    printf("====================================\n");
+    printf("Estado: %c\n", info.state);
+    printf("Bloco Inicial: %d\n", info.block_inicio);
+    printf("Bloco Final: %d\n", info.block_fim);
+    printf("====================================\n");
+
+    // Continuar cadastrando até o último endereço
+    while (info.block_fim < ultimo_endereco)
+    {
+        bloco_inicio = info.block_fim + 1;
+
+        // Entrada e validação do próximo bloco_fim
+        while (1)
+        {
+            printf("Informe o bloco final do próximo nó (máx: %d): ", ultimo_endereco);
+            scanf("%d", &bloco_fim);
+
+            // Validação do bloco_fim
+            if (bloco_fim > bloco_inicio && bloco_fim <= ultimo_endereco)
+            {
+                break;
+            }
+
+            printf("Bloco final inválido. Deve ser maior que %d e menor ou igual a %d.\n", bloco_inicio, ultimo_endereco);
+        }
+
+        // Atualização do estado alternado
         state = (info.state == 'L') ? 'O' : 'L';
+        
+        // Criação do novo nó
+        Informacao_memoria novaInfo = criar_info(state, bloco_inicio, bloco_fim);
+        insere_Q3(raiz, novaInfo);
 
-        Informacao_memoria novaInfo;
-        novaInfo.state = state;
-        novaInfo.block_inicio = bloco_inicio;
-        novaInfo.block_fim = bloco_fim;
+        // Imprime os valores do nó criado
+        printf("====================================\n");
+        printf("Estado: %c\n", novaInfo.state);
+        printf("Bloco Inicial: %d\n", novaInfo.block_inicio);
+        printf("Bloco Final: %d\n", novaInfo.block_fim);
+        printf("====================================\n");
 
-        inserir_Elemento_ARV_2_3(raiz, novaInfo);
+        // Atualizar info com o novo nó criado
         info = novaInfo;
     }
 }
 
-void inserir_Elemento_ARV_2_3(ARVORE2_3 **no, Informacao info, Informacao *sobe, ARVORE2_3 *pai) {
-    Informacao sobe_sup;
-    ARVORE2_3 *maior = NULL;
+
+ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai) {
+    ARVORE2_3* maior = NULL;
 
     if (*no == NULL) {
-        // Criação do nó inicial
-        *no = criar_no(info, NULL, NULL);
+        // Se o nó for nulo, cria um novo nó
+        *no = criar_no_Q3(info, NULL, NULL, NULL);
     } else {
-        // Caso seja uma folha
-        if (eh_folha_Q3(*no)) {
-            // Se o nó tiver apenas um elemento
-            if ((*no)->quant_infos == 1) {
-                if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) != 0) {
-                    add_elementos(*no, info, NULL);
-                } else {
-                    insere_arvore_binaria(&((*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.palavra_ingles->unidade);
-                }
-            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) != 0) { 
-                // Realiza a quebra do nó
-                maior = quebra_No(no, info, sobe, NULL);
-                if (pai == NULL) {
-                    *no = criar_no(*sobe, *no, maior);
-                }
+        if ((*no)->quant_infos == 1) {
+            // Nó com uma informação
+            if (info.block_fim < (*no)->info1.block_fim) {
+                // Insere à esquerda
+                maior = criar_no_Q3((*no)->info1, (*no)->esquerda, (*no)->centro, (*no)->direita);
+                (*no)->info1 = info; // Atualiza a informação
+                (*no)->esquerda = NULL; // Limpa os ponteiros
+                (*no)->centro = NULL;
+                (*no)->direita = NULL;
+                (*no)->quant_infos = 1; // Ainda contém uma informação
             } else {
-                insere_arvore_binaria(&((*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.palavra_ingles->unidade);
+                // Insere à direita
+                maior = criar_no_Q3(info, (*no)->esquerda, (*no)->centro, (*no)->direita);
+                (*no)->quant_infos = 2;
             }
-        } else { // Caso não seja folha
-            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0) {
-                inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, *no);
-            } else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) == 0) {
-                insere_arvore_binaria(&((*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.palavra_ingles->unidade);
-            } else if ((*no)->quant_infos == 1 || strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) < 0) {
-                inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, *no);
-            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) == 0) {
-                insere_arvore_binaria(&((*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.palavra_ingles->unidade);
-            } else {
-                inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, *no);
-            }
-
-            // Gerenciamento de nós com divisão
-            if (maior) {
-                if ((*no)->quant_infos == 1) {
-                    add_elementos(*no, *sobe, maior);
-                } else {
-                    quebra_No(no, *sobe, &sobe_sup, &maior);
-                    if (!pai) {
-                        *no = criar_no(sobe_sup, *no, maior);
-                    }
-                }
+        } else if ((*no)->quant_infos == 2) {
+            // Nó com duas informações (precisa quebrar o nó)
+            if (info.block_fim < (*no)->info1.block_fim) {
+                *sobe = (*no)->info1;
+                maior = criar_no_Q3((*no)->info2, (*no)->centro, NULL, NULL);
+                (*no)->info1 = info;
+                (*no)->centro = NULL;
+                (*no)->quant_infos = 1;
+            } else if (info.block_fim < (*no)->info2.block_fim) {
+                *sobe = info;
+                maior = criar_no_Q3((*no)->info2, (*no)->centro, NULL, NULL);
+                (*no)->quant_infos = 2;
             }
         }
     }
+
+    // Se o maior foi inserido ou sobe
+    if (maior != NULL) {
+        if (*pai == NULL) {
+            // Caso o pai seja nulo, cria uma nova raiz
+            *no = criar_no_Q3(*sobe, *no, maior, NULL);
+        } else {
+            // Se o nó já tiver pai, sobe as informações
+            *no = criar_no_Q3(*sobe, *no, maior, NULL);
+        }
+    }
+
+    return maior;
 }
 
+
+
+ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **filho)
+{
+    ARVORE2_3 *maior_info;
+
+    // Depuração inicial para acompanhar o estado da quebra
+    printf("Quebrando nó: Novo Info = [%d-%d]\n", info.block_inicio, info.block_fim);
+    printf("Estado antes da quebra: Info1 = [%d-%d], Info2 = [%d-%d]\n",
+           (*no)->info1.block_inicio, (*no)->info1.block_fim,
+           (*no)->info2.block_inicio, (*no)->info2.block_fim);
+
+    if (info.block_fim > (*no)->info2.block_fim)
+    {
+        *sobe = (*no)->info2; // o elemento central é o maior
+        maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL); // Cria o nó para o maior elemento
+        maior_info->esquerda = (*no)->centro;
+        maior_info->direita = (filho ? *filho : NULL);
+        (*no)->centro = NULL; // Remove referência duplicada
+    }
+    else if (info.block_fim > (*no)->info1.block_fim)
+    {
+        *sobe = info; // novo elemento sobe
+        maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL);
+        maior_info->esquerda = (filho ? *filho : NULL);
+        maior_info->direita = (*no)->centro;
+        (*no)->centro = NULL; // Atualiza o nó pai
+    }
+    else
+    {
+        *sobe = (*no)->info1; // info1 sobe
+        maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL);
+        maior_info->esquerda = (*no)->centro;
+        maior_info->direita = (filho ? *filho : NULL);
+
+        (*no)->info1 = info; // Atualiza o menor valor no nó atual
+        (*no)->centro = NULL; // Remove o vínculo do centro
+    }
+
+    (*no)->quant_infos = 1; // Reduz a quantidade de elementos do nó atual
+
+    // Depuração pós-quebra
+    printf("Estado após quebra:\n");
+    printf("Nó Atual: Info1 = [%d-%d]\n", (*no)->info1.block_inicio, (*no)->info1.block_fim);
+    printf("Novo Nó Maior: Info1 = [%d-%d]\n",
+           maior_info->info1.block_inicio, maior_info->info1.block_fim);
+    printf("Elemento que Subiu = [%d-%d]\n", sobe->block_inicio, sobe->block_fim);
+
+    return maior_info;
+}
+
+
+void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho)
+{
+
+    if (Info.block_fim > no->info1.block_fim)
+    {
+        no->info2 = Info;
+        no->direita = filho;
+    }
+    else
+    {
+        no->info2 = no->info1;
+        no->direita = no->centro;
+        no->info1 = Info;
+        no->centro = filho;
+    }
+    no->quant_infos = 2;
+}
 
 /**
  * @brief Retorna a maior informação armazenada na árvore 2-3.
@@ -142,7 +276,8 @@ void inserir_Elemento_ARV_2_3(ARVORE2_3 **no, Informacao info, Informacao *sobe,
  * @param raiz Ponteiro para a raiz da árvore 2-3.
  * @return A maior informação armazenada na raiz da árvore 2-3.
  */
-Informacao_memoria maior_info(ARVORE2_3 *raiz){
+Informacao_memoria maior_info(ARVORE2_3 *raiz)
+{
     return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
 }
 
@@ -157,13 +292,15 @@ Informacao_memoria maior_info(ARVORE2_3 *raiz){
  * @param raiz Ponteiro para a raiz da árvore 2-3.
  * @param quantidade_blocos Número de blocos a serem alocados.
  *
- * @note A função imprime informações sobre a alocação e a concatenação de blocos. 
+ * @note A função imprime informações sobre a alocação e a concatenação de blocos.
  *       Caso a árvore esteja vazia, uma mensagem de erro é exibida.
- *       Após a alocação, a função `intercalarNos` é chamada para ajustar a árvore, 
+ *       Após a alocação, a função `intercalarNos` é chamada para ajustar a árvore,
  *       caso necessário.
  */
-void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
-    if (*raiz){
+void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos)
+{
+    if (*raiz)
+    {
         ARVORE2_3 *atual = *raiz;
         int contador = 0;
 
@@ -194,22 +331,29 @@ void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
             }
 
             // Concatenar nós adjacentes livres
-            if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L')) {
-                if (atual->quant_infos == 1 && atual->direita->info1.state == 'L') {
+            if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L'))
+            {
+                if (atual->quant_infos == 1 && atual->direita->info1.state == 'L')
+                {
                     atual->info1.block_fim = atual->direita->info1.block_fim;
-                } else if (atual->quant_infos == 2) {
-                    if (atual->info2.state == 'L' && atual->direita->info1.state == 'L') {
+                }
+                else if (atual->quant_infos == 2)
+                {
+                    if (atual->info2.state == 'L' && atual->direita->info1.state == 'L')
+                    {
                         atual->info2.block_fim = atual->direita->info1.block_fim;
-                    } else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L') {
+                    }
+                    else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L')
+                    {
                         atual->info2.block_fim = atual->direita->info2.block_fim;
                     }
                 }
-        
             }
 
             printf("Valor atual após a concatenação, se houve:\n");
             printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-            if (atual->quant_infos == 2) {
+            if (atual->quant_infos == 2)
+            {
                 printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
             }
 
@@ -219,11 +363,11 @@ void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
 
         printf("Finalização da alocação de blocos.\n");
         intercalarNos(raiz);
-    }else{
+    }
+    else
+    {
         printf("Árvore vazia.\n");
     }
-
-    
 }
 
 /**
@@ -245,7 +389,8 @@ void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
  */
 void intercalarNos(ARVORE2_3 **raiz)
 {
-    if (*raiz){
+    if (*raiz)
+    {
         ARVORE2_3 *atual = *raiz;
         while (atual && atual->direita)
         {
@@ -253,7 +398,7 @@ void intercalarNos(ARVORE2_3 **raiz)
             if (atual->quant_infos == 2 && atual->info1.state == atual->info2.state)
             {
                 // Move info2 para a direita
-                ARVORE2_3 *novoNo = criarNo(atual->info2);
+                ARVORE2_3 *novoNo = criar_no_Q3(atual->info2, NULL, NULL, NULL);
                 novoNo->direita = atual->direita;
                 atual->direita = novoNo;
                 atual->quant_infos = 1;
@@ -279,104 +424,30 @@ void intercalarNos(ARVORE2_3 **raiz)
 
             atual = atual->direita;
         }
-        
-    }else{
+    }
+    else
+    {
         printf("Árvore vazia.\n");
     }
-
-    
-}
-
-/**
- * @brief Aloca blocos de memória em uma árvore 2-3.
- *
- * Esta função percorre a árvore 2-3 e aloca blocos de memória conforme a quantidade especificada.
- * Se um nó com estado 'L' (livre) e tamanho suficiente for encontrado, ele será marcado como 'O' (ocupado).
- * Além disso, a função tenta concatenar nós adjacentes livres.
- *
- * @param raiz Ponteiro para a raiz da árvore 2-3.
- * @param quantidade_blocos Quantidade de blocos de memória a serem alocados.
- */
-void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos){
-    if (*raiz){
-        ARVORE2_3 *atual = *raiz;
-        int contador = 0;
-
-        printf("Blocos a serem alocados: %d\n", quantidade_blocos);
-        while (atual && contador < quantidade_blocos)
-        {
-            if (atual->info1.state == 'L' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
-            {
-                Informacao_memoria novoInfo = {'O', atual->info1.block_inicio, atual->info1.block_fim};
-                atual->info1 = novoInfo;
-
-                printf("====================================\n");
-                printf("Status: %c\n", atual->info1.state);
-                printf("Bloco inicial: %d\n", atual->info1.block_inicio);
-                printf("Bloco final: %d\n", atual->info1.block_fim);
-                printf("====================================\n");
-            }
-            else if (atual->quant_infos == 2 && atual->info2.state == 'L' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
-            {
-                Informacao_memoria novoInfo = {'O', atual->info2.block_inicio, atual->info2.block_fim};
-                atual->info2 = novoInfo;
-
-                printf("====================================\n");
-                printf("Status: %c\n", atual->info2.state);
-                printf("Bloco inicial: %d\n", atual->info2.block_inicio);
-                printf("Bloco final: %d\n", atual->info2.block_fim);
-                printf("====================================\n");
-            }
-
-            // Concatenar nós adjacentes livres
-            if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L')) {
-                if (atual->quant_infos == 1 && atual->direita->info1.state == 'L') {
-                    atual->info1.block_fim = atual->direita->info1.block_fim;
-                } else if (atual->quant_infos == 2) {
-                    if (atual->info2.state == 'L' && atual->direita->info1.state == 'L') {
-                        atual->info2.block_fim = atual->direita->info1.block_fim;
-                    } else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L') {
-                        atual->info2.block_fim = atual->direita->info2.block_fim;
-                    }
-                }
-        
-            }
-
-            printf("Valor atual após a concatenação, se houve:\n");
-            printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-            if (atual->quant_infos == 2) {
-                printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
-            }
-
-            atual = atual->direita;
-            contador++;
-        }
-
-        printf("Finalização da alocação de blocos.\n");
-        intercalarNos(raiz);
-    }else{
-        printf("Árvore vazia.\n");
-    }
-
-    
 }
 
 /**
  * @brief Libera blocos de memória em uma árvore 2-3.
  *
- * Esta função percorre a árvore 2-3 e libera os blocos de memória que estão ocupados ('O') e que têm tamanho 
- * maior ou igual à quantidade de blocos especificada. Após liberar os blocos, a função tenta concatenar nós 
+ * Esta função percorre a árvore 2-3 e libera os blocos de memória que estão ocupados ('O') e que têm tamanho
+ * maior ou igual à quantidade de blocos especificada. Após liberar os blocos, a função tenta concatenar nós
  * adjacentes que estão livres ('L') para otimizar o uso da memória.
  *
  * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
  * @param quantidade_blocos Quantidade de blocos a serem liberados.
  *
- * A função imprime informações detalhadas sobre os blocos liberados e os estados dos nós após a liberação e 
+ * A função imprime informações detalhadas sobre os blocos liberados e os estados dos nós após a liberação e
  * possível concatenação. No final, chama a função `intercalarNos` para realizar operações adicionais na árvore.
  */
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos)
 {
-    if (*raiz){
+    if (*raiz)
+    {
         ARVORE2_3 *atual = *raiz;
         int contador = 0;
 
@@ -403,23 +474,30 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos)
             }
 
             // Concatenar nós adjacentes livres
-            if (atual->direita && atual->direita->info1.state == 'L') {
-                if (atual->quant_infos == 1) {
+            if (atual->direita && atual->direita->info1.state == 'L')
+            {
+                if (atual->quant_infos == 1)
+                {
                     atual->info1.block_fim = atual->direita->info1.block_fim;
-                } else if (atual->quant_infos == 2 && atual->info2.state == 'L') {
+                }
+                else if (atual->quant_infos == 2 && atual->info2.state == 'L')
+                {
                     atual->info2.block_fim = atual->direita->info1.block_fim;
                 }
             }
 
-            if (atual->direita && atual->quant_infos == 2 && atual->direita->info1.state == 'L') {
-                if (atual->info2.state == 'L') {
+            if (atual->direita && atual->quant_infos == 2 && atual->direita->info1.state == 'L')
+            {
+                if (atual->info2.state == 'L')
+                {
                     atual->info2.block_fim = atual->direita->info1.block_fim;
                 }
             }
 
             printf("Valor atual após a concatenação, se houve:\n");
             printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-            if (atual->quant_infos == 2) {
+            if (atual->quant_infos == 2)
+            {
                 printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
             }
 
@@ -429,14 +507,12 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos)
 
         printf("Finalização da liberação de blocos.\n");
 
-        
         intercalarNos(raiz);
-            
-    }else{
+    }
+    else
+    {
         printf("Árvore vazia.\n");
     }
-
-    
 }
 
 /**
@@ -448,15 +524,28 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos)
  *
  * @param raiz Ponteiro para o nó raiz da árvore 2-3.
  */
-void exibirNos(ARVORE2_3 *raiz){
-    if (raiz){
+void exibirNos(ARVORE2_3 *raiz)
+{
+    if (raiz) 
+    {
+        // Visita o subárvore esquerda
         exibirNos(raiz->esquerda);
-        printf("====================================\n");
-        printf("Estado: %c\n", raiz->info1.state);
-        printf("Bloco Inicial: %d\n", raiz->info1.block_inicio);
-        printf("Bloco Final: %d\n", raiz->info1.block_fim);
-        printf("====================================\n");
-        if (raiz->quant_infos == 2)
+
+        // Exibe info1
+        if (raiz->quant_infos >= 1) 
+        {
+            printf("====================================\n");
+            printf("Estado: %c\n", raiz->info1.state);
+            printf("Bloco Inicial: %d\n", raiz->info1.block_inicio);
+            printf("Bloco Final: %d\n", raiz->info1.block_fim);
+            printf("====================================\n");
+        }
+
+        // Visita a subárvore central entre info1 e info2
+        exibirNos(raiz->centro);
+
+        // Exibe info2 (se houver)
+        if (raiz->quant_infos == 2) 
         {
             printf("====================================\n");
             printf("Estado: %c\n", raiz->info2.state);
@@ -464,11 +553,12 @@ void exibirNos(ARVORE2_3 *raiz){
             printf("Bloco Final: %d\n", raiz->info2.block_fim);
             printf("====================================\n");
         }
-        exibirNos(raiz->centro);
-        exibirNos(raiz->direita); 
-    }
 
+        // Visita o subárvore direita
+        exibirNos(raiz->direita);
+    }
 }
+
 
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior)
 {
@@ -565,12 +655,13 @@ ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_
  *
  * @param raiz Ponteiro para a raiz da árvore 2-3.
  */
-void liberarNos(ARVORE2_3 *raiz){
-    if (raiz){
+void liberarNos(ARVORE2_3 *raiz)
+{
+    if (raiz)
+    {
         liberarNos(raiz->esquerda);
         liberarNos(raiz->centro);
         liberarNos(raiz->direita);
         free(raiz);
     }
 }
-
