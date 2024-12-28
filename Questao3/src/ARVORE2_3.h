@@ -25,7 +25,7 @@ ARVORE2_3 *criarNo(Informacao_memoria info);
 void cadastrarNos(ARVORE2_3** raiz, int ultimo_endereco);
 void alocarNos(ARVORE2_3** raiz, int quantidade_blocos);//conferir se realmente precisa do balancear 
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior);
-
+void inserir_Elemento_ARV_2_3(ARVORE2_3 **no, Informacao info, Informacao *sobe, ARVORE2_3 *pai);
 /*Funções de liberar*/
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos);
 void liberarNos(ARVORE2_3* raiz);
