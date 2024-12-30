@@ -90,7 +90,6 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
             break;
         }
 
-        printf("Bloco final inválido. Deve ser maior ou igual a 0 e menor ou igual a %d.\n", ultimo_endereco);
     }
 
     // Cria o primeiro nó
@@ -121,7 +120,7 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
                 break;
             }
 
-            printf("Bloco final inválido. Deve ser maior que %d e menor ou igual a %d.\n", bloco_inicio, ultimo_endereco);
+        
         }
 
         // Atualização do estado alternado
@@ -603,49 +602,6 @@ ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_
     return filho1;
 }
 
-// int arvore_2_3_rebalancear_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 **maior)
-// {
-//     int balanceou = 0;
-//     if (*raiz != NULL)
-//     {
-//         if (!eh_folha_Q3(*raiz))
-//         {
-//             // if((*raiz)->quant_infos == 2 && !eh_info1(**raiz, info) && !eh_info2(**raiz, info))
-//             if ((*raiz)->quant_infos == 2 && (*raiz)->centro->quant_infos == 2)
-//                 balanceou = -1;
-//             else
-//             {
-//                 if (info == (*raiz)->info1.block_inicio)
-//                     balanceou = arvore_2_3_rebalancear_Q3(&((*raiz)->esquerda), info, maior);
-//                 else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_inicio)
-//                     balanceou = arvore_2_3_rebalancear_Q3(&((*raiz)->centro), info, maior);
-//                 else
-//                     balanceou = arvore_2_3_rebalancear_Q3(&((*raiz)->direita), info, maior);
-
-//                 if ((*raiz)->quant_infos == 1)
-//                     balanceou = balanceamento_Q3(raiz, (*raiz)->esquerda, &((*raiz)->centro), (*raiz)->info1, maior);
-//                 else if ((*raiz)->quant_infos == 2)
-//                     balanceou = balanceamento_Q3(raiz, (*raiz)->centro, &((*raiz)->direita), (*raiz)->info2, maior);
-//             }
-//         }
-//     }
-
-//     return balanceou;
-// }
-
-// static int balanceamento_Q3(ARVORE2_3 **raiz, ARVORE2_3 *filho1, ARVORE2_3 **filho2, Informacao_memoria info, ARVORE2_3 **maior)
-// {
-//     int balanceou = 0;
-//     if (*filho2 == NULL || (*filho2)->quant_infos == 0)
-//     {
-//         if (*filho2 != NULL)
-//             no_2_3_desacolar_Q3(filho2);
-
-//         *maior = no_2_3_juntar_Q3(filho1, info, *maior, raiz);
-//         balanceou = 1;
-//     }
-//     return balanceou;
-// }
 
 /**
  * @brief Libera todos os nós de uma árvore 2-3.
