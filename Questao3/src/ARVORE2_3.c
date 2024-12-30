@@ -234,40 +234,43 @@ ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memo
 {
     ARVORE2_3 *maior_info;
 
-    // Depuração inicial para acompanhar o estado da quebra
+    // Depuração inicial
     printf("Quebrando nó: Novo Info = [%d-%d]\n", info.block_inicio, info.block_fim);
     printf("Estado antes da quebra: Info1 = [%d-%d], Info2 = [%d-%d]\n",
            (*no)->info1.block_inicio, (*no)->info1.block_fim,
            (*no)->info2.block_inicio, (*no)->info2.block_fim);
 
+    // Caso 1: Novo valor (info) é maior que info2
     if (info.block_fim > (*no)->info2.block_fim)
     {
-        *sobe = (*no)->info2; // o elemento central é o maior
-        maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL); // Cria o nó para o maior elemento
-        maior_info->esquerda = (*no)->centro;
+        *sobe = (*no)->info2;
+        maior_info = criar_no_Q3(info, NULL, NULL, NULL); // Novo elemento é o maior
+        maior_info->esquerda = (*no)->direita;
         maior_info->direita = (filho ? *filho : NULL);
-        (*no)->centro = NULL; // Remove referência duplicada
+        (*no)->direita = NULL;
     }
+    // Caso 2: Novo valor está entre info1 e info2
     else if (info.block_fim > (*no)->info1.block_fim)
     {
-        *sobe = info; // novo elemento sobe
+        *sobe = info;
         maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL);
         maior_info->esquerda = (filho ? *filho : NULL);
-        maior_info->direita = (*no)->centro;
-        (*no)->centro = NULL; // Atualiza o nó pai
+        maior_info->direita = (*no)->direita;
+        (*no)->direita = NULL;
     }
+    // Caso 3: Novo valor é menor ou igual a info1
     else
     {
-        *sobe = (*no)->info1; // info1 sobe
+        *sobe = (*no)->info1;
         maior_info = criar_no_Q3((*no)->info2, NULL, NULL, NULL);
         maior_info->esquerda = (*no)->centro;
-        maior_info->direita = (filho ? *filho : NULL);
-
+        maior_info->direita = (*no)->direita;
         (*no)->info1 = info; // Atualiza o menor valor no nó atual
-        (*no)->centro = NULL; // Remove o vínculo do centro
+        (*no)->direita = NULL;
     }
 
-    (*no)->quant_infos = 1; // Reduz a quantidade de elementos do nó atual
+    // Atualiza quantidade de informações no nó original
+    (*no)->quant_infos = 1;
 
     // Depuração pós-quebra
     printf("Estado após quebra:\n");
@@ -278,6 +281,7 @@ ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memo
 
     return maior_info;
 }
+
 
 
 void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho)

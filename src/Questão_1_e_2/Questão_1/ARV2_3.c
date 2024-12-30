@@ -70,7 +70,7 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
         *sobe = info; // novo elemento sobe
 
         maior_info = criar_no((*no)->info2, filho ? *filho : NULL, (*no)->direita);
-        // msm coisa do outro só que quem sobe é info 2
+       
     }else
     {                         // caso 3 info menor info 1
         *sobe = (*no)->info1; // quem vai subir é info 1
