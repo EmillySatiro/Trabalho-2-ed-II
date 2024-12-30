@@ -30,6 +30,8 @@ void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho);
 ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **filho);
 void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info);
 Informacao_memoria criar_info(int state, int block_inicio, int block_fim);
+void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info);
+Informacao_memoria maior_info(ARVORE2_3 *raiz);
 /*Funções de liberar*/
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos);
 void liberarNos(ARVORE2_3* raiz);

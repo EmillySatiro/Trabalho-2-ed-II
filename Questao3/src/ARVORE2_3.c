@@ -34,7 +34,19 @@ void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
 {
     Informacao_memoria sobe;
     ARVORE2_3 *novo_no = inserir_Elemento_Q3(raiz, info, &sobe, NULL);
-    if (novo_no)
+    if (novo_no != NULL && *raiz != NULL)
+    {
+        ARVORE2_3 *maior = NULL;
+        if (sobe.block_fim > maior_info(*raiz).block_fim)
+        {
+            maior = quebra_No_Q3(raiz, sobe, &sobe, &novo_no);
+        }
+        if (maior != NULL)
+        {
+            *raiz = no_2_3_juntar_Q3(*raiz, sobe, maior, raiz);
+        }
+    }
+    else if (novo_no != NULL)
     {
         *raiz = criar_no_Q3(sobe, *raiz, novo_no, NULL);
     }
@@ -142,59 +154,80 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
     }
 }
 
+void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info)
+{
+    if (info.block_fim == no->info1.block_fim)
+    {
+        no->info1 = info;
+    }
+    else
+    {
+        no->info2 = info;
+    }
+}
+
 
 ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai) {
-    ARVORE2_3* maior = NULL;
+    Informacao_memoria sobe_sup;
+    ARVORE2_3 *maior = NULL;
 
+    // Se o nó for NULL, cria um novo nó
     if (*no == NULL) {
-        // Se o nó for nulo, cria um novo nó
         *no = criar_no_Q3(info, NULL, NULL, NULL);
     } else {
-        if ((*no)->quant_infos == 1) {
-            // Nó com uma informação
-            if (info.block_fim < (*no)->info1.block_fim) {
-                // Insere à esquerda
-                maior = criar_no_Q3((*no)->info1, (*no)->esquerda, (*no)->centro, (*no)->direita);
-                (*no)->info1 = info; // Atualiza a informação
-                (*no)->esquerda = NULL; // Limpa os ponteiros
-                (*no)->centro = NULL;
-                (*no)->direita = NULL;
-                (*no)->quant_infos = 1; // Ainda contém uma informação
+        // Verifica se é folha
+        if (eh_folha_Q3(*no)) {
+            // Se o nó tem 1 informação
+            if ((*no)->quant_infos == 1) {
+                if (info.block_fim < (*no)->info1.block_fim) {
+                    add_elementos_Q3(*no, info, NULL); // Adiciona à esquerda
+                } else if (info.block_fim > (*no)->info1.block_fim) {
+                    add_elementos_Q3(*no, info, NULL); // Adiciona à direita
+                } else {
+                    atualizar_no_Q3(*no, info); // Atualiza valores caso exista
+                }
+            } else if (info.block_fim != (*no)->info2.block_fim) { // Para nós com duas informações
+                maior = quebra_No_Q3(no, info, sobe, NULL);
+                if (pai == NULL) { // Cria nova raiz caso necessário
+                    *no = criar_no_Q3(*sobe, *no, maior, NULL);
+                    maior = NULL;
+                }
             } else {
-                // Insere à direita
-                maior = criar_no_Q3(info, (*no)->esquerda, (*no)->centro, (*no)->direita);
-                (*no)->quant_infos = 2;
+                atualizar_no_Q3(*no, info);
             }
-        } else if ((*no)->quant_infos == 2) {
-            // Nó com duas informações (precisa quebrar o nó)
+        } else { // Caso não seja folha
             if (info.block_fim < (*no)->info1.block_fim) {
-                *sobe = (*no)->info1;
-                maior = criar_no_Q3((*no)->info2, (*no)->centro, NULL, NULL);
-                (*no)->info1 = info;
-                (*no)->centro = NULL;
-                (*no)->quant_infos = 1;
-            } else if (info.block_fim < (*no)->info2.block_fim) {
-                *sobe = info;
-                maior = criar_no_Q3((*no)->info2, (*no)->centro, NULL, NULL);
-                (*no)->quant_infos = 2;
+                maior = inserir_Elemento_Q3(&((*no)->esquerda), info, sobe, no);
+            } else if (info.block_fim == (*no)->info1.block_fim) {
+                atualizar_no_Q3(*no, info);
+                maior = NULL;
+            } else if ((*no)->quant_infos == 1 || info.block_fim < (*no)->info2.block_fim) {
+                maior = inserir_Elemento_Q3(&((*no)->centro), info, sobe, no);
+            } else if (info.block_fim == (*no)->info2.block_fim) {
+                atualizar_no_Q3(*no, info);
+                maior = NULL;
+            } else {
+                maior = inserir_Elemento_Q3(&((*no)->direita), info, sobe, no);
             }
-        }
-    }
 
-    // Se o maior foi inserido ou sobe
-    if (maior != NULL) {
-        if (*pai == NULL) {
-            // Caso o pai seja nulo, cria uma nova raiz
-            *no = criar_no_Q3(*sobe, *no, maior, NULL);
-        } else {
-            // Se o nó já tiver pai, sobe as informações
-            *no = criar_no_Q3(*sobe, *no, maior, NULL);
+            // Se "maior" precisa ser reorganizado
+            if (maior) {
+                if ((*no)->quant_infos == 1) {
+                    add_elementos_Q3(*no, *sobe, maior);
+                    maior = NULL;
+                } else {
+                    maior = quebra_No_Q3(no, *sobe, &sobe_sup, &maior);
+                    if (pai == NULL) {
+                        *no = criar_no_Q3(sobe_sup, *no, maior, NULL);
+                        maior = NULL;
+                    }
+                }
+            }
         }
     }
 
     return maior;
 }
-
 
 
 ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **filho)
