@@ -365,6 +365,46 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
     imprimir_palavras_ingles(raiz->direita, palavra_portugues);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * no_2_3_juntar - Junta informações de um nó em uma árvore 2-3.
+ * @filho1: Ponteiro para o nó filho que receberá a informação.
+ * @info: Informação a ser adicionada ao nó.
+ * @maior: Ponteiro para o maior nó da árvore.
+ * @raiz: Ponteiro duplo para a raiz da árvore.
+ *
+ * Esta função verifica se o nó filho possui duas informações e, caso possua, reduz a quantidade de informações para uma.
+ * Em seguida, a nova informação é adicionada ao nó filho. Após a operação, a quantidade de informações da raiz é decrementada.
+ * Se a raiz ficar sem informações, o nó raiz é desacoplado.
+ *
+ * Retorno:
+ * Retorna o ponteiro para o nó filho após a operação de junção.
+ */
+ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **raiz)
+{
+    no_2_3_adicionar_info(filho1, info, maior);
+
+    (*raiz)->quant_infos--;
+
+    if((*raiz)->quant_infos== 0)
+        no_2_3_desacolar(raiz);
+
+    return filho1;
+}
+
+
 /**
  * no_2_3_adicionar_info - Adiciona uma nova informação a um nó em uma árvore 2-3.
  * @no: Ponteiro para o nó onde a informação será adicionada.
@@ -483,32 +523,17 @@ void no_2_3_desacolar(ARV2_3 **no){
 }
 
 /**
- * no_2_3_juntar - Junta informações de um nó em uma árvore 2-3.
- * @filho1: Ponteiro para o nó filho que receberá a informação.
- * @info: Informação a ser adicionada ao nó.
- * @maior: Ponteiro para o maior nó da árvore.
- * @raiz: Ponteiro duplo para a raiz da árvore.
+ * maior_info - Retorna a maior informação de um nó em uma árvore 2-3.
+ * @raiz: Ponteiro para o nó da árvore de onde a maior informação será extraída.
  *
- * Esta função verifica se o nó filho possui duas informações e, caso possua, reduz a quantidade de informações para uma.
- * Em seguida, a nova informação é adicionada ao nó filho. Após a operação, a quantidade de informações da raiz é decrementada.
- * Se a raiz ficar sem informações, o nó raiz é desacoplado.
+ * Esta função verifica o número de informações presentes no nó. Se o nó contiver duas informações,
+ * retorna a segunda informação (a maior). Caso contrário, retorna a primeira informação.
  *
  * Retorno:
- * Retorna o ponteiro para o nó filho após a operação de junção.
+ * Retorna a maior informação presente no nó, que pode ser a `info1` ou `info2` dependendo da quantidade de informações.
  */
-ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **raiz)
-{
-    if(filho1->quant_infos == 2)
-        filho1->quant_infos = 1;
-        
-    no_2_3_adicionar_info(filho1, info, maior);
-
-    (*raiz)->quant_infos--;
-
-    if((*raiz)->quant_infos == 0)
-        no_2_3_desacolar(raiz);
-
-    return filho1;
+Informacao maior_info(ARV2_3 *raiz){ 
+    return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
 }
 
 /**
@@ -534,19 +559,6 @@ ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai){
     return filho; 
 }
 
-/**
- * maior_info - Retorna a maior informação de um nó em uma árvore 2-3.
- * @raiz: Ponteiro para o nó da árvore de onde a maior informação será extraída.
- *
- * Esta função verifica o número de informações presentes no nó. Se o nó contiver duas informações,
- * retorna a segunda informação (a maior). Caso contrário, retorna a primeira informação.
- *
- * Retorno:
- * Retorna a maior informação presente no nó, que pode ser a `info1` ou `info2` dependendo da quantidade de informações.
- */
-Informacao maior_info(ARV2_3 *raiz){ 
-    return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
-}
 
 /**
  * buscar_maior_filho - Busca o maior filho de um nó em uma árvore 2-3.
@@ -731,7 +743,24 @@ ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
 
     return pai;
 }
+int possivel_remover(ARV2_3 *raiz){
+ int possivel = 0;
 
+    if(raiz != NULL)
+    {
+        possivel = raiz->quant_infos == 2;
+
+        if(!possivel)
+        {
+            possivel = possivel_remover(raiz->centro);
+
+            if(!possivel)
+                possivel = possivel_remover(raiz->esquerda);
+        }
+    }
+
+    return possivel;
+}
 /**
  * ondinha_1 - Realiza o ajuste estrutural na árvore 2-3 durante a remoção de um nó.
  * @saindo: Informação que está sendo removida da árvore.
@@ -751,29 +780,11 @@ ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
  * -1 se houve um problema durante a remoção,
  * 0 se a informação não foi encontrada na árvore.
  */
-int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior){
-    int removeu =  _1_remover_2_3(raiz, saindo.palavra_portugues, pai, origem,maior); 
-    *entrada = saindo; 
-    return removeu; 
-}
-
-/**
- * @brief Função que realiza a remoção de um elemento de uma árvore 2-3 e ajusta a entrada.
- *
- * Esta função remove um elemento da árvore 2-3 e ajusta a entrada com a informação do elemento removido.
- *
- * @param saindo Estrutura do tipo Informacao que contém a palavra a ser removida.
- * @param entrada Ponteiro para a estrutura do tipo Informacao onde será armazenada a informação do elemento removido.
- * @param pai Ponteiro para a árvore 2-3 que representa o nó pai.
- * @param origem Ponteiro duplo para a árvore 2-3 que representa a origem da remoção.
- * @param raiz Ponteiro duplo para a árvore 2-3 que representa a raiz da árvore.
- * @param maior Ponteiro duplo para a árvore 2-3 que representa o maior elemento.
- * @return Retorna um inteiro indicando se a remoção foi bem-sucedida.
- */
-int ondinha_esq2dir(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior){
-    int removeu = _2_remover_2_3(raiz, saindo.palavra_portugues, pai, origem, maior); 
-    *entrada = saindo; 
-    return removeu; 
+static int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior, char (*funcao_remover)(ARV2_3**, char, ARV2_3 *, ARV2_3 **, ARV2_3 **))
+{
+    int removeu = funcao_remover(raiz, saindo.palavra_portugues, pai, origem, maior);
+    *entrada = saindo;
+    return removeu;
 }
 
 /**
@@ -800,6 +811,57 @@ void arvore_2_3_desalocar(ARV2_3 **raiz)
         no_2_3_desacolar(raiz);
     }
 }
+
+
+int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
+{
+    char *removeu;
+    ARV2_3 *filho, *pai;
+    Informacao info_filho;
+
+    pai = raiz;
+
+    filho = buscar_maior_filho(filho1, &pai, &info_filho);
+
+    if(filho->quant_infos == 2)
+    {
+        *info = info_filho;
+        filho->quant_infos = 1;
+    }
+    else
+    {
+        filho = buscar_menor_filho(filho2, &pai);
+        removeu = ondinha_1(filho->info1, info, pai, origem, &filho, maior, _1_remover_2_3);
+    }
+
+    return removeu;
+}
+
+int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
+{
+    char *removeu;
+    ARV2_3 *filho, *pai;
+    Informacao info_filho;
+
+    pai = raiz;
+
+    filho = buscar_menor_filho(filho1, &pai);
+
+    if(filho->quant_infos == 2)
+    {
+        *info = filho->info1;
+        filho->info1 = filho->info2;
+        filho->quant_infos = 1;
+    }
+    else
+    {
+        filho = buscar_maior_filho(filho2, &pai, &info_filho);
+        removeu = ondinha_1(info_filho, info, pai, origem, &filho, maior, _1_remover_2_3);
+    }
+
+    return removeu;
+}
+
 
 /**
  * _1_remover_2_3 - Remove um nó de uma árvore 2-3.
@@ -844,9 +906,9 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
                             pai_aux = buscar_pai(*origem, pai->info1.palavra_portugues);
                             
                             if(*raiz == pai->esquerda)
-                                removeu = ondinha_1(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                removeu = ondinha_1(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior, _1_remover_2_3);
                             else 
-                                removeu = ondinha_1(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                removeu = ondinha_1(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior, _1_remover_2_3);
                         }else{// filho do centro(com pai de 1 info)ou da direita 
 
                             Informacao info_pai;
@@ -869,7 +931,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
 
                                 ARV2_3 *avo;
                                 avo = buscar_pai(*origem, info_pai.palavra_portugues);
-                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior);
+                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, _1_remover_2_3);
                             }
                         }
                 }
@@ -896,7 +958,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
                         filho2->quant_infos = 1;
                     }
                     else
-                        removeu = ondinha_1(filho->info1, &((*raiz)->info2), pai_aux, origem, &filho, maior);
+                        removeu = ondinha_1(filho->info1, &((*raiz)->info2), pai_aux, origem, &filho, maior, _1_remover_2_3);
                 }
                 else if(info1)
                 {
@@ -910,7 +972,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
                     else
                     {
                         filho = buscar_menor_filho((*raiz)->centro, &pai_aux);
-                        removeu = ondinha_1(filho->info1, &((*raiz)->info1), pai_aux, origem, &filho, maior);
+                        removeu = ondinha_1(filho->info1, &((*raiz)->info1), pai_aux, origem, &filho, maior,_1_remover_2_3);
                     }
                 }
             }
@@ -948,13 +1010,12 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
  * A função também lida com casos especiais, como quando o nó a ser removido é a raiz
  * ou quando o nó pai tem apenas uma informação.
  */
-int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
+int arvore23_remover2(ARV2_3 **raiz, int info, ARV2_3  *pai, ARV2_3  **origem, ARV2_3  **maior)
 {
     int removeu = 0;
 
     if(*raiz != NULL)
     {
-        ARV2_3 *pai_aux;
         int info1 = eh_info1(**raiz, info);
         int info2 = eh_info2(**raiz, info);
 
@@ -966,106 +1027,71 @@ int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
                 if((*raiz)->quant_infos == 2)
                 {
                     if(info1)
-                        troca_infos(&((*raiz)->info1), &((*raiz)->info2));
+                        (*raiz)->info1 = (*raiz)->info2;
 
                     (*raiz)->quant_infos = 1;
                 }
                 else
                 {
-                    if(pai != NULL)
+                    if(pai == NULL)
+                        no_2_3_desacolar(raiz);
+                    else
                     {
-                        
+                        ARV2_3  *pai_aux;
+                        Informacao info_pai;
                         if(*raiz == pai->centro || (pai->quant_infos == 2 && *raiz == pai->direita))
                         {
                             pai_aux = buscar_pai(*origem, pai->info1.palavra_portugues);
                             
                             if(*raiz == pai->centro)
-                                removeu =ondinha_esq2dir(pai->info1, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                info_pai = pai->info1;
                             else 
-                                removeu = ondinha_esq2dir(pai->info2, &((*raiz)->info1), pai_aux, origem, &pai, maior);
+                                info_pai = pai->info2;
+
+                            removeu = ondinha_1(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, _1_remover_2_3);
                         }
-                        else
+                        else // Filho da esquerda
                         {
-                            Informacao info_pai;
-                            pai_aux = buscar_menor_pai(*origem,(*raiz)->info1.palavra_portugues);
-                            if(pai_aux != NULL && pai->quant_infos == 1)
+                            pai_aux = buscar_menor_pai(*origem, (*raiz)->info1.palavra_portugues);
+
+                            ARV2_3  *menor_pai;
+                            menor_pai = buscar_menor_pai_2_info(*origem, (*raiz)->info1.palavra_portugues);
+
+                            ARV2_3  *avo;
+                            if(pai_aux == NULL || (pai_aux != pai && menor_pai != NULL))
+                            {  
+                                removeu = -1;
+                                *maior = pai;
+                            }
+                            else
                             {
-                                if(pai_aux->quant_infos == 2 && (strcmp(pai_aux->info2.palavra_portugues,(*raiz)->info1.palavra_portugues) < 0))
+                                if(pai_aux->quant_infos == 2 && (strcmp(pai_aux->info2.palavra_portugues, (*raiz)->info1.palavra_portugues) < 0))
                                     info_pai = pai_aux->info2;
                                 else
                                     info_pai = pai_aux->info1;
 
-                                ARV2_3 *avo;
                                 avo = buscar_pai(*origem, info_pai.palavra_portugues);
-                                removeu = ondinha_esq2dir(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior);
-                            }
-                            else
-                            {
-                                // Revisar
-                                ondinha_1(pai->info1, &((*raiz)->info1), pai_aux, origem, raiz, maior);
+                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, arvore23_remover2);
                             }
                         }
                     }
-                    else
-                        no_2_3_desacolar(raiz);
                 }
             }
-            else
-            {
-                ARV2_3 *filho;
-                Informacao info_filho;
-                pai_aux = *raiz;
-
-                if(info2)
-                {
-                    filho = buscar_menor_filho((*raiz)->direita, &pai_aux);
-
-                    // TODO revisar
-                    if(filho->quant_infos == 2)
-                    {
-                        (*raiz)->info2 = filho->info1;
-                        filho->info1 = filho->info2;
-                        filho->quant_infos = 1;
-                    }
-                    else
-                    {
-                        filho = buscar_maior_filho((*raiz)->centro, &pai_aux, &info_filho);
-                        removeu = ondinha_esq2dir(info_filho, &((*raiz)->info2), pai_aux, origem, &filho, maior);
-                    }
-                }
-                else if(info1)
-                {
-                    filho = buscar_menor_filho((*raiz)->centro, &pai_aux);
-
-                    if(filho->quant_infos == 2)
-                    {
-                        (*raiz)->info1 = filho->info1;
-                        filho->info1 = filho->info2;
-                        filho->quant_infos = 1;
-                    }
-                    else
-                    {
-                        filho = buscar_maior_filho((*raiz)->esquerda, &pai_aux, &info_filho);
-                        removeu = ondinha_esq2dir(info_filho, &((*raiz)->info1), pai_aux, origem, &filho, maior);
-                    }
-                }
-            }
+            else if(info2)
+                removeu = arvore23_remover_nao_folha2(origem, *raiz, &((*raiz)->info2), (*raiz)->direita, (*raiz)->centro, maior);
+            else if(info1)
+                removeu = arvore23_remover_nao_folha2(origem, *raiz, &((*raiz)->info1), (*raiz)->centro, (*raiz)->esquerda, maior);
         }
         else
         {
-            if(info < (*raiz)->info1.palavra_portugues)
-                removeu = _1_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
-            else if((*raiz)->quant_infos == 1 || info < (*raiz)->info2.palavra_portugues)
-                removeu = _1_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
+            if((strcmp(info, (*raiz)->info1.palavra_portugues) < 0 ))
+                removeu = _2_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
+            else if((*raiz)->quant_infos == 1 || (strcmp(info,(*raiz)->info2.palavra_portugues)< 0))
+                removeu = _2_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
-                removeu = _1_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
+                removeu = _2_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
         }
     }
-
-    // TODO revisar
-    if(*origem == NULL)
-        *origem = *maior;
-
     return removeu;
 }
 
@@ -1092,18 +1118,19 @@ int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
  * - `-1`: Falha na remoção, possivelmente devido à ausência da chave ou 
  * necessidade de rebalanceamento que não foi resolvida.
  */
-int arvore_2_3_remover(ARV2_3 **raiz, char *info)
+int arvore23_remover(ARV2_3 **raiz, int info)
 {   
     ARV2_3 *maior, *posicao_juncao;
-    maior = NULL;
     int removeu = _1_remover_2_3(raiz, info, NULL, raiz, &posicao_juncao);
 
     if(removeu == -1)
     {
+        removeu = 1;
         Informacao valor_juncao = maior_info(posicao_juncao);
-        removeu = arvore_2_3_rebalancear(raiz, valor_juncao.palavra_portugues, &maior);
+        maior = NULL;
+        int removeu_aux = arvore_2_3_rebalancear(raiz, valor_juncao.palavra_portugues, &maior);
         
-        if(removeu == -1)
+        if(removeu_aux == -1)
         {
             ARV2_3 *pai, *posicao_juncao2;
             Informacao *entrada;
@@ -1114,9 +1141,19 @@ int arvore_2_3_remover(ARV2_3 **raiz, char *info)
             else
                 entrada = &(posicao_juncao->direita->info1);
 
-            //removeu = ondinha_esq2dir(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2);
+            removeu_aux = ondinha_1(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2, _1_remover_2_3);
+
+            if(removeu_aux == -1)
+            {
+                valor_juncao = posicao_juncao2->info1;
+                pai = buscar_pai(*raiz, valor_juncao.palavra_portugues);
+                removeu_aux = ondinha_1(valor_juncao, &(posicao_juncao2->esquerda->info1), pai, raiz, &posicao_juncao2, &posicao_juncao, _1_remover_2_3);
+
+                valor_juncao = maior_info(posicao_juncao);
+                maior = NULL;
+                removeu_aux = arvore_2_3_rebalancear(raiz, valor_juncao.palavra_portugues, &maior);
+            }
         }
-            //removeu = _2_remover_2_3(raiz, posicao_juncao->info1.palavra_portugues, NULL, raiz, &posicao_juncao);
 
         if(*raiz == NULL)
             *raiz = maior;
@@ -1142,23 +1179,31 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior)
     {
         if(!eh_folha(*raiz))
         {
-            //if((*raiz)->quant_infos == 2 && !eh_info1(**raiz, info) && !eh_info2(**raiz, info))
-            if((*raiz)->quant_infos == 2 && (*raiz)->centro->quant_infos == 2)
-                balanceou = -1;
+            if((strcmp(info,(*raiz)->info1.palavra_portugues)< 0))
+                balanceou = arvore_2_3_rebalancear(&((*raiz)->esquerda), info, maior);
+            else if((*raiz)->quant_infos == 1 || info < (*raiz)->info2.palavra_portugues)
+            {
+                if((*raiz)->esquerda->quant_infos == 2 && !possivel_remover((*raiz)->centro))
+                    balanceou = -1;
+                else
+                    balanceou = arvore_2_3_rebalancear(&((*raiz)->centro), info, maior);
+            }
             else
             {
-                if((strcmp (info, (*raiz)->info1.palavra_portugues) < 0))
-                    balanceou = arvore_2_3_rebalancear(&((*raiz)->esquerda), info, maior);
-                else if((*raiz)->quant_infos == 1 || info < (*raiz)->info2.palavra_portugues)
-                    balanceou = arvore_2_3_rebalancear(&((*raiz)->centro), info, maior);
+                if((*raiz)->centro->quant_infos == 2 && !possivel_remover((*raiz)->direita))
+                    balanceou = -1;
                 else
                     balanceou = arvore_2_3_rebalancear(&((*raiz)->direita), info, maior);
-                
+            }
+
+            if(balanceou != -1)
+            {
                 if((*raiz)->quant_infos == 1)
                     balanceou = balanceamento(raiz, (*raiz)->esquerda, &((*raiz)->centro), (*raiz)->info1, maior);
                 else if((*raiz)->quant_infos == 2)
                     balanceou = balanceamento(raiz, (*raiz)->centro, &((*raiz)->direita), (*raiz)->info2, maior);
             }
+            
         }
     }
 
@@ -1361,3 +1406,7 @@ void liberar_arvore_2_3(ARV2_3 **raiz) {
         *raiz = NULL;
     }
 }
+
+
+
+   
