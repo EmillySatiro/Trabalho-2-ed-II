@@ -81,10 +81,9 @@ int main() {
                 printf("Opção inválida! Tente novamente.\n");
         }
 
-        printf("\n"); // Linha extra para melhorar a apresentação
-    } while (opcao != 0); // Continua o menu até o usuário escolher 0 (Sair)
-
-    //liberar_rubronegra(&arvore_rubro_negra);
+        printf("\n"); 
+    } while (opcao != 0); 
+    liberar_rubronegra(&arvore_rubro_negra);
     return 0;
 }
 

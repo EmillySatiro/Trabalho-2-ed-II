@@ -438,14 +438,15 @@ void mostrar_rubronegra(Rubronegra *raiz){
 
        
         printf("\n=====================================\n");
-        printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
-        printf("Cor do nó: %s\n", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
-        printf("Unidade: %d\n", raiz->info->unidade);
-        printf("Árvore binária das palavras em Inglês:\n");
+        printf("| Palavra em Português: %s\n", raiz->info->palavra_portugues);
+        printf("| Cor do nó: %s\n", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+        printf("| Unidade: %d\n", raiz->info->unidade);
+        printf("| Árvore binária das palavras em Inglês:\n");
         mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+        printf("=====================================\n");
         mostrar_rubronegra(raiz->direita);
 
-        printf("=====================================\n");
+        
     }
 
 }
