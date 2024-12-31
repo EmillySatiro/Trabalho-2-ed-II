@@ -85,7 +85,6 @@ int main() {
 
         printf("\n"); 
     } while (opcao != 0); 
-
     liberar_arvore_2_3(&arvore2_3);
     return 0;
 

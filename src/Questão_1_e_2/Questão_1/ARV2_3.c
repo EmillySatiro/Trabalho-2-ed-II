@@ -271,6 +271,7 @@ void mostrar(ARV2_3 *raiz){
    
     if (raiz)
     {
+        mostrar(raiz->esquerda);
         printf("\n+--- Nó Atual ---+\n");
         printf("| Quantidade de Informações: %d\n", raiz->quant_infos);
 
@@ -278,22 +279,24 @@ void mostrar(ARV2_3 *raiz){
         printf("| Unidade : %d\n", raiz->info1.unidade);
         printf("| Árvore Binária Associada à Palavra 1:\n");
         mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
+        printf("+----------------+\n");
+       
 
         if (raiz->quant_infos == 2)
         {
             printf("| Palavra 2 (PT): %s\n", raiz->info2.palavra_portugues);
-            printf("\n| Unidade : %d\n", raiz->info2.unidade);
+            printf("| Unidade : %d\n", raiz->info2.unidade);
             printf("| Árvore Binária Associada à Palavra 2:\n");
             mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
+            printf("+----------------+\n");
         }
 
-        printf("+----------------+\n");
-
-        mostrar(raiz->esquerda);
+        
         mostrar(raiz->centro);
-
         if (raiz->quant_infos == 2)
             mostrar(raiz->direita);
+        
+        
     }
 }
 
@@ -780,11 +783,11 @@ int possivel_remover(ARV2_3 *raiz){
  * -1 se houve um problema durante a remoção,
  * 0 se a informação não foi encontrada na árvore.
  */
-static int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior, char (*funcao_remover)(ARV2_3**, char, ARV2_3 *, ARV2_3 **, ARV2_3 **))
-{
-    int removeu = funcao_remover(raiz, saindo.palavra_portugues, pai, origem, maior);
+int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior, int (*funcao_remover)(ARV2_3 **, char *, ARV2_3 *, ARV2_3 **, ARV2_3 **)){
+   int removeu = funcao_remover(raiz, saindo.palavra_portugues, pai, origem, maior);
     *entrada = saindo;
     return removeu;
+
 }
 
 /**
@@ -815,7 +818,7 @@ void arvore_2_3_desalocar(ARV2_3 **raiz)
 
 int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
 {
-    char *removeu;
+    int removeu;
     ARV2_3 *filho, *pai;
     Informacao info_filho;
 
@@ -839,7 +842,7 @@ int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info,
 
 int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
 {
-    char *removeu;
+    int removeu;
     ARV2_3 *filho, *pai;
     Informacao info_filho;
 
@@ -877,8 +880,7 @@ int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info,
  *
  * Retorno: 1 se a remoção foi bem-sucedida, -1 se houve um problema, 0 se a informação não foi encontrada.
  */
-int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior)
-{
+int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior) {
     int removeu = 0;
 
     if(*raiz != NULL){
@@ -1010,7 +1012,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
  * A função também lida com casos especiais, como quando o nó a ser removido é a raiz
  * ou quando o nó pai tem apenas uma informação.
  */
-int arvore23_remover2(ARV2_3 **raiz, int info, ARV2_3  *pai, ARV2_3  **origem, ARV2_3  **maior)
+int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3  *pai, ARV2_3  **origem, ARV2_3  **maior)
 {
     int removeu = 0;
 
@@ -1071,7 +1073,7 @@ int arvore23_remover2(ARV2_3 **raiz, int info, ARV2_3  *pai, ARV2_3  **origem, A
                                     info_pai = pai_aux->info1;
 
                                 avo = buscar_pai(*origem, info_pai.palavra_portugues);
-                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, arvore23_remover2);
+                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, _2_remover_2_3);
                             }
                         }
                     }
@@ -1118,7 +1120,7 @@ int arvore23_remover2(ARV2_3 **raiz, int info, ARV2_3  *pai, ARV2_3  **origem, A
  * - `-1`: Falha na remoção, possivelmente devido à ausência da chave ou 
  * necessidade de rebalanceamento que não foi resolvida.
  */
-int arvore23_remover(ARV2_3 **raiz, int info)
+int arvore_2_3_remover(ARV2_3 **raiz, char *info)
 {   
     ARV2_3 *maior, *posicao_juncao;
     int removeu = _1_remover_2_3(raiz, info, NULL, raiz, &posicao_juncao);
@@ -1373,13 +1375,13 @@ int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int uni
  * @param info Ponteiro para a estrutura de informação a ser liberada.
  */
 void liberar_arvore_2_3_binaria(Informacao *info) {
+
     if (info) {
         if (info->palavra_ingles) {
             libera_arvore_binaria(&info->palavra_ingles);
             info->palavra_ingles = NULL;
         }
     }
-    free(info);
 }
 
 /**
@@ -1396,17 +1398,20 @@ void liberar_arvore_2_3(ARV2_3 **raiz) {
     if (*raiz) {
         liberar_arvore_2_3(&(*raiz)->esquerda);
         liberar_arvore_2_3(&(*raiz)->centro);
-        liberar_arvore_2_3(&(*raiz)->direita);
+        
+        if ((*raiz)->quant_infos == 2) {
+            liberar_arvore_2_3(&(*raiz)->direita);
+        }
 
-       
-        liberar_arvore_2_3_binaria(&(*raiz)->info1);
-        liberar_arvore_2_3_binaria(&(*raiz)->info2);
+        liberar_arvore_2_3_binaria(&(*raiz)->info1); 
+        if ((*raiz)->quant_infos == 2) {
+            liberar_arvore_2_3_binaria(&(*raiz)->info2);  
+        }
 
         free(*raiz);
-        *raiz = NULL;
+        *raiz = NULL;  
     }
 }
-
 
 
    
