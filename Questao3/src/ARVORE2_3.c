@@ -335,76 +335,91 @@ Informacao_memoria maior_info(ARVORE2_3 *raiz)
  */
 void alocarNos(ARVORE2_3 **raiz, int quantidade_blocos)
 {
-    if (*raiz)
+    if (*raiz == NULL)
     {
-        ARVORE2_3 *atual = *raiz;
-        int contador = 0;
+        printf("Árvore vazia.\n");
+        return;
+    }
 
-        printf("Blocos a serem alocados: %d\n", quantidade_blocos);
-        while (atual && contador < quantidade_blocos)
+    ARVORE2_3 *atual = *raiz;
+    int blocos_restantes = quantidade_blocos; // Blocos ainda a serem alocados
+    printf("Blocos a serem alocados: %d\n", quantidade_blocos);
+
+    while (atual && blocos_restantes > 0)
+    {
+        // Verifica se o primeiro bloco possui espaço suficiente e está livre
+        if (atual->info1.state == 'L' && 
+            (atual->info1.block_fim - atual->info1.block_inicio + 1) >= blocos_restantes)
         {
-            if (atual->info1.state == 'L' && (atual->info1.block_fim - atual->info1.block_inicio + 1) >= quantidade_blocos)
+            // Divide o bloco, se necessário
+            if ((atual->info1.block_fim - atual->info1.block_inicio + 1) > blocos_restantes)
             {
-                Informacao_memoria novoInfo = {'O', atual->info1.block_inicio, atual->info1.block_fim};
-                atual->info1 = novoInfo;
-
-                printf("====================================\n");
-                printf("Status: %c\n", atual->info1.state);
-                printf("Bloco inicial: %d\n", atual->info1.block_inicio);
-                printf("Bloco final: %d\n", atual->info1.block_fim);
-                printf("====================================\n");
-            }
-            else if (atual->quant_infos == 2 && atual->info2.state == 'L' && (atual->info2.block_fim - atual->info2.block_inicio + 1) >= quantidade_blocos)
-            {
-                Informacao_memoria novoInfo = {'O', atual->info2.block_inicio, atual->info2.block_fim};
-                atual->info2 = novoInfo;
-
-                printf("====================================\n");
-                printf("Status: %c\n", atual->info2.state);
-                printf("Bloco inicial: %d\n", atual->info2.block_inicio);
-                printf("Bloco final: %d\n", atual->info2.block_fim);
-                printf("====================================\n");
-            }
-
-            // Concatenar nós adjacentes livres
-            if (atual->direita && (atual->direita->info1.state == 'L' || atual->direita->info2.state == 'L'))
-            {
-                if (atual->quant_infos == 1 && atual->direita->info1.state == 'L')
+                Informacao_memoria livre = {'L', atual->info1.block_inicio + blocos_restantes, atual->info1.block_fim};
+                atual->info1.block_fim = atual->info1.block_inicio + blocos_restantes - 1;
+                atual->info1.state = 'O';
+                
+                // Ajusta o próximo bloco para a porção não utilizada
+                if (atual->quant_infos == 1)
                 {
-                    atual->info1.block_fim = atual->direita->info1.block_fim;
+                    atual->info2 = livre;
+                    atual->quant_infos = 2;
                 }
-                else if (atual->quant_infos == 2)
+                else
                 {
-                    if (atual->info2.state == 'L' && atual->direita->info1.state == 'L')
-                    {
-                        atual->info2.block_fim = atual->direita->info1.block_fim;
-                    }
-                    else if (atual->info2.state == 'L' && atual->direita->info2.state == 'L')
-                    {
-                        atual->info2.block_fim = atual->direita->info2.block_fim;
-                    }
+                    atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
                 }
             }
-
-            printf("Valor atual após a concatenação, se houve:\n");
-            printf("Info1 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info1.state, atual->info1.block_inicio, atual->info1.block_fim);
-            if (atual->quant_infos == 2)
+            else
             {
-                printf("Info2 Status: %c, Bloco inicial: %d, Bloco final: %d\n", atual->info2.state, atual->info2.block_inicio, atual->info2.block_fim);
+                atual->info1.state = 'O'; // Ocupa o bloco inteiro
             }
 
-            atual = atual->direita;
-            contador++;
+            blocos_restantes = 0; // Todos os blocos foram alocados
+        }
+        // Verifica o segundo bloco, se existir
+        else if (atual->quant_infos == 2 &&
+                 atual->info2.state == 'L' && 
+                 (atual->info2.block_fim - atual->info2.block_inicio + 1) >= blocos_restantes)
+        {
+            // Divide o bloco, se necessário
+            if ((atual->info2.block_fim - atual->info2.block_inicio + 1) > blocos_restantes)
+            {
+                Informacao_memoria livre = {'L', atual->info2.block_inicio + blocos_restantes, atual->info2.block_fim};
+                atual->info2.block_fim = atual->info2.block_inicio + blocos_restantes - 1;
+                atual->info2.state = 'O';
+
+                atual->centro = criar_no_Q3(livre, NULL, NULL, NULL); // Cria nó adicional para o restante livre
+            }
+            else
+            {
+                atual->info2.state = 'O'; // Ocupa o bloco inteiro
+            }
+
+            blocos_restantes = 0; // Todos os blocos foram alocados
         }
 
-        printf("Finalização da alocação de blocos.\n");
-        intercalarNos(raiz);
+        // Move para o próximo nó na árvore
+        if (blocos_restantes > 0)
+        {
+            atual = atual->direita;
+        }
+    }
+
+    if (blocos_restantes > 0)
+    {
+        printf("Erro: Não há espaço suficiente para alocar %d blocos.\n", quantidade_blocos);
     }
     else
     {
-        printf("Árvore vazia.\n");
+        printf("Blocos alocados com sucesso.\n");
     }
+
+    // Depuração: Exibir estado atual da árvore
+    intercalarNos(raiz);
+    printf("Finalização da alocação de blocos.\n");
 }
+
+
 
 /**
  * @brief Intercala nós em uma árvore 2-3.
