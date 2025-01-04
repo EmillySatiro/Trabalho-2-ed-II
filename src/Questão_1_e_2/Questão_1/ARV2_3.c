@@ -4,8 +4,6 @@
 #include "ARV2_3.h"
 #include "../Binaria/ARV_BINARIA.h"
 
-
-
 /**
  * @brief Cria um novo nó para a árvore 2-3.
  *
@@ -371,16 +369,6 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
 
 
 
-
-
-
-
-
-
-
-
-
-
 /**
  * no_2_3_juntar - Junta informações de um nó em uma árvore 2-3.
  * @filho1: Ponteiro para o nó filho que receberá a informação.
@@ -499,19 +487,7 @@ ARV2_3 *no_2_3_alocar(){
 
 }
 
-/**
- * troca_infos - Troca as informações entre dois objetos do tipo `Informacao`.
- * @info1: Ponteiro para o primeiro objeto de tipo `Informacao` a ser trocado.
- * @info2: Ponteiro para o segundo objeto de tipo `Informacao` a ser trocado.
- *
- * Esta função troca os valores das informações contidas nos dois objetos `info1` e `info2` utilizando uma variável auxiliar.
- * Após a execução, o conteúdo de `info1` será o de `info2`, e o conteúdo de `info2` será o de `info1`.
- */
-void troca_infos(Informacao *info1, Informacao *info2){
-    Informacao aux = *info1; 
-    *info1 = *info2; 
-    *info2 = aux;
-}
+
 
 /**
  * no_2_3_desacolar - Desacopla (libera a memória) de um nó em uma árvore 2-3.
@@ -521,8 +497,10 @@ void troca_infos(Informacao *info1, Informacao *info2){
  * efetivamente removendo-o da árvore e garantindo que não haja referência a um nó de memória já liberada.
  */
 void no_2_3_desacolar(ARV2_3 **no){
-    free(*no);
-    *no = NULL;
+    if(*no != NULL){
+        free(*no);
+        *no = NULL;
+    }
 }
 
 /**
@@ -746,6 +724,7 @@ ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
 
     return pai;
 }
+
 int possivel_remover(ARV2_3 *raiz){
  int possivel = 0;
 

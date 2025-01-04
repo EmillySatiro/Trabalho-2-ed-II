@@ -44,7 +44,7 @@ int eh_folha(ARV2_3 *no);
 int eh_info1(ARV2_3 no, char *info);
 int eh_info2(ARV2_3 no, char *info);
 ARV2_3 *no_2_3_alocar();
-void troca_infos(Informacao *info1, Informacao *info2);
+//void troca_infos(Informacao *info1, Informacao *info2);
 void no_2_3_desacolar(ARV2_3 **no);
 Informacao maior_info(ARV2_3 *raiz);
 int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior);
@@ -65,7 +65,7 @@ int possivel_remover(ARV2_3 *raiz);
 int ondinha_1(Informacao saindo, Informacao *entrada, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **raiz, ARV2_3 **maior, int (*funcao_remover)(ARV2_3 **, char *, ARV2_3 *, ARV2_3 **, ARV2_3 **));
 int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior);
 int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior);
-int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior);
+int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2_3 **maior);// arrumar
 int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3  *pai, ARV2_3  **origem, ARV2_3  **maior);
 void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, int unidade);
 int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade);
