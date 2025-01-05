@@ -366,9 +366,6 @@ void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
     imprimir_palavras_ingles(raiz->direita, palavra_portugues);
 }
 
-
-
-
 /**
  * no_2_3_juntar - Junta informações de um nó em uma árvore 2-3.
  * @filho1: Ponteiro para o nó filho que receberá a informação.
@@ -394,7 +391,6 @@ ARV2_3 *no_2_3_juntar(ARV2_3 *filho1, Informacao info, ARV2_3 *maior, ARV2_3 **r
 
     return filho1;
 }
-
 
 /**
  * no_2_3_adicionar_info - Adiciona uma nova informação a um nó em uma árvore 2-3.
@@ -487,8 +483,6 @@ ARV2_3 *no_2_3_alocar(){
 
 }
 
-
-
 /**
  * no_2_3_desacolar - Desacopla (libera a memória) de um nó em uma árvore 2-3.
  * @no: Ponteiro duplo para o nó a ser desacoplado.
@@ -539,7 +533,6 @@ ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai){
     
     return filho; 
 }
-
 
 /**
  * buscar_maior_filho - Busca o maior filho de um nó em uma árvore 2-3.
@@ -725,6 +718,16 @@ ARV2_3 *buscar_menor_pai_2_info(ARV2_3 *raiz, char *info)
     return pai;
 }
 
+/**
+ * @brief Verifica se é possível remover um nó da árvore 2-3.
+ *
+ * Esta função verifica se é possível remover um nó da árvore 2-3, 
+ * verificando se o nó raiz possui duas informações ou se é possível 
+ * remover um nó dos seus filhos.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @return int Retorna 1 se for possível remover o nó, caso contrário, retorna 0.
+ */
 int possivel_remover(ARV2_3 *raiz){
  int possivel = 0;
 
@@ -743,6 +746,7 @@ int possivel_remover(ARV2_3 *raiz){
 
     return possivel;
 }
+
 /**
  * ondinha_1 - Realiza o ajuste estrutural na árvore 2-3 durante a remoção de um nó.
  * @saindo: Informação que está sendo removida da árvore.
@@ -794,31 +798,39 @@ void arvore_2_3_desalocar(ARV2_3 **raiz)
     }
 }
 
-
-int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
+/**
+ * @brief Calcula a altura de uma árvore binária.
+ *
+ * Esta função calcula a altura de uma árvore binária a partir de um nó dado.
+ * A altura de uma árvore é definida como o número de arestas no caminho mais longo
+ * da raiz até uma folha. Se a árvore estiver vazia, a altura é -1.
+ *
+ * @param no Ponteiro para o nó da árvore binária.
+ * @return A altura da árvore binária. Retorna -1 se a árvore estiver vazia.
+ */
+int calcular_altura(ARV2_3 *no)
 {
-    int removeu;
-    ARV2_3 *filho, *pai;
-    Informacao info_filho;
+    int altura = -1;
 
-    pai = raiz;
+    if(no != NULL)
+        altura = 1 + calcular_altura(no->esquerda);
 
-    filho = buscar_maior_filho(filho1, &pai, &info_filho);
-
-    if(filho->quant_infos == 2)
-    {
-        *info = info_filho;
-        filho->quant_infos = 1;
-    }
-    else
-    {
-        filho = buscar_menor_filho(filho2, &pai);
-        removeu = ondinha_1(filho->info1, info, pai, origem, &filho, maior, _1_remover_2_3);
-    }
-
-    return removeu;
+    return altura;
 }
 
+/**
+ * @brief Remove um nó não-folha de uma árvore 2-3.
+ *
+ * Esta função remove um nó não-folha de uma árvore 2-3, ajustando os nós e informações conforme necessário.
+ *
+ * @param origem Ponteiro para a árvore original.
+ * @param raiz Ponteiro para a raiz da árvore.
+ * @param info Ponteiro para a informação a ser removida.
+ * @param filho1 Ponteiro para o primeiro filho do nó a ser removido.
+ * @param filho2 Ponteiro para o segundo filho do nó a ser removido.
+ * @param maior Ponteiro para o maior nó da subárvore.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, caso contrário, retorna 0.
+ */
 int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
 {
     int removeu;
@@ -844,15 +856,46 @@ int arvore23_remover_nao_folha2(ARV2_3 **origem, ARV2_3* raiz, Informacao *info,
     return removeu;
 }
 
-int calcular_altura(ARV2_3 *no)
+/**
+ * @brief Remove um elemento de um nó não folha em uma árvore 2-3.
+ *
+ * @param origem Ponteiro duplo para a raiz da árvore.
+ * @param raiz Ponteiro para o nó raiz.
+ * @param info Ponteiro para a informação a ser substituída ou removida.
+ * @param filho1 Ponteiro para o filho esquerdo do nó raiz.
+ * @param filho2 Ponteiro para o filho direito do nó raiz.
+ * @param maior Ponteiro para armazenar o maior nó, se necessário.
+ *
+ * @return 1 se a remoção foi bem-sucedida, 0 caso contrário.
+ *
+ * A função ajusta a estrutura da árvore para manter suas propriedades após a remoção, buscando o maior 
+ * elemento do filho esquerdo ou o menor do filho direito, conforme necessário.
+ */
+
+int arvore23_remover_nao_folha1(ARV2_3 **origem, ARV2_3* raiz, Informacao *info, ARV2_3 *filho1, ARV2_3 *filho2, ARV2_3 **maior)
 {
-    int altura = -1;
+    int removeu;
+    ARV2_3 *filho, *pai;
+    Informacao info_filho;
 
-    if(no != NULL)
-        altura = 1 + calcular_altura(no->esquerda);
+    pai = raiz;
 
-    return altura;
+    filho = buscar_maior_filho(filho1, &pai, &info_filho);
+
+    if(filho->quant_infos == 2)
+    {
+        *info = info_filho;
+        filho->quant_infos = 1;
+    }
+    else
+    {
+        filho = buscar_menor_filho(filho2, &pai);
+        removeu = ondinha_1(filho->info1, info, pai, origem, &filho, maior, _1_remover_2_3);
+    }
+
+    return removeu;
 }
+
 
 /**
  * _1_remover_2_3 - Remove um nó de uma árvore 2-3.
@@ -950,6 +993,7 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
 
  return removeu;
 }
+
 /**
  * @brief Remove um nó de uma árvore 2-3.
  * 
@@ -1369,5 +1413,3 @@ void liberar_arvore_2_3(ARV2_3 **raiz) {
     }
 }
 
-
-   
