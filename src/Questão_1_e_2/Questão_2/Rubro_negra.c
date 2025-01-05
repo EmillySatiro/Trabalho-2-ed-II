@@ -6,7 +6,7 @@
 #include "../Binaria/ARV_BINARIA.h"
 
 
-// revise depois emilly do futuro 
+
 /**
  * @brief Aloca um novo nó para a árvore rubro-negra.
  *
@@ -432,15 +432,23 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
  * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
  */
 void mostrar_rubronegra(Rubronegra *raiz){
-    if(raiz){
+    if (raiz) {
+      
         mostrar_rubronegra(raiz->esquerda);
-        printf("\n");
-        printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
-        printf("Unidade: %d\n", raiz->info->unidade);
-        printf("Arvore binaria da palavra(palavras em ingles): \n");
+
+       
+        printf("\n=====================================\n");
+        printf("| Palavra em Português: %s\n", raiz->info->palavra_portugues);
+        printf("| Cor do nó: %s\n", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+        printf("| Unidade: %d\n", raiz->info->unidade);
+        printf("| Árvore binária das palavras em Inglês:\n");
         mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+        printf("=====================================\n");
         mostrar_rubronegra(raiz->direita);
+
+        
     }
+
 }
 
 /**
@@ -493,12 +501,15 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
-        if (raiz->info->unidade == unidade){
-            printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
-            printf("Palavras em ingles: \n");
+         if (raiz->info->unidade == unidade) {
+            printf("\n=====================================\n");
+            printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
+            printf("Palavras em Inglês:\n");
+
+        
             mostrar_binaria_em_rubro(raiz, unidade);
-            printf("\n");
-        }
+            printf("\n=====================================\n");
+    }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
     }
 
@@ -524,10 +535,13 @@ void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
             Imprimir_toda_palavras(raiz->direita, palavra_portugues);
         }
         else{
-            printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
-            printf("Palavras em inglês equivalentes:\n");
+            printf("\n=====================================\n");
+            printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
+            printf("=====================================\n");
+            printf("Palavras em Inglês equivalentes:\n");
             mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
-            printf("\n");
+            printf("\n=====================================\n");
+
         }
     }
 }
@@ -635,19 +649,6 @@ void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, i
         remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
         remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
     }
-}
-
-/**
- * @brief Limpa o buffer de entrada.
- *
- * Esta função descarta todos os caracteres no buffer de entrada até encontrar
- * um caractere de nova linha ('\n') e, em seguida, lê e descarta esse caractere
- * de nova linha. É útil para evitar problemas com entradas residuais ao usar
- * funções de entrada como scanf.
- */
-void limparBuffer(){
-    scanf("%*[^\n]"); 
-    getchar();        
 }
 
 /**
