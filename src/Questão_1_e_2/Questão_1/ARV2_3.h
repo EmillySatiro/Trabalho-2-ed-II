@@ -44,11 +44,11 @@ int eh_folha(ARV2_3 *no);
 int eh_info1(ARV2_3 no, char *info);
 int eh_info2(ARV2_3 no, char *info);
 ARV2_3 *no_2_3_alocar();
-//void troca_infos(Informacao *info1, Informacao *info2);
 void no_2_3_desacolar(ARV2_3 **no);
 Informacao maior_info(ARV2_3 *raiz);
 int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior);
 static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior);
+int calcular_altura(ARV2_3 *no);
 
 /*Funções de busca*/
 ARV2_3 *buscar_menor_filho(ARV2_3 *raiz, ARV2_3 **pai);

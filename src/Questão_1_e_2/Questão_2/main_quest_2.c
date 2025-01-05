@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../Binaria/ARV_BINARIA.h"
 #include "../Questão_2/Rubro_negra.h"
 #include "../../Questão_1_e_2/Questão_2/Arquivo/extrair_rubro.h"

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "../Binaria/ARV_BINARIA.h"
 #include "../Questão_1/ARV2_3.h"
 #include "../../Questão_1_e_2/Questão_1/Arquivo/Extrair.h"
