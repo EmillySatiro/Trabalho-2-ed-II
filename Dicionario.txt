@@ -13,3 +13,63 @@
     Fan: ventilador;
     ablublu: ola;
     Network: rede de relacionamento;
+% Unidade 3
+    Mouse: rato, dispositivo de entrada;
+    Keyboard: teclado;
+    Monitor: tela, dispositivo de saída;
+    CPU: unidade central de processamento;
+    RAM: memória de acesso aleatório;
+    SSD: unidade de estado sólido;
+% Unidade 4
+    Printer: impressora;
+    Scanner: digitalizador;
+    Laptop: computador portátil;
+    Tablet: dispositivo de toque;
+    Smartphone: telefone inteligente;
+    Router: roteador;
+% Unidade 5
+    Algorithm: algoritmo;
+    Debugging: depuração;
+    Function: função;
+    Variable: variável;
+    Loop: laço;
+    Array: vetor;
+    Input: entrada;
+    Output: saída;
+    Syntax: sintaxe;
+    Compile: compilar;
+    Execute: executar;
+    Exception: exceção;
+    Boolean: booleano;
+    Integer: inteiro;
+    String: cadeia de caracteres;
+    Float: ponto flutuante;
+    Object: objeto;
+    Class: classe;
+% Unidade 6
+    Constructor: construtor;
+    Method: método;
+    Parameter: parâmetro;
+    Argument: argumento;
+    Return: retornar;
+    Module: módulo;
+    Library: biblioteca;
+    Framework: framework;
+    IDE: ambiente de desenvolvimento integrado;
+    Repository: repositório;
+    Version: versão;
+% Unidade 7
+    Commit: commit;
+    Push: enviar;
+    Pull: baixar;
+    Merge: mesclar;
+    Conflict: conflito;
+    Branch: ramo;
+    Main: principal;
+    Tag: etiqueta;
+    Deploy: implantar;
+    Build: construir;
+    Release: lançamento;
+    Debug: depurar;
+    Test: testar;
+    Integration: integração;

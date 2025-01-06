@@ -1254,7 +1254,9 @@ static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informa
  */
 void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, int unidade) {
     if (*raiz != NULL) { 
-        
+        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->esquerda), palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->direita), palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->centro), palavra_ingles, unidade);
         if (*raiz) {
             int sucesso = remover_palavra_por_unidade(&((*raiz)->info1.palavra_ingles), palavra_ingles, unidade);
             if (sucesso) {
@@ -1283,8 +1285,7 @@ void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, i
         }
 
       
-        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->esquerda), palavra_ingles, unidade);
-        remover_palavra_ingles_e_unidade_2_3(&((*raiz)->direita), palavra_ingles, unidade);
+      
     }
 }
 

@@ -60,7 +60,6 @@ int main() {
                 fgets(palavra_removida, sizeof(palavra_removida), stdin); 
                 palavra_removida[strcspn(palavra_removida, "\n")] = '\0'; 
                 remover_palavra_ingles_e_unidade_2_3(&arvore2_3, palavra_removida, unidade) ;
-                printf("saindo aqui ");
                 break;
             case 5:
                 printf("Você escolheu a Opção 5!\n");
