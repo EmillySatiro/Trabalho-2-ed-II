@@ -25,6 +25,7 @@ ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
         no->esquerda = filho_esquerda;
         no->centro = filho_centro;
         no->quant_infos = 1;
+        no->direita = NULL;
     }
     else
     {
@@ -54,33 +55,45 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho
 {
     ARV2_3 *maior_info;
 
-    // caso 1 : O novo elemento (info) é maior que minha info2.
+    // Caso 1: O novo elemento (info) é maior que info2.
     if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) > 0)
     {
-        *sobe = (*no)->info2; // o info dois sobe pq ele é o do meio
+        *sobe = (*no)->info2; // info2 sobe, pois é o do meio
 
+        // Cria um novo nó com o maior valor e o ponteiro do filho.
         maior_info = criar_no(info, (*no)->direita, filho ? *filho : NULL);
-        // criando um no para o maior que no caso é meu novo elemento( esse filho ? * filho: null é se o filho não for nulo ele executa e manda(*filho)  para o criar e se não for manda null)
-
-        // cado 2: o novo elemento é oq sobe pois ele esta entre info 1 e info 2
-    }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
+        
+        // Atualiza o nó atual para manter apenas info1
+        (*no)->quant_infos = 1;
+        (*no)->direita = NULL;
+    }
+    // Caso 2: O novo elemento está entre info1 e info2.
+    else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
     {
-        *sobe = info; // novo elemento sobe
+        *sobe = info; // O novo elemento sobe
 
-        maior_info = criar_no((*no)->info2, filho ? *filho : NULL, (*no)->direita);
-       
-    }else
-    {                         // caso 3 info menor info 1
-        *sobe = (*no)->info1; // quem vai subir é info 1
+        // Cria um novo nó com info2 e o ponteiro do filho direito.
+        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
+        
+        // Atualiza o nó atual para manter info1
+        (*no)->quant_infos = 1;
+        (*no)->centro = (*no)->direita;
+        (*no)->direita = NULL;
+    }
+    // Caso 3: O novo elemento é menor que info1.
+    else
+    {
+        *sobe = (*no)->info1; // info1 sobe
 
+        // Cria um novo nó com info2 e os ponteiros de centro e direita
         maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
 
-        // ajustar o no atual para nova info ser info 1
+        // Atualiza o nó atual para manter apenas o novo valor (info)
+        (*no)->quant_infos = 1;
         (*no)->info1 = info;
         (*no)->centro = (filho ? *filho : NULL);
+        (*no)->direita = NULL;
     }
-
-    (*no)->quant_infos = 1;
 
     return maior_info;
 }
@@ -201,6 +214,7 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
  */
 void insere(ARV2_3 **raiz, Informacao info)
 {
+   
     Informacao sobe;
     ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL);
     if (novo_no)
@@ -225,12 +239,9 @@ Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade
     Informacao info;
 
     strcpy(info.palavra_portugues, palavra_portugues);
-    // Insere a palavra na árvore binária, que é criada fora da função
     insere_arvore_binaria(&arvore, palavra_ingles, unidade);
-    // Atribuindo a árvore binária à estrutura de informação
     info.palavra_ingles = arvore;
     info.unidade = unidade;
-    
     return info;
 }
 
@@ -278,7 +289,7 @@ void mostrar(ARV2_3 *raiz){
         printf("| Árvore Binária Associada à Palavra 1:\n");
         mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
         printf("+----------------+\n");
-       
+        mostrar(raiz->centro);
 
         if (raiz->quant_infos == 2)
         {
@@ -287,12 +298,9 @@ void mostrar(ARV2_3 *raiz){
             printf("| Árvore Binária Associada à Palavra 2:\n");
             mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
             printf("+----------------+\n");
+            mostrar(raiz->direita);
         }
 
-        
-        mostrar(raiz->centro);
-        if (raiz->quant_infos == 2)
-            mostrar(raiz->direita);
         
         
     }
@@ -310,9 +318,9 @@ void mostrar(ARV2_3 *raiz){
  * da unidade especificada.
  */
 void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
-    if (raiz) {
+    if (raiz != NULL) {
 
-     imprimir_palavras_unidade(raiz->esquerda, unidade);
+         imprimir_palavras_unidade(raiz->esquerda, unidade);
 
         if (raiz->info1.unidade == unidade) {
             printf("\n=====================================\n");
@@ -320,18 +328,20 @@ void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
             printf("Tradução para o Inglês:\n");
             mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
             printf("=====================================\n");
+           
         }
+        imprimir_palavras_unidade(raiz->centro, unidade);
         if (raiz->quant_infos == 2 && raiz->info2.unidade == unidade) {
             printf("\n=====================================\n");
             printf("Palavra em Português: %s\n", raiz->info2.palavra_portugues);
             printf("Tradução para o Inglês:\n");
             mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
             printf("=====================================\n");
+            imprimir_palavras_unidade(raiz->direita, unidade);
 
         }
 
-        imprimir_palavras_unidade(raiz->centro, unidade);
-        imprimir_palavras_unidade(raiz->direita, unidade);
+       
     }
   
 }
@@ -1226,7 +1236,7 @@ int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior)
  * @param maior Ponteiro duplo para o maior nó.
  * @return Retorna 1 se o balanceamento foi realizado, caso contrário, retorna 0.
  */
-static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior)
+int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior)
 {
     int balanceou = 0;
     if(*filho2 == NULL || (*filho2)->quant_infos == 0)

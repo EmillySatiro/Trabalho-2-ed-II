@@ -5,7 +5,7 @@
 
 
 typedef struct Informacao{
-   
+
     char palavra_portugues[25];
     ARV_BINARIA *palavra_ingles; 
     int unidade; 
@@ -47,7 +47,7 @@ ARV2_3 *no_2_3_alocar();
 void no_2_3_desacolar(ARV2_3 **no);
 Informacao maior_info(ARV2_3 *raiz);
 int arvore_2_3_rebalancear(ARV2_3 **raiz, char  *info, ARV2_3 **maior);
-static int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior);
+int balanceamento(ARV2_3 **raiz, ARV2_3 *filho1, ARV2_3 **filho2, Informacao info, ARV2_3 **maior);
 int calcular_altura(ARV2_3 *no);
 
 /*Funções de busca*/

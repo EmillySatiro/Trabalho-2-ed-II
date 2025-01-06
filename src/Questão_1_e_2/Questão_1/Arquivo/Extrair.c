@@ -65,8 +65,7 @@ ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz) {
 
     char linha[100];
     int unidade;
-    char palavra_ingles[100];
-
+    char palavra_ingles[100]; 
     while (fgets(linha, sizeof(linha), arquivo)) {
         linha[strcspn(linha, "\n")] = '\0';
 
@@ -76,7 +75,6 @@ ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz) {
         } else {
             char *pt = strtok(linha, ":,;");
             pt = trim_23(pt);
-
             if (pt) {
                 strcpy(palavra_ingles, pt);
                 

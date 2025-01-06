@@ -64,12 +64,4 @@
     Pull: baixar;
     Merge: mesclar;
     Conflict: conflito;
-    Branch: ramo;
-    Main: principal;
-    Tag: etiqueta;
-    Deploy: implantar;
-    Build: construir;
-    Release: lançamento;
-    Debug: depurar;
-    Test: testar;
-    Integration: integração;
+   
