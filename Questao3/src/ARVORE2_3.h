@@ -6,8 +6,8 @@
 
 typedef struct Informacao_memoria{
     int state; 
-    int block_inicio; 
-    int block_fim;   
+    int block_inicio,block_fim;
+    int inicio, fim;
 } Informacao_memoria;
 
 typedef struct ARVORE2_3 {
