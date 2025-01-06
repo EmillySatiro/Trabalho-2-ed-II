@@ -15,8 +15,7 @@
  *
  * @note A função imprime uma mensagem de erro e termina o programa se a alocação de memória falhar.
  */
-ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade)
-{
+ARV_BINARIA *cria_arvore_binaria(char *palavra_ingles, int unidade){
 
     ARV_BINARIA *arvore = (ARV_BINARIA *)malloc(sizeof(ARV_BINARIA));
     if (arvore != NULL)
@@ -77,8 +76,7 @@ void insere_arvore_binaria(ARV_BINARIA **arvore, char *palavra_ingles, int unida
  * @param arvore Ponteiro para a árvore binária (ARV_BINARIA) a ser exibida.
  * @param unidade Unidade a ser comparada com a unidade dos nós da árvore.
  */
-void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
-{
+void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade){
     if (arvore != NULL)
     {
 
@@ -113,16 +111,15 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade)
  *
  * @param arvore Ponteiro para a raiz da árvore binária.
  */
-void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
-{
-    if (arvore != NULL)
-    {
-        printf("Palavra: %s\nUnidades: ", arvore->palavra_ingles);
-
+void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore){
+    if (arvore != NULL){
+        printf("| Palavra em Inglês: %s\n", arvore->palavra_ingles);
+        printf("| Unidades Associadas: ");
+        
         lista_unidade *temp = arvore->unidade;
-        while (temp != NULL)
-        {
-            printf("%d| ", temp->unidade);
+        while (temp != NULL){
+
+            printf("| %d | ", temp->unidade);
             temp = temp->proximo;
         }
         printf("\n");
@@ -142,22 +139,24 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore)
 }
 
 /**
- * @brief Libera a memória alocada para uma árvore binária.
+ * @brief Libera a memória alocada para uma árvore binária e suas listas de unidades.
  *
- * Esta função percorre a árvore binária de forma recursiva e libera a memória
- * alocada para cada nó, garantindo que o ponteiro para o nó liberado seja
- * definido como NULL.
+ * Esta função percorre a árvore binária de forma recursiva, liberando a memória alocada
+ * para cada nó, bem como a memória das listas de unidades associadas a cada nó.
  *
  * @param arvore Ponteiro duplo para a árvore binária a ser liberada.
  */
-void libera_arvore_binaria(ARV_BINARIA **arvore)
-{
-    if (*arvore)
-    {
+void libera_arvore_binaria(ARV_BINARIA **arvore) {
+    if (*arvore) {
+        
+        libera_lista_unidade(&(*arvore)->unidade);
+       
         libera_arvore_binaria(&(*arvore)->esquerda);
         libera_arvore_binaria(&(*arvore)->direita);
+        
+       
         free(*arvore);
-        *arvore = NULL;
+        *arvore = NULL;  
     }
 }
 
@@ -237,69 +236,52 @@ int tem_dois_filhos(ARV_BINARIA *no)
 }
 
 /**
- * @brief Remove um nó de uma árvore binária de busca com base na palavra em inglês fornecida.
+ * @brief Remove um nó da árvore binária que contém a palavra em inglês especificada.
  *
- * Esta função remove um nó de uma árvore binária de busca que contém a palavra em inglês especificada.
- * A função lida com três casos principais:
- * 1. O nó a ser removido é uma folha.
- * 2. O nó a ser removido tem apenas um filho.
- * 3. O nó a ser removido tem dois filhos.
+ * Esta função remove um nó da árvore binária que contém a palavra em inglês fornecida.
+ * Se a palavra não for encontrada, a função não faz nenhuma alteração na árvore.
+ * A função também lida com a remoção de nós que têm zero, um ou dois filhos.
  *
- * @param arvore Um ponteiro duplo para a árvore binária de busca.
- * @param palavra_ingles A palavra em inglês a ser removida da árvore.
- * @return int Retorna 1 se a remoção for bem-sucedida, caso contrário, retorna 0.
+ * @param arvore Ponteiro duplo para a árvore binária.
+ * @param palavra_ingles Palavra em inglês a ser removida da árvore.
+ * @return int Retorna 1 se a remoção for bem-sucedida, 0 caso contrário.
  */
-int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles)
-{
+int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles) {
     int resultado = 0;
 
-    if (*arvore != NULL)
-    {
-        if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0)
-        {
-
+    if (arvore == NULL || *arvore == NULL || palavra_ingles == NULL) {
+        resultado = 0;
+    } else {
+        if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) < 0) {
             resultado = remover_no_binaria(&(*arvore)->esquerda, palavra_ingles);
-        }
-        else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0)
-        {
-
+        } else if (strcmp(palavra_ingles, (*arvore)->palavra_ingles) > 0) {
             resultado = remover_no_binaria(&(*arvore)->direita, palavra_ingles);
-        }
-        else
-        {
-            remover_lista_unidade(&(*arvore)->unidade, (*arvore)->unidade->unidade);
+        } else {
+            if ((*arvore)->unidade != NULL) {
+                remover_lista_unidade(&(*arvore)->unidade, (*arvore)->unidade->unidade);
+            }
 
-            if ((*arvore)->unidade == NULL)
-            {
-                if (eh_folha__binaria(*arvore))
-                {
+            if ((*arvore)->unidade == NULL) {
+                if (eh_folha__binaria(*arvore)) {
                     free(*arvore);
                     *arvore = NULL;
                     resultado = 1;
-                }
-                else if (tem_apenas_um_filho(*arvore))
-                {
+                } else if (tem_apenas_um_filho(*arvore)) {
                     ARV_BINARIA *temp = *arvore;
                     *arvore = (*arvore)->esquerda != NULL ? (*arvore)->esquerda : (*arvore)->direita;
                     free(temp);
                     resultado = 1;
-                }
-                else
-                {
+                } else {
                     ARV_BINARIA *temp = (*arvore)->esquerda;
-                    while (temp->direita != NULL)
-                    {
+                    while (temp->direita != NULL) {
                         temp = temp->direita;
                     }
                     strncpy((*arvore)->palavra_ingles, temp->palavra_ingles, sizeof((*arvore)->palavra_ingles) - 1);
                     (*arvore)->palavra_ingles[sizeof((*arvore)->palavra_ingles) - 1] = '\0';
                     resultado = remover_no_binaria(&(*arvore)->esquerda, temp->palavra_ingles);
                 }
-            }
-            else
-            {
-
-                printf("A lista de unidades nao esta vazia\n");
+            } else {
+                resultado = 1;
             }
         }
     }
@@ -317,17 +299,22 @@ int remover_no_binaria(ARV_BINARIA **arvore, char *palavra_ingles)
  * @param arvore Um ponteiro duplo para a raiz da árvore binária.
  * @param unidade O valor da unidade a ser correspondido para remoção.
  */
-void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade)
-{
-    if (*arvore != NULL)
-    {
-        if ((*arvore)->unidade->unidade == unidade)
-        {
+void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade) {
+    if (arvore != NULL && *arvore != NULL) {
+        
+        if ((*arvore)->unidade != NULL && (*arvore)->unidade->unidade == unidade) {
             remover_no_binaria(arvore, (*arvore)->palavra_ingles);
         }
-        remover_todas_palavras_por_unidade(&(*arvore)->esquerda, unidade);
-        remover_todas_palavras_por_unidade(&(*arvore)->direita, unidade);
+
+        if (*arvore != NULL) {
+            remover_todas_palavras_por_unidade(&(*arvore)->esquerda, unidade);
+        }
+
+        if (*arvore != NULL) {
+            remover_todas_palavras_por_unidade(&(*arvore)->direita, unidade);
+        }
     }
+
 }
 
 /**
@@ -340,24 +327,29 @@ void remover_todas_palavras_por_unidade(ARV_BINARIA **arvore, int unidade)
  * @param palavra_ingles A palavra em inglês a ser removida da árvore.
  * @param unidade A unidade associada à palavra a ser removida.
  */
-int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade)
-{
-    int resultado = 0; 
+int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int unidade) {
+    int resultado = 0;
 
-    if (*arvore != NULL) 
-    {
-        if ((*arvore)->unidade != NULL && (*arvore)->unidade->unidade == unidade)
-        {
-            resultado = remover_no_binaria(arvore, palavra_ingles);
+    if (arvore != NULL && *arvore != NULL) {
+        if ((*arvore)->unidade != NULL) {
+            lista_unidade *unidade_atual = (*arvore)->unidade;
+            
+            while (unidade_atual != NULL) {
+                if (unidade_atual->unidade == unidade) {
+                    resultado = remover_no_binaria(arvore, palavra_ingles);
+                    if (resultado) {
+                        break;
+                    }
+                }
+                unidade_atual = unidade_atual->proximo;
+            }
         }
 
-        if (!resultado) 
-        {
+        if (resultado == 0) {
             resultado = remover_palavra_por_unidade(&((*arvore)->esquerda), palavra_ingles, unidade);
         }
-
-        if (!resultado)
-        {
+        
+        if (resultado == 0) {
             resultado = remover_palavra_por_unidade(&((*arvore)->direita), palavra_ingles, unidade);
         }
     }
@@ -365,8 +357,18 @@ int remover_palavra_por_unidade(ARV_BINARIA **arvore, char *palavra_ingles, int 
     return resultado;
 }
 
-
-
+/**
+ * @brief Insere uma unidade na lista de unidades.
+ *
+ * Esta função insere uma nova unidade na lista de unidades, caso ela ainda não exista na lista.
+ * Se a lista estiver vazia, a função aloca memória para a nova unidade e a insere como o primeiro
+ * elemento da lista. Se a lista já contiver elementos, a função verifica se a unidade já existe
+ * na lista. Se a unidade não existir, a função a insere no final da lista. Caso contrário, uma
+ * mensagem informando que a unidade já existe é exibida.
+ *
+ * @param lista Ponteiro duplo para a lista de unidades.
+ * @param unidade Unidade a ser inserida na lista.
+ */
 void inserir_lista_unidade(lista_unidade **lista, int unidade)
 {
     if (*lista == NULL)
@@ -424,10 +426,20 @@ void inserir_lista_unidade(lista_unidade **lista, int unidade)
     }
 }
 
+/**
+ * @brief Remove uma unidade da lista.
+ *
+ * Esta função remove a primeira ocorrência de uma unidade específica da lista.
+ * Se a lista estiver vazia, uma mensagem será exibida. Se a unidade não for
+ * encontrada na lista, uma mensagem será exibida.
+ *
+ * @param lista Ponteiro para o ponteiro da lista de unidades.
+ * @param unidade Unidade a ser removida da lista.
+ */
 void remover_lista_unidade(lista_unidade **lista, int unidade)
 {
-    if (*lista == NULL)
-    {
+    
+    if (*lista == NULL){
         printf("A lista está vazia.\n");
     }
     else
@@ -452,11 +464,40 @@ void remover_lista_unidade(lista_unidade **lista, int unidade)
             {
                 printf("Unidade %d não encontrada na lista.\n", unidade);
             }
-            else
-            {
+            else{
                 anterior->proximo = temp->proximo;
                 free(temp);
             }
         }
     }
+}
+
+/**
+ * @brief Libera a memória da lista de unidades.
+ *
+ * Esta função percorre a lista de unidades de um nó e libera cada nó da lista.
+ *
+ * @param unidade Ponteiro para o ponteiro da lista de unidades a ser liberada.
+ */
+void libera_lista_unidade(lista_unidade **unidade) {
+    lista_unidade *temp;
+    
+    while (*unidade != NULL) {
+        temp = *unidade;
+        *unidade = (*unidade)->proximo;
+        free(temp);  
+    }
+}
+
+/**
+ * @brief Limpa o buffer de entrada.
+ *
+ * Esta função descarta todos os caracteres no buffer de entrada até encontrar
+ * um caractere de nova linha ('\n') e, em seguida, lê e descarta esse caractere
+ * de nova linha. É útil para evitar problemas com entradas residuais ao usar
+ * funções de entrada como scanf.
+ */
+void limparBuffer(){
+    scanf("%*[^\n]"); 
+    getchar();        
 }

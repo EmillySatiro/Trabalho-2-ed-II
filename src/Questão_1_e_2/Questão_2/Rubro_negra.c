@@ -6,7 +6,7 @@
 #include "../Binaria/ARV_BINARIA.h"
 
 
-// revise depois emilly do futuro 
+
 /**
  * @brief Aloca um novo nó para a árvore rubro-negra.
  *
@@ -64,7 +64,6 @@ Rubronegra *alocar_no(Informacao_VP *info){
  * @param info Ponteiro para a estrutura de informação a ser inserida.
  * @return Ponteiro para a raiz da árvore rubro-negra após a inserção.
  */
-
 Rubronegra *inserir_rubro(Rubronegra **raiz, Informacao_VP *info){
     Rubronegra *inserido = NULL;
     if (*raiz == NULL){
@@ -433,15 +432,23 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade){
  * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
  */
 void mostrar_rubronegra(Rubronegra *raiz){
-    if(raiz){
+    if (raiz) {
+      
         mostrar_rubronegra(raiz->esquerda);
-        printf("\n");
-        printf("Palavra: %s, Cor: %s\n", raiz->info->palavra_portugues, raiz->cor == PRETO ? "PRETO" : "VERMELHO");
-        printf("Unidade: %d\n", raiz->info->unidade);
-        printf("Arvore binaria da palavra(palavras em ingles): \n");
+
+       
+        printf("\n=====================================\n");
+        printf("| Palavra em Português: %s\n", raiz->info->palavra_portugues);
+        printf("| Cor do nó: %s\n", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+        printf("| Unidade: %d\n", raiz->info->unidade);
+        printf("| Árvore binária das palavras em Inglês:\n");
         mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
+        printf("=====================================\n");
         mostrar_rubronegra(raiz->direita);
+
+        
     }
+
 }
 
 /**
@@ -494,12 +501,15 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
-        if (raiz->info->unidade == unidade){
-            printf("Plavra em portugues: %s\n", raiz->info->palavra_portugues);
-            printf("Palavras em ingles: \n");
+         if (raiz->info->unidade == unidade) {
+            printf("\n=====================================\n");
+            printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
+            printf("Palavras em Inglês:\n");
+
+        
             mostrar_binaria_em_rubro(raiz, unidade);
-            printf("\n");
-        }
+            printf("\n=====================================\n");
+    }
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
     }
 
@@ -525,10 +535,13 @@ void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues){
             Imprimir_toda_palavras(raiz->direita, palavra_portugues);
         }
         else{
-            printf("Palavra em português: %s\n", raiz->info->palavra_portugues);
-            printf("Palavras em inglês equivalentes:\n");
+            printf("\n=====================================\n");
+            printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
+            printf("=====================================\n");
+            printf("Palavras em Inglês equivalentes:\n");
             mostrar_arvore_binaria_completa(raiz->info->palavras_ingles);
-            printf("\n");
+            printf("\n=====================================\n");
+
         }
     }
 }
@@ -599,72 +612,103 @@ int remover_palavra_completa(Rubronegra **raiz, char *palavra_portugues, int uni
     return confere; 
 }
 
-// rpz custoso melhora emilly do futuro
-void liberar_rubronegra_binaria(Informacao_VP *info){
+/**
+ * @brief Remove uma palavra em inglês e sua unidade correspondente da árvore Rubro-Negra.
+ *
+ * Esta função percorre a árvore Rubro-Negra e remove a palavra em inglês especificada
+ * e sua unidade correspondente. Se a palavra em inglês for removida com sucesso e não
+ * houver mais palavras em inglês associadas à palavra em português, a palavra em português
+ * também será removida da árvore Rubro-Negra.
+ *
+ * @param raiz Ponteiro para a raiz da árvore Rubro-Negra.
+ * @param palavra_ingles Palavra em inglês a ser removida.
+ * @param unidade Unidade associada à palavra em inglês a ser removida.
+ */
+void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
+    if (*raiz != NULL) { 
+    
+        if ((*raiz)->info != NULL) {
+            int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
+            if (sucesso) {
+                if ((*raiz)->info->palavras_ingles == NULL) {
+                    char palavra_portugues[100];
+                    strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
+                    if (sucesso) {
+                        remover_na_arvore(raiz, palavra_portugues);
+                        printf("Palavra '%s' foi removida da árvore Rubro-Negra e da árvore binária.\n", palavra_portugues);
+                    } else {
+                        printf("Falha ao remover a palavra '%s' da árvore binária.\n", palavra_portugues);
+                    }
+                } else {
+                    printf("Palavra '%s' em inglês foi removida, mas a palavra em português permanece.\n", palavra_ingles);
+                }
+            }
+        }
 
-    if (info)
-    {
-        if (info->palavras_ingles)
-        {
-            //  liberar_binaria(&(*raiz)->info->palavras_ingles);
+   
+        remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
+        remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
+    }
+}
+
+/**
+ * @brief Libera a memória alocada para a estrutura Informacao_VP e sua árvore binária de palavras em inglês.
+ *
+ * Esta função verifica se a estrutura Informacao_VP passada como parâmetro é não-nula.
+ * Se for, libera a memória alocada para a árvore binária de palavras em inglês,
+ * define o ponteiro para NULL e, em seguida, libera a memória da própria estrutura Informacao_VP.
+ *
+ * @param info Ponteiro para a estrutura Informacao_VP a ser liberada.
+ */
+void liberar_rubronegra_binaria(Informacao_VP *info) {
+    if (info) {
+        if (info->palavras_ingles) {
+            libera_arvore_binaria(&info->palavras_ingles);
             info->palavras_ingles = NULL;
         }
         free(info);
     }
 }
 
-void liberar_rubronegra(Rubronegra **raiz){
-    if (*raiz){
+/**
+ * @brief Libera a memória alocada para uma árvore rubro-negra.
+ *
+ * Esta função percorre a árvore rubro-negra de forma recursiva, liberando a memória
+ * alocada para cada nó e seus respectivos filhos. Se o nó contém uma informação adicional,
+ * a função `liberar_rubronegra_binaria` é chamada para liberar essa informação.
+ *
+ * @param raiz Ponteiro duplo para o nó raiz da árvore rubro-negra.
+ */
+void liberar_rubronegra(Rubronegra **raiz) {
+    if (*raiz) {
+       
         liberar_rubronegra(&(*raiz)->esquerda);
         liberar_rubronegra(&(*raiz)->direita);
-        // liberar_rubronegra_binaria((*raiz)->info);
-    }
-    free(*raiz);
-    *raiz = NULL;
-}
-
-/**
- * @brief Remove uma palavra em inglês e sua unidade correspondente da árvore Rubro-Negra.
- *
- * Esta função percorre a árvore Rubro-Negra em profundidade e remove a palavra em inglês
- * e sua unidade correspondente, se encontradas. Se a árvore binária associada ao nó
- * ficar vazia após a remoção, o nó da árvore Rubro-Negra também é removido.
- *
- * @param raiz Ponteiro para a raiz da árvore Rubro-Negra.
- * @param palavra_ingles Palavra em inglês a ser removida.
- * @param unidade Unidade correspondente à palavra em inglês a ser removida.
- */
-void remover_palavra_ingles_e_unidade(Rubronegra **raiz, char *palavra_ingles, int unidade) {
-    if (*raiz == NULL) {
-        return;
-    }
-
-    // Processa o nó atual primeiro
-    if ((*raiz)->info != NULL && (*raiz)->info->unidade == unidade) {
-        int sucesso = remover_palavra_por_unidade(&((*raiz)->info->palavras_ingles), palavra_ingles, unidade);
-
-        if (sucesso) {
-            if ((*raiz)->info->palavras_ingles == NULL) {
-                char palavra_portugues[100];
-                strcpy(palavra_portugues, (*raiz)->info->palavra_portugues);
-                int sucesso_remocao = remover_na_arvore(raiz, palavra_portugues);
-                if (sucesso_remocao) {
-                    printf("Palavra '%s' foi removida.\n", palavra_portugues);
-                }
-            } else {
-                printf("Palavra '%s' em inglês removida.\n", palavra_ingles);
-            }
+        if ((*raiz)->info) {
+            liberar_rubronegra_binaria((*raiz)->info);
         }
+
+        free(*raiz);
+        *raiz = NULL;
     }
-
-    // Recorre para a esquerda e direita
-    remover_palavra_ingles_e_unidade(&((*raiz)->esquerda), palavra_ingles, unidade);
-    remover_palavra_ingles_e_unidade(&((*raiz)->direita), palavra_ingles, unidade);
 }
 
 
 
-void limparBuffer(){
-    scanf("%*[^\n]"); 
-    getchar();        
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
