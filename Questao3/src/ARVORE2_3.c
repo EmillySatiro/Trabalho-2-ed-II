@@ -409,10 +409,6 @@ void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos) {
 
 
 
-
-
-
-
 /**
  * @brief Intercala nós em uma árvore 2-3.
  *
@@ -481,10 +477,31 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
         return; // Base da recursão: nó vazio ou todos os blocos foram liberados
     }
 
-    // Liberação de blocos no info1
+    // Verificar se a concatenação é necessária
+    if (atual->quant_infos == 2 && atual->info1.state == 'O' && atual->info2.state == 'O') {
+        int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
+        int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
+
+        // Verifica se os dois blocos juntos são suficientes para a quantidade de blocos restantes a liberar
+        if (size_info1 + size_info2 <= *blocos_restantes) {
+            // Se for possível concatenar, faça
+            // Ajuste o bloco atual (info1) para englobar tanto os blocos de info1 quanto de info2
+            atual->info1.block_fim = atual->info2.block_fim;  // Extende o bloco de info1 para o final de info2
+            atual->info2.state = 'L';  // Marca o bloco info2 como livre, pois agora foi combinado
+            *blocos_restantes -= (size_info1 + size_info2);  // Atualiza os blocos restantes
+            printf("Concatenado o bloco de info1 com o de info2: de %d a %d (total liberado)\n", 
+                   atual->info1.block_inicio, atual->info1.block_fim);
+            atual->quant_infos = 1; // Atualiza o número de blocos, agora só temos um bloco concatenado
+
+            // Liberar o nó original de info2, pois ele já foi "fundido" ao nó de info1
+            liberarInfo(atual, atual->info2);
+         
+        }
+    }
+
+    // Liberação de blocos no info1 se houverem blocos livres e restando blocos para liberar
     if (atual->info1.state == 'O' && *blocos_restantes > 0) {
         int tamanho_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-
         if (tamanho_info1 <= *blocos_restantes) {
             // Se o tamanho do info1 for menor ou igual ao restante, libera todo o espaço
             atual->info1.state = 'L'; // Marca como livre
@@ -493,17 +510,15 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
         } else {
             // Liberação parcial dos blocos no info1
             int liberar_parcial = *blocos_restantes;
-            // Ajusta o bloco de início no info1 para liberar os blocos desejados
-            atual->info1.block_inicio += liberar_parcial;
+            atual->info1.block_inicio += liberar_parcial; // Ajusta o bloco de início
             *blocos_restantes -= liberar_parcial;
             printf("Blocos parcialmente liberados no nó atual (info1): %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
         }
     }
 
-    // Liberação de blocos no info2
+    // Liberação de blocos no info2 se existir e houver blocos restantes
     if (atual->quant_infos == 2 && *blocos_restantes > 0 && atual->info2.state == 'O') {
         int tamanho_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-
         if (tamanho_info2 <= *blocos_restantes) {
             // Libera todo o bloco de info2
             atual->info2.state = 'L'; // Marca como livre
@@ -512,57 +527,19 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
         } else {
             // Liberação parcial dos blocos no info2
             int liberar_parcial = *blocos_restantes;
-            // Ajusta o bloco de início no info2 para liberar os blocos desejados
-            atual->info2.block_inicio += liberar_parcial;
+            atual->info2.block_inicio += liberar_parcial; // Ajusta o bloco de início
             *blocos_restantes -= liberar_parcial;
             printf("Blocos parcialmente liberados no nó atual (info2): %d a %d\n", atual->info2.block_inicio, atual->info2.block_fim);
         }
     }
 
-    // Tentativa de combinar blocos com os nós adjacentes (esquerda e direita) se necessário
-    if (*blocos_restantes > 0) {
-        if (atual->direita != NULL && atual->direita->info1.state == 'O' && *blocos_restantes > 0) {
-            int size_avail = atual->direita->info1.block_fim - atual->direita->info1.block_inicio + 1;
-            int remaining = *blocos_restantes;
-
-            if (size_avail <= remaining) {
-                // Libera blocos do nó direito
-                atual->direita->info1.state = 'L';
-                atual->info1.block_fim = atual->direita->info1.block_fim; // Atualiza o bloco final
-                *blocos_restantes -= size_avail;
-                printf("Blocos do nó direito combinados para liberação: %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
-                // Exclui o nó direito após a junção
-                atual->direita = NULL;
-            } else {
-                // Se a soma dos blocos for maior que a quantidade solicitada, trate o restante como ocupado
-                int sobrando = size_avail - remaining;
-                atual->info1.block_fim = atual->direita->info1.block_fim;
-                atual->direita->info1.block_inicio += sobrando;
-                *blocos_restantes = 0; // Todos os blocos pedidos foram alocados
-                printf("Sobrou espaço de %d blocos, parte do nó direito ocupada\n", sobrando);
-            }
-        }
-    }
-
-    // Recursão para os filhos
+    // Caso ainda restem blocos a liberar, podemos tentar recursivamente para os filhos (esquerda, centro, direita)
     liberarBlocosRecursivo(atual->esquerda, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->centro, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->direita, blocos_restantes, maior_block_fim);
 
-    // Tentativa de fusão dos nós adjacentes, se possível
-    if (atual->direita != NULL && atual->direita->info1.state == 'L' && atual->info1.state == 'L') {
-        if (atual->quant_infos == 1) {
-            atual->info1.block_fim = atual->direita->info1.block_fim; // Junta os blocos
-            atual->direita = NULL; // Remove o nó da direita após a fusão
-        }
-    }
-
-    if (atual->esquerda != NULL && atual->esquerda->info1.state == 'L' && atual->info1.state == 'L') {
-        if (atual->quant_infos == 1) {
-            atual->info1.block_fim = atual->esquerda->info1.block_fim; // Junta os blocos
-            atual->esquerda = NULL; // Remove o nó da esquerda após a fusão
-        }
-    }
+    // Caso algum nó adjacente tenha um bloco livre, ele será manipulado, mas **não haverá união**
+    // nos filhos ou no restante dos nós para evitar alterar blocos adjacentes.
 }
 
 
@@ -707,5 +684,26 @@ void liberarNos(ARVORE2_3 *raiz)
         liberarNos(raiz->centro);
         liberarNos(raiz->direita);
         free(raiz);
+    }
+}
+
+void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info)
+{
+    if (raiz)
+    {
+        if (raiz->info1.block_inicio == info.block_inicio)
+        {
+            raiz->info1.state = 'L';
+        }
+        else if (raiz->info2.block_inicio == info.block_inicio)
+        {
+            raiz->info2.state = 'L';
+        }
+        else
+        {
+            liberarInfo(raiz->esquerda, info);
+            liberarInfo(raiz->centro, info);
+            liberarInfo(raiz->direita, info);
+        }
     }
 }

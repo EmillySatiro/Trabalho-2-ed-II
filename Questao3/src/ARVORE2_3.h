@@ -36,6 +36,7 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco)
 
 /*Funções de liberar*/
 void liberarNos(ARVORE2_3* raiz);
+void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info);
 
 /*Funções de listagem*/
 void exibirNos(ARVORE2_3* raiz);
