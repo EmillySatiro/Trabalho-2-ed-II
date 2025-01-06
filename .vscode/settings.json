@@ -1,19 +1,20 @@
 {
-    "files.associations": {
-        "*.njk": "njk",
-        "curso.h": "c",
-        "liberar.h": "c",
-        "aluno.h": "c",
-        "nota.h": "c",
-        "disciplina.h": "c",
-        "matricula.h": "c",
-        "stdlib.h": "c",
-        "stdio.h": "c",
-        "utils.h": "c",
-        "arv_2_3.h": "c",
-        "rubro_negra.h": "c",
-        "extrair_rubro.h": "c",
-        "extrair.h": "c",
-        "arv_binaria.h": "c"
-    }
+  "files.associations": {
+    "*.njk": "njk",
+    "curso.h": "c",
+    "liberar.h": "c",
+    "aluno.h": "c",
+    "nota.h": "c",
+    "disciplina.h": "c",
+    "matricula.h": "c",
+    "stdlib.h": "c",
+    "stdio.h": "c",
+    "utils.h": "c",
+    "arv_2_3.h": "c",
+    "rubro_negra.h": "c",
+    "extrair_rubro.h": "c",
+    "extrair.h": "c",
+    "arv_binaria.h": "c"
+  },
+  "C_Cpp_Runner.msvcBatchPath": ""
 }
