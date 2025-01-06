@@ -23,7 +23,7 @@ typedef struct ARVORE2_3 {
 /*Funções de inserir */
 ARVORE2_3* criar_no_Q3(Informacao_memoria info, ARVORE2_3* esq, ARVORE2_3* centro, ARVORE2_3* dir);
 void cadastrarNos(ARVORE2_3** raiz, int ultimo_endereco);
-void alocarNos(ARVORE2_3** raiz, int quantidade_blocos);//conferir se realmente precisa do balancear 
+void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos);
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior);
 ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai);
 void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho);
@@ -32,8 +32,9 @@ void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info);
 Informacao_memoria criar_info(int state, int block_inicio, int block_fim);
 void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info);
 Informacao_memoria maior_info(ARVORE2_3 *raiz);
+void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco);
+
 /*Funções de liberar*/
-void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos);
 void liberarNos(ARVORE2_3* raiz);
 
 /*Funções de listagem*/
