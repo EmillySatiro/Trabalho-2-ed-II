@@ -474,72 +474,80 @@ void intercalarNos(ARVORE2_3 **raiz)
 
 void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_block_fim) {
     if (atual == NULL || *blocos_restantes <= 0) {
-        return; // Base da recursão: nó vazio ou todos os blocos foram liberados
+        return; // Base da recursão: nó vazio ou não há mais blocos para liberar
     }
 
-    // Verificar se a concatenação é necessária
+    // Verificar se a concatenação é possível
     if (atual->quant_infos == 2 && atual->info1.state == 'O' && atual->info2.state == 'O') {
         int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
         int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
 
-        // Verifica se os dois blocos juntos são suficientes para a quantidade de blocos restantes a liberar
         if (size_info1 + size_info2 >= *blocos_restantes) {
-            // Se for possível concatenar, faça
-            // Ajuste o bloco atual (info1) para englobar tanto os blocos de info1 quanto de info2
-            atual->info1.block_fim = atual->info2.block_fim;  // Extende o bloco de info1 para o final de info2
-            atual->info2.state = 'L';  // Marca o bloco info2 como livre, pois agora foi combinado
-            *blocos_restantes -= (size_info1 + size_info2);  // Atualiza os blocos restantes
-            printf("Concatenado o bloco de info1 com o de info2: de %d a %d (total liberado)\n", 
+            // Ajustar info1 para englobar ambos os blocos
+            atual->info1.block_fim = atual->info2.block_fim;
+            atual->info1.state = 'O';
+            *blocos_restantes -= (size_info1 + size_info2);
+
+            // Marcar info2 como livre
+            atual->info2.state = 'L';
+            atual->quant_infos = 1; // Atualiza para indicar apenas um bloco relevante
+
+            printf("Blocos concatenados: de %d a %d\n",
                    atual->info1.block_inicio, atual->info1.block_fim);
-            atual->quant_infos = 1; // Atualiza o número de blocos, agora só temos um bloco concatenado
 
-            // Liberar o nó original de info2, pois ele já foi "fundido" ao nó de info1
-            liberarInfo(atual, atual->info2);
-         
+            // Caso reste espaço, crie novo nó livre
+            if (*blocos_restantes < 0) {
+                Informacao_memoria livre = {'L', atual->info1.block_fim + *blocos_restantes + 1, maior_block_fim};
+                atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
+                atual->info1.block_fim += *blocos_restantes; // Ajustar fim ao número liberado
+            }
+
+            intercalarNos(&atual);
+            return;
         }
     }
 
-    // Liberação de blocos no info1 se houverem blocos livres e restando blocos para liberar
+    // Liberação de blocos em info1
     if (atual->info1.state == 'O' && *blocos_restantes > 0) {
-        int tamanho_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-        if (tamanho_info1 <= *blocos_restantes) {
-            // Se o tamanho do info1 for menor ou igual ao restante, libera todo o espaço
-            atual->info1.state = 'L'; // Marca como livre
-            *blocos_restantes -= tamanho_info1;
-            printf("Blocos liberados no nó atual (info1): %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
+        int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
+        if (size_info1 <= *blocos_restantes) {
+            // Libera todo o bloco de info1
+            atual->info1.state = 'L';
+            *blocos_restantes -= size_info1;
+            printf("Blocos liberados em info1: %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
         } else {
-            // Liberação parcial dos blocos no info1
-            int liberar_parcial = *blocos_restantes;
-            atual->info1.block_inicio += liberar_parcial; // Ajusta o bloco de início
-            *blocos_restantes -= liberar_parcial;
-            printf("Blocos parcialmente liberados no nó atual (info1): %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
+            // Libera parcialmente info1
+            atual->info1.block_inicio += *blocos_restantes;
+            *blocos_restantes = 0;
+            printf("Blocos parcialmente liberados em info1: %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
         }
     }
 
-    // Liberação de blocos no info2 se existir e houver blocos restantes
-    if (atual->quant_infos == 2 && *blocos_restantes > 0 && atual->info2.state == 'O') {
-        int tamanho_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-        if (tamanho_info2 <= *blocos_restantes) {
+    // Liberação de blocos em info2, se aplicável
+    if (atual->quant_infos == 2 && atual->info2.state == 'O' && *blocos_restantes > 0) {
+        int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
+        if (size_info2 <= *blocos_restantes) {
             // Libera todo o bloco de info2
-            atual->info2.state = 'L'; // Marca como livre
-            *blocos_restantes -= tamanho_info2;
-            printf("Blocos liberados no nó atual (info2): %d a %d\n", atual->info2.block_inicio, atual->info2.block_fim);
+            atual->info2.state = 'L';
+            *blocos_restantes -= size_info2;
+            printf("Blocos liberados em info2: %d a %d\n", atual->info2.block_inicio, atual->info2.block_fim);
         } else {
-            // Liberação parcial dos blocos no info2
-            int liberar_parcial = *blocos_restantes;
-            atual->info2.block_inicio += liberar_parcial; // Ajusta o bloco de início
-            *blocos_restantes -= liberar_parcial;
-            printf("Blocos parcialmente liberados no nó atual (info2): %d a %d\n", atual->info2.block_inicio, atual->info2.block_fim);
+            // Libera parcialmente info2
+            atual->info2.block_inicio += *blocos_restantes;
+            *blocos_restantes = 0;
+            printf("Blocos parcialmente liberados em info2: %d a %d\n", atual->info2.block_inicio, atual->info2.block_fim);
         }
     }
 
-    // Caso ainda restem blocos a liberar, podemos tentar recursivamente para os filhos (esquerda, centro, direita)
+    // Processar filhos recursivamente
     liberarBlocosRecursivo(atual->esquerda, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->centro, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->direita, blocos_restantes, maior_block_fim);
 
-    // Caso algum nó adjacente tenha um bloco livre, ele será manipulado, mas **não haverá união**
-    // nos filhos ou no restante dos nós para evitar alterar blocos adjacentes.
+    // Garantir que não há estados inconsistentes após a recursão
+    if (atual->quant_infos == 2 && atual->info2.state == 'L') {
+        atual->quant_infos = 1; // Ajusta caso info2 seja livre
+    }
 }
 
 
