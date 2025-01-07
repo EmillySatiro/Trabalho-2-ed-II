@@ -496,9 +496,9 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
                    atual->info1.block_inicio, atual->info1.block_fim);
 
             // Caso reste espaço, crie novo nó livre
-            if (*blocos_restantes < 0) {
+            if (*blocos_restantes > 0) {
                 Informacao_memoria livre = {'L', atual->info1.block_fim + *blocos_restantes + 1, maior_block_fim};
-                atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
+                SSinsere_Q3(&atual->centro, livre);
                 atual->info1.block_fim += *blocos_restantes; // Ajustar fim ao número liberado
             }
 
