@@ -483,7 +483,7 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
         int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
 
         // Verifica se os dois blocos juntos são suficientes para a quantidade de blocos restantes a liberar
-        if (size_info1 + size_info2 <= *blocos_restantes) {
+        if (size_info1 + size_info2 >= *blocos_restantes) {
             // Se for possível concatenar, faça
             // Ajuste o bloco atual (info1) para englobar tanto os blocos de info1 quanto de info2
             atual->info1.block_fim = atual->info2.block_fim;  // Extende o bloco de info1 para o final de info2
