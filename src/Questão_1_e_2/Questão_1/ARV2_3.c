@@ -153,10 +153,10 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe,
                 // Verifica se a palavra já existe antes de adicionar
                 if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) != 0) {
                     add_elementos(*no, info, NULL);
-                }else {
+                }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) == 0){
                     insere_arvore_binaria((&(*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
                 }
-            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) != 0){ // Caso o nó tenha 2 informações
+            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) != 0){ 
                 maior = quebra_No(no, info, sobe, NULL);
                 // Se não houver pai, cria um novo nó superior
                 if (pai == NULL) {

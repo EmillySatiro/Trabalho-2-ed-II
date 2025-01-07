@@ -11,6 +11,7 @@ MAIN_FILE="$BASE_DIR/src/Questão_1_e_2/Questão_2/main_quest_2.c"
 BINARIA_FILE="$BASE_DIR/src/Questão_1_e_2/Binaria/ARV_BINARIA.c"
 RUBRO_NEGRA_FILE="$BASE_DIR/src/Questão_1_e_2/Questão_2/Rubro_negra.c"
 EXTRAIR_RUBRO="$BASE_DIR/src/Questão_1_e_2/Questão_2/Arquivo/extrair_rubro.c"
+TESTE_RUBRO="$BASE_DIR/src/Questão_1_e_2/Questão_2/test.c"
 
 # Verificar se os arquivos existem
 if [ ! -f "$MAIN_FILE" ]; then
@@ -32,6 +33,10 @@ if [ ! -f "$EXTRAIR_RUBRO" ]; then
     echo "Erro: $EXTRAIR_RUBRO não encontrado!"
     exit 1
 fi  
+if [ ! -f "$TESTE_RUBRO" ]; then
+    echo "Erro: $TESTE_RUBRO não encontrado!"
+    exit 1
+fi  
 
 # Compilar o programa
 echo "Compilando o programa..."
@@ -41,12 +46,13 @@ gcc -o "$BASE_DIR/$EXECUTAVEL" \
     "$BINARIA_FILE" \
     "$RUBRO_NEGRA_FILE" \
     "$EXTRAIR_RUBRO" \
+    "$TESTE_RUBRO"\
    
 
 # Verificar se a compilação foi bem-sucedida
 if [ $? -eq 0 ]; then
     echo "Compilação bem-sucedida! Executando o programa..."
-    # Executar o programa
+    
     "$BASE_DIR/$EXECUTAVEL"
 else
     echo "Erro na compilação. Verifique os arquivos e tente novamente."

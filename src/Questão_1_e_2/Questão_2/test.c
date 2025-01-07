@@ -1,3 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include "../Binaria/ARV_BINARIA.h"
+#include "../Questão_2/Rubro_negra.h"
+#include "../../Questão_1_e_2/Questão_2/Arquivo/extrair_rubro.h"
 
 typedef double tempo_tipo;
 
@@ -6,18 +13,10 @@ tempo_tipo calcula_tempo(clock_t inicio, clock_t fim)
     return ((tempo_tipo)(fim - inicio)) / CLOCKS_PER_SEC * 1000 * 1000;
 }
 
-Informacao_VP* criar_info_vp(char *palavra_portugues, char *palavra_ingles, int unidade) {
-    Informacao_VP *info = (Informacao_VP*)malloc(sizeof(Informacao_VP));
-    strcpy(info->palavra_portugues, palavra_portugues);
-    info->palavras_ingles = (palavra_ingles*)malloc(sizeof(PalavrasIngles));
-    strcpy(info->palavras_ingles->palavra_ingles, palavra_ingles);
-    
-    // Aqui você pode adicionar lógica para manipular 'unidade' ou outras variáveis, se necessário.
-    
-    return info;
+Informacao_VP* criar_info(char *palavra_portugues) {
+    int unidade = rand() % 10000000 + 1; 
+    return criar_info_vp(palavra_portugues, palavra_portugues, unidade);
 }
-
-
 
 Rubronegra* montar_arvore(int quant, int tam)
 {
@@ -37,7 +36,7 @@ Rubronegra* montar_arvore(int quant, int tam)
             for(int j = 'a'; j <= 'z' && atual < quant; j++)
             {
                 palavra[i] = j;
-                Informacao_VP *info = preencher_no(palavra);
+                Informacao_VP *info = criar_info(palavra);
                 inserir_rubro(&arvore, info);
                 atual++;
             }
@@ -48,6 +47,8 @@ Rubronegra* montar_arvore(int quant, int tam)
     free(palavra);
     return arvore;
 }
+
+Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra);
 
 tempo_tipo calcular_tempo_medio(Rubronegra **arvore, char *info, int repeticoes)
 {
@@ -62,7 +63,7 @@ tempo_tipo calcular_tempo_medio(Rubronegra **arvore, char *info, int repeticoes)
         inicio = clock();
 
         // Substitua pela função de busca desejada
-        no_encontrado = buscar_palavra_rubro_negra(*arvore, info); 
+        no_encontrado = arvorevp_buscar_caminho(*arvore, info); 
 
         fim = clock();
         
@@ -80,7 +81,7 @@ Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra)
 
     if(raiz != NULL)
     {
-        printf("%s -> ", raiz->info->palavra_portugues);
+        printf("%d -> ", raiz->cor);
 
         int resultado = strcmp(palavra, raiz->info->palavra_portugues);
 
@@ -113,7 +114,7 @@ int main()
     // Inserir palavras na árvore
     for(int i = 0; i < quant_palavras; i++)
     {
-        Informacao_VP *info = preencher_no(palavras[i]);
+        Informacao_VP *info = criar_info(palavras[i]);
         inserir_rubro(&arvore, info);
     }
 
@@ -125,7 +126,6 @@ int main()
     }
 
     printf("\n[Árvore de %d elementos]\n", quant_nos + quant_palavras);
-
     // Liberar memória da árvore
     liberar_rubronegra(&arvore);
 
