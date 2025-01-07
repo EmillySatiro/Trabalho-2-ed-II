@@ -15,23 +15,15 @@
  * @param filho_centro Ponteiro para o filho do centro do nó.
  * @return Ponteiro para o novo nó criado, ou NULL se a alocação falhar.
  */
-ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
+ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro, ARV2_3 *direita)
 {
-    ARV2_3 *no = (ARV2_3 *)malloc(sizeof(ARV2_3));
-
-    if (no != NULL)
-    {
-        no->info1 = info;
-        no->esquerda = filho_esquerda;
-        no->centro = filho_centro;
-        no->quant_infos = 1;
-        no->direita = NULL;
-    }
-    else
-    {
-        printf("Não foi possivel criar no \n ");
-    }
-    return no;
+    ARV2_3 *novo_no = (ARV2_3 *)malloc(sizeof(ARV2_3));
+        novo_no->quant_infos = 1;
+        novo_no->info1 = info;
+        novo_no->esquerda = filho_esquerda;
+        novo_no->centro = filho_centro;
+        novo_no->direita = direita ;
+    return novo_no;
 }
 
 /**
@@ -51,51 +43,35 @@ ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro)
  *       2. A nova informação está entre info1 e info2 do nó.
  *       3. A nova informação é menor que a info1 do nó.
  */
-ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho)
+ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 *filho)
 {
-    ARV2_3 *maior_info;
+    ARV2_3 *novo_no;
 
-    // Caso 1: O novo elemento (info) é maior que info2.
-    if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) > 0)
+    if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0)
     {
-        *sobe = (*no)->info2; // info2 sobe, pois é o do meio
-
-        // Cria um novo nó com o maior valor e o ponteiro do filho.
-        maior_info = criar_no(info, (*no)->direita, filho ? *filho : NULL);
         
-        // Atualiza o nó atual para manter apenas info1
-        (*no)->quant_infos = 1;
-        (*no)->direita = NULL;
-    }
-    // Caso 2: O novo elemento está entre info1 e info2.
-    else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) > 0)
-    {
-        *sobe = info; // O novo elemento sobe
+        *sobe = (*no)->info1; 
+        novo_no = criar_no((*no)->info2, (*no)->centro, (*no)->direita, NULL);
 
-        // Cria um novo nó com info2 e o ponteiro do filho direito.
-        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
-        
-        // Atualiza o nó atual para manter info1
-        (*no)->quant_infos = 1;
-        (*no)->centro = (*no)->direita;
-        (*no)->direita = NULL;
-    }
-    // Caso 3: O novo elemento é menor que info1.
-    else
-    {
-        *sobe = (*no)->info1; // info1 sobe
-
-        // Cria um novo nó com info2 e os ponteiros de centro e direita
-        maior_info = criar_no((*no)->info2, (*no)->centro, (*no)->direita);
-
-        // Atualiza o nó atual para manter apenas o novo valor (info)
-        (*no)->quant_infos = 1;
         (*no)->info1 = info;
-        (*no)->centro = (filho ? *filho : NULL);
-        (*no)->direita = NULL;
+        (*no)->centro = filho;
     }
+    else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) < 0){
+        
+        *sobe = info; 
 
-    return maior_info;
+        novo_no = criar_no((*no)->info2, filho, (*no)->direita, NULL);
+
+    } else{
+        
+        *sobe = (*no)->info2; 
+        novo_no = criar_no(info, (*no)->direita, filho, NULL);
+       
+    }
+    (*no)->quant_infos = 1; 
+    (*no)->direita = NULL;
+
+    return novo_no;
 }
 
 /**
@@ -136,92 +112,72 @@ void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho)
  * @param pai Ponteiro para o nó pai do nó atual.
  * @return Ponteiro para o maior nó resultante da quebra, ou NULL se não houver quebra.
  */
-ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai)
-{
-    Informacao sobe_sup;
+ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 *pai,ARV2_3 **no, Informacao info, Informacao *sobe) {
     ARV2_3 *maior = NULL;
 
-    // Se o nó for NULL, cria um novo nó com a informação
-    if (*no == NULL){
-        *no = criar_no(info, NULL, NULL);
-    }
-    else {
-        // Caso seja uma folha
-        if (eh_folha(*no)) {
-            // Se o nó tiver apenas um elemento, adiciona a nova informação
-            if ((*no)->quant_infos == 1) {
-                // Verifica se a palavra já existe antes de adicionar
-                if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) != 0) {
-                    add_elementos(*no, info, NULL);
-                }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) == 0){
-                    insere_arvore_binaria((&(*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
+    if (*no == NULL) {
+        *no = criar_no(info, NULL,NULL,NULL);
+    }else{
+        if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues)  == 0 ){
+               insere_arvore_binaria(&((*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
+               maior = NULL;
+        }else if(strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) == 0){
+                insere_arvore_binaria(&((*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
+                maior = NULL;
+        }else
+        {
+            if (eh_folha(*no)){
+                if ((*no)->quant_infos == 1){
+                    add_elementos(*no, info, maior);
+                }else{
+                    ARV2_3 *novo; 
+                    novo = quebra_No(no,info, sobe, maior);
+                    if (pai == NULL){
+                            ARV2_3 *axu; 
+                            axu = criar_no(*sobe, *no, novo, NULL);
+                            *no = axu; 
+                    }else{
+                            maior = novo; 
+                    }     
                 }
-            } else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) != 0){ 
-                maior = quebra_No(no, info, sobe, NULL);
-                // Se não houver pai, cria um novo nó superior
-                if (pai == NULL) {
-                    *no = criar_no(*sobe, *no, maior);
-                    maior = NULL; // Limpa o maior
-                }
-            }else{
-                insere_arvore_binaria((&(*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
-            }
-        }
-        else { // Caso não seja folha, procura o local para inserir
-            if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0) {
-                    maior = inserir_Elemento_ARV_2_3(&((*no)->esquerda), info, sobe, no);
-                }else if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) == 0) {
-                    insere_arvore_binaria(&((*no)->info1.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
-                    maior = NULL;  
-                }else if ((*no)->quant_infos == 1 || strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) < 0) {
-                    maior = inserir_Elemento_ARV_2_3(&((*no)->centro), info, sobe, no);
-                }else if (strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) == 0) {
-                    insere_arvore_binaria(&((*no)->info2.palavra_ingles), info.palavra_ingles->palavra_ingles, info.unidade);
-                    maior = NULL;  
-                }
-                else {
-                    maior = inserir_Elemento_ARV_2_3(&((*no)->direita), info, sobe, no);
+            }else
+            {
+
+                if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0) {
+                    maior = inserir_Elemento_ARV_2_3(*no,&((*no)->esquerda), info, sobe);
+                }else if((*no)->quant_infos == 1 || strcmp(info.palavra_portugues, (*no)->info2.palavra_portugues) < 0){
+                    maior = inserir_Elemento_ARV_2_3(*no,&((*no)->centro), info, sobe);
+                }else{
+                    maior = inserir_Elemento_ARV_2_3(*no,&((*no)->direita), info, sobe);
                 }
 
-            // Se maior foi retornado, o nó pode precisar ser atualizado ou quebrado
-            if (maior) {
-                // Se o nó tem apenas 1 informação, adiciona a informação
-                if ((*no)->quant_infos == 1) {
-                    add_elementos(*no, *sobe, maior);
-                    maior = NULL; // Limpa maior após adicionar
-                } else { // Caso o nó tenha 2 informações
-                    maior = quebra_No(no, *sobe, &sobe_sup, &maior);
-
-                    if (pai) {
-                        *no = criar_no(sobe_sup, *no, maior);
-                        maior = NULL; // Limpa maior após criar o nó
+                if (maior != NULL) {
+                    if ((*no)->quant_infos == 1) {
+                        add_elementos(*no, *sobe, maior);
+                        maior = NULL;
+                    } else {
+                        Informacao sobe1; 
+                        ARV2_3 *novo;
+                        novo = quebra_No(no, *sobe, &sobe1, maior);
+                        if (pai == NULL){
+                             ARV2_3 *no1; 
+                            no1 = criar_no(sobe1, *no, novo, NULL);
+                            *no = no1; 
+                            maior = NULL;
+                        }else{
+                            maior = novo; 
+                            *sobe = sobe1; 
+                        }
                     }
                 }
             }
         }
     }
-    return maior;
+           return maior;
 }
+ 
 
-/**
- * @brief Insere uma nova informação na árvore 2-3.
- *
- * Esta função insere um novo elemento na árvore 2-3. Se a inserção causar um 
- * estouro no nó raiz, um novo nó raiz é criado.
- *
- * @param raiz Ponteiro para o ponteiro da raiz da árvore 2-3.
- * @param info Informação a ser inserida na árvore.
- */
-void insere(ARV2_3 **raiz, Informacao info)
-{
-   
-    Informacao sobe;
-    ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info, &sobe, NULL);
-    if (novo_no)
-    {
-        *raiz = criar_no(sobe, *raiz, novo_no);
-    }
-}
+
 
 /**
  * @brief Cria uma estrutura de informação contendo uma palavra em português, 
@@ -261,9 +217,9 @@ void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade,
     Informacao info_2_3 = criar_info(palavra_portugues, palavra_ingles, unidade); 
 
     Informacao sobe;
-    ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(raiz, info_2_3, &sobe, NULL);
+    ARV2_3 *novo_no = inserir_Elemento_ARV_2_3(NULL,raiz, info_2_3, &sobe);
     if (novo_no)
-        *raiz = criar_no(sobe, *raiz, novo_no);
+        *raiz = criar_no(sobe, *raiz, novo_no, NULL);
     
 }
 

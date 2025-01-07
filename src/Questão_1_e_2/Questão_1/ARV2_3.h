@@ -24,10 +24,10 @@ typedef struct ARV2_3{
 
 
 /*Funções referentes a inserir  2_3*/
-ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro);
-ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **filho);
+ARV2_3 *criar_no(Informacao info, ARV2_3 *filho_esquerda, ARV2_3 *filho_centro, ARV2_3 *direita);
+ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 *filho);
 void add_elementos(ARV2_3 *no, Informacao Info, ARV2_3 *filho);
-ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 **pai);
+ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 *pai,ARV2_3 **no, Informacao info, Informacao *sobe);
 void insere(ARV2_3 **raiz, Informacao info);
 Informacao criar_info(char *palavra_portugues, char *palavra_ingles, int unidade);
 void inserir_binaria_em_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade, char *palavra_ingles);
