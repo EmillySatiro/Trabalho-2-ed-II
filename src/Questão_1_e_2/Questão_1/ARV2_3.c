@@ -275,9 +275,8 @@ void mostrar(ARV2_3 *raiz){
  */
 void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
     if (raiz != NULL) {
-
-         imprimir_palavras_unidade(raiz->esquerda, unidade);
-
+        imprimir_palavras_unidade(raiz->esquerda, unidade);
+        imprimir_palavras_unidade(raiz->direita, unidade);
         if (raiz->info1.unidade == unidade) {
             printf("\n=====================================\n");
             printf("Palavra em Português: %s\n", raiz->info1.palavra_portugues);
@@ -293,11 +292,9 @@ void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
             printf("Tradução para o Inglês:\n");
             mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
             printf("=====================================\n");
-            imprimir_palavras_unidade(raiz->direita, unidade);
+           
 
         }
-
-       
     }
   
 }
