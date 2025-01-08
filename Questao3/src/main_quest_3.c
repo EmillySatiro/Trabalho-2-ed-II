@@ -52,6 +52,7 @@ int main() {
                     break;
                 }
                 liberarBlocos(&raiz, quantidade_blocos, ultimo_endereco);
+
                 printf("\n=============== Nós após a liberação ==================\n");
                 exibirNos(raiz);
                 break;

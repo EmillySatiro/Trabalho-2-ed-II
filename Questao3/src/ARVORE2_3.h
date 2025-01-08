@@ -25,9 +25,9 @@ ARVORE2_3* criar_no_Q3(Informacao_memoria info, ARVORE2_3* esq, ARVORE2_3* centr
 void cadastrarNos(ARVORE2_3** raiz, int ultimo_endereco);
 void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos);
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior);
-ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai);
+ARVORE2_3 *inserir_Elemento_Q3(ARVORE2_3 *pai, ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe);
 void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho);
-ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **filho);
+ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 *filho);
 void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info);
 Informacao_memoria criar_info(int state, int block_inicio, int block_fim);
 void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info);
@@ -35,7 +35,19 @@ Informacao_memoria maior_info(ARVORE2_3 *raiz);
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco);
 void concatenarBlocos(ARVORE2_3 *atual, int *blocos_restantes);
 
+int _2_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior);
+int _1_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior);
+
+int eh_info1(ARVORE2_3 no, Informacao_memoria *info);
+int eh_info2(ARVORE2_3 no, Informacao_memoria *info);
+
+ARVORE2_3* buscar_menor_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai);
+ARVORE2_3* buscar_maior_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_memoria *info);
+
+ARVORE2_3 *buscar_pai(ARVORE2_3 *raiz, int block_inicio);
+
 ARVORE2_3 *encontrarProximo(ARVORE2_3 *atual);
+void no_2_3_desacolar(ARVORE2_3 **no);
 
 /*Funções de liberar*/
 void liberarNos(ARVORE2_3* raiz);
@@ -44,7 +56,9 @@ void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info);
 /*Funções de listagem*/
 void exibirNos(ARVORE2_3* raiz);
 
+int arvore23_remover_nao_folha1_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info,ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior);
 
+int ondinha_1(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai,ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior,int (*funcao_remover)(ARVORE2_3 **, int, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **));
 
 /*Funções suporte */
 void intercalarNos(ARVORE2_3 **raiz);
