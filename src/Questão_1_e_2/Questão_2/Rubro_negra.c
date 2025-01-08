@@ -759,17 +759,21 @@ Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra)
 
     if(raiz != NULL)
     {
-        printf("%s -> ", raiz->info->palavra_portugues);
+       
 
         int resultado = strcmp(palavra, raiz->info->palavra_portugues);
 
-        if(resultado == 0)
+        if(resultado == 0){
+            printf("%s -> ", raiz->info->palavra_portugues);
             retorno = raiz;
-        else if(resultado < 0)
+        }else if(resultado < 0){
+            printf("Esquerda->   ");
             retorno = arvorevp_buscar_caminho(raiz->esquerda, palavra);
-        else if(resultado > 0)
+        }else if(resultado > 0){
+              printf("direita->   ");
             retorno = arvorevp_buscar_caminho(raiz->direita, palavra);
-    }
+        }
+    }   
 
     return retorno;
 }

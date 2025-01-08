@@ -1449,21 +1449,20 @@ ARV2_3 *arvore23_buscar_caminho(ARV2_3 *raiz, char *info)
 
     if (raiz != NULL)
     {
-        printf("[1º] %s ", raiz->info1.palavra_portugues);
-
-        if (raiz->quant_infos == 2)
-            printf("| [2º] %s ", raiz->info2.palavra_portugues);
-
-        printf("-> ");
+    
    
         if (strcmp(info, raiz->info1.palavra_portugues) == 0 || 
             (raiz->quant_infos == 2 && strcmp(info, raiz->info2.palavra_portugues) == 0)) {
             no = raiz;
         } else if (strcmp(info, raiz->info1.palavra_portugues) < 0) {
+             printf("Esquerda ->  ");
             no = arvore23_buscar_caminho(raiz->esquerda, info);
         } else if (raiz->quant_infos == 1 || (strcmp(info, raiz->info2.palavra_portugues) < 0)) {
+            printf("centro -> ");
             no = arvore23_buscar_caminho(raiz->centro, info);
+            
         } else {
+            printf("direita -> ");
             no = arvore23_buscar_caminho(raiz->direita, info);
         }
     }

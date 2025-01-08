@@ -82,7 +82,7 @@ ARV2_3 *Pegar_dados_arquivo_23(ARV2_3 **raiz) {
                 while ((pt = strtok(NULL, ":,;")) != NULL) 
                 {
                     pt = trim_23(pt);
-                    Informacao info = criar_info(pt, palavra_ingles, unidade);
+                    Informacao info = criar_info(pt,palavra_ingles, unidade);
                     if (&info != NULL) {
                        Informacao sobe; 
                        inserir_Elemento_ARV_2_3(NULL,raiz, info, &sobe);
