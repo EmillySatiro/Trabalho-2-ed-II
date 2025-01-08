@@ -16,13 +16,12 @@ int main() {
     srand(time(NULL));
     int tamanho = 5, repeticoes = 30;
     int quant_nos = 10000; 
-    char palavras[][50] = {"processamento", "algoritmo", "programação", "código", "linguagem", 
+   char palavras[][50] = {"processamento", "algoritmo", "programação", "código", "linguagem", 
                                             "python", "java", "html", "css", "sql", 
                                             "banco de dados", "api", "endpoint", "rest", "json", 
                                             "xml", "tcp", "ssl", "vpn", "firewall", 
                                             "segurança", "automação", "robótica", "iot", "wearables", 
-                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract", 
-                                            "fintech", "startups", "investimento", "aceleração"};
+                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract"};
     int quant_palavras = sizeof(palavras) / sizeof(char [50]);
 
     do {
@@ -52,7 +51,7 @@ int main() {
                 printf("Você escolheu a Opção 2!\n");
                 printf("Infome a unidade: \n");
                 scanf("%d", &unidade);
-                mostrar_palavras_em_portugues_de_uma_unidade(arvore_rubro_negra, unidade);// rpz revisar isso pq ela ta mostrando todas as palvras em ingles e tem que ser só da unidade correspondente  
+                mostrar_palavras_em_portugues_de_uma_unidade(arvore_rubro_negra, unidade);
                 break;
             case 3:
                 printf("Você escolheu a Opção 3!\n");

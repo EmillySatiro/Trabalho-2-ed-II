@@ -86,6 +86,7 @@ void mostrar_arvore_binaria(ARV_BINARIA *arvore, int unidade){
             if (temp->unidade == unidade)
             {
                 printf("%s \n", arvore->palavra_ingles);
+                printf("Unidade : %d\n", arvore->unidade->unidade);
             }
             temp = temp->proximo;
         }
@@ -115,7 +116,6 @@ void mostrar_arvore_binaria_completa(ARV_BINARIA *arvore){
     if (arvore != NULL){
         printf("| Palavra em Inglês: %s\n", arvore->palavra_ingles);
         printf("| Unidades Associadas: ");
-        
         lista_unidade *temp = arvore->unidade;
         while (temp != NULL){
 

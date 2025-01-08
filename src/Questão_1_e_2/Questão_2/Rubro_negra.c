@@ -500,16 +500,15 @@ Informacao_VP *criar_info_vp(char *palavra_portugues, char *palavra_ingles, int 
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade){
     if (raiz != NULL){
         mostrar_palavras_em_portugues_de_uma_unidade(raiz->esquerda, unidade);
+        mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
          if (raiz->info->unidade == unidade) {
             printf("\n=====================================\n");
             printf("Palavra em Português: %s\n", raiz->info->palavra_portugues);
             printf("Palavras em Inglês:\n");
-
-        
             mostrar_binaria_em_rubro(raiz, unidade);
-            printf("\n=====================================\n");
+            printf("=====================================\n");
     }
-        mostrar_palavras_em_portugues_de_uma_unidade(raiz->direita, unidade);
+       
     }
 
 }

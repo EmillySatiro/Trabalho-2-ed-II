@@ -21,8 +21,7 @@ int main() {
                                             "banco de dados", "api", "endpoint", "rest", "json", 
                                             "xml", "tcp", "ssl", "vpn", "firewall", 
                                             "segurança", "automação", "robótica", "iot", "wearables", 
-                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract", 
-                                            "fintech", "startups", "investimento", "aceleração"};
+                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract"};
     int quant_palavras = sizeof(palavras) / sizeof(char [50]);
 
     do {
