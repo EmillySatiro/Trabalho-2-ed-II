@@ -46,7 +46,7 @@ gcc -o "$BASE_DIR/$EXECUTAVEL" \
 # Verificar se a compilação foi bem-sucedida
 if [ $? -eq 0 ]; then
     echo "Compilação bem-sucedida! Executando o programa..."
-    # Executar o programa
+    
     "$BASE_DIR/$EXECUTAVEL"
 else
     echo "Erro na compilação. Verifique os arquivos e tente novamente."

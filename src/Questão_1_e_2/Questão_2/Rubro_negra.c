@@ -4,8 +4,7 @@
 #include <stdbool.h>
 #include "Rubro_negra.h"
 #include "../Binaria/ARV_BINARIA.h"
-
-
+#include "time.h"
 
 /**
  * @brief Aloca um novo nó para a árvore rubro-negra.
@@ -693,6 +692,91 @@ void liberar_rubronegra(Rubronegra **raiz) {
     }
 }
 
+/**
+ * @brief Calcula o tempo decorrido entre dois instantes de tempo.
+ *
+ * Esta função calcula o tempo decorrido entre dois instantes de tempo 
+ * fornecidos como parâmetros e retorna o valor em microssegundos.
+ *
+ * @param inicio O instante de tempo inicial.
+ * @param fim O instante de tempo final.
+ * @return O tempo decorrido em microssegundos.
+ */
+tempo_tipo calcula_tempo(clock_t inicio, clock_t fim)
+{
+    return ((tempo_tipo)(fim - inicio)) / CLOCKS_PER_SEC * 1000 * 1000;
+}
+
+
+/**
+ * @brief Calcula o tempo médio de busca em uma árvore Rubro-Negra.
+ *
+ * Esta função realiza múltiplas buscas em uma árvore Rubro-Negra e calcula o tempo médio gasto nessas buscas.
+ *
+ * @param arvore Ponteiro para a árvore Rubro-Negra.
+ * @param info Informação a ser buscada na árvore.
+ * @param repeticoes Número de vezes que a busca será realizada para calcular a média.
+ * @return O tempo médio gasto nas buscas.
+ */
+tempo_tipo calcular_tempo_medio(Rubronegra **arvore, char *info, int repeticoes)
+{
+    tempo_tipo media = 0;
+
+    for(int i = 0; i < repeticoes; i++)
+    {
+        clock_t inicio, fim;
+        Rubronegra *no_encontrado;
+        tempo_tipo tempo_gasto;
+
+        inicio = clock();
+
+        // Substitua pela função de busca desejada
+        no_encontrado = arvorevp_buscar_caminho(*arvore, info); 
+        fim = clock();
+        
+        tempo_gasto = calcula_tempo(inicio, fim);
+        media += tempo_gasto;
+    }
+    
+    media /= repeticoes;
+    return media;
+}
+
+/**
+ * @brief Busca um nó na árvore rubro-negra que contém a palavra especificada e imprime o caminho percorrido.
+ *
+ * Esta função percorre a árvore rubro-negra a partir da raiz, comparando a palavra fornecida com as palavras
+ * armazenadas nos nós da árvore. Durante a busca, a função imprime cada palavra encontrada no caminho até
+ * encontrar a palavra desejada ou até chegar a um nó folha.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore rubro-negra.
+ * @param palavra Ponteiro para a string que contém a palavra a ser buscada.
+ * @return Ponteiro para o nó que contém a palavra buscada, ou NULL se a palavra não for encontrada.
+ */
+Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra)
+{
+    Rubronegra *retorno = NULL;
+
+    if(raiz != NULL)
+    {
+       
+
+        int resultado = strcmp(palavra, raiz->info->palavra_portugues);
+
+        if(resultado == 0){
+            printf("%s -> ", raiz->info->palavra_portugues);
+            retorno = raiz;
+        }else if(resultado < 0){
+            printf("Esquerda->   ");
+            retorno = arvorevp_buscar_caminho(raiz->esquerda, palavra);
+        }else if(resultado > 0){
+              printf("direita->   ");
+            retorno = arvorevp_buscar_caminho(raiz->direita, palavra);
+        }
+    }   
+
+    return retorno;
+}
 
 
 

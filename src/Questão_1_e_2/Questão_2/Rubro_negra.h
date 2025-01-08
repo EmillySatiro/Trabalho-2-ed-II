@@ -4,6 +4,7 @@
 
 #define VERMELHO 1 
 #define PRETO 0
+typedef double tempo_tipo;
 
 typedef struct Informacao_VP{
     char *palavra_portugues;
@@ -47,6 +48,11 @@ void mostrar_binaria_em_rubro(Rubronegra *raiz, int unidade);
 void mostrar_rubronegra(Rubronegra *raiz);
 void mostrar_palavras_em_portugues_de_uma_unidade(Rubronegra *raiz, int unidade);
 void Imprimir_toda_palavras(Rubronegra *raiz, char *palavra_portugues);
+
+/*Funções de buscas as 30 palavras */
+tempo_tipo calcula_tempo(clock_t inicio, clock_t fim);
+tempo_tipo calcular_tempo_medio(Rubronegra **arvore, char *info, int repeticoes);
+Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra);
 
 /*Funções de liberar*/
 void liberar_rubronegra_binaria(Informacao_VP *info);

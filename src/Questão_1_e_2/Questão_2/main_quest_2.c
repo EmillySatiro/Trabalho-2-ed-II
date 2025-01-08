@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
+#include <time.h>
 #include "../Binaria/ARV_BINARIA.h"
 #include "../Questão_2/Rubro_negra.h"
 #include "../../Questão_1_e_2/Questão_2/Arquivo/extrair_rubro.h"
@@ -13,6 +13,17 @@ int main() {
     int unidade = 0;
     char palavra[100];
     char palavra_removida[100];
+    srand(time(NULL));
+    int tamanho = 5, repeticoes = 30;
+    int quant_nos = 10000; 
+    char palavras[][50] = {"processamento", "algoritmo", "programação", "código", "linguagem", 
+                                            "python", "java", "html", "css", "sql", 
+                                            "banco de dados", "api", "endpoint", "rest", "json", 
+                                            "xml", "tcp", "ssl", "vpn", "firewall", 
+                                            "segurança", "automação", "robótica", "iot", "wearables", 
+                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract", 
+                                            "fintech", "startups", "investimento", "aceleração"};
+    int quant_palavras = sizeof(palavras) / sizeof(char [50]);
 
     do {
         
@@ -23,6 +34,7 @@ int main() {
         printf("4.Remover uma palavra em inglês de todas as arvores que a mesma pertence\n");
         printf("5.Remover uma palavra em português e a unidade a qual a mesma pertence\n");
         printf("6.Mostrar todas as palavras em portugues e suas traduções para o inglês\n");
+        printf("7 Buscar caminho de 30 elementos predefinidos com visualização de tempo e quandidade de elesmentos na arvore\n");
         printf("0. Sair\n");
         printf("==================================\n");
         printf("Escolha uma opção: ");
@@ -75,6 +87,16 @@ int main() {
                 printf("Você escolheu a Opção 6!\n");
                 mostrar_rubronegra(arvore_rubro_negra);
                 break;
+            case 7: 
+            printf("Você escolheu opção 7!\n");
+            for(int i = 0; i < quant_palavras; i++)
+            {
+                tempo_tipo media = calcular_tempo_medio(&arvore_rubro_negra, palavras[i], repeticoes);
+                printf("[%dº] [%s] Tempo médio de execução: %lf microssegundos\n\n", i+1, palavras[i], media);
+            }
+
+            printf("\n[Árvore de %d elementos]\n", quant_nos + quant_palavras);
+            break;
             case 0:
                 printf("Saindo do programa...\n");
                 break;
@@ -87,7 +109,5 @@ int main() {
     liberar_rubronegra(&arvore_rubro_negra);
     return 0;
 }
-
-
 
 
