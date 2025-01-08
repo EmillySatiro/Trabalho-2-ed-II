@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ARV2_3.h"
+#include <time.h>
 #include "../Binaria/ARV_BINARIA.h"
 
 /**
@@ -47,7 +48,7 @@ ARV2_3 *quebra_No(ARV2_3 **no, Informacao info, Informacao *sobe, ARV2_3 *filho)
 {
     ARV2_3 *novo_no;
 
-    if (strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0)
+    if ((*no)->info1.palavra_portugues != NULL && strcmp(info.palavra_portugues, (*no)->info1.palavra_portugues) < 0)
     {
         
         *sobe = (*no)->info1; 
@@ -176,9 +177,6 @@ ARV2_3 *inserir_Elemento_ARV_2_3(ARV2_3 *pai,ARV2_3 **no, Informacao info, Infor
            return maior;
 }
  
-
-
-
 /**
  * @brief Cria uma estrutura de informação contendo uma palavra em português, 
  *        uma árvore binária com a palavra em inglês e uma unidade.
@@ -1377,3 +1375,98 @@ void liberar_arvore_2_3(ARV2_3 **raiz) {
     }
 }
 
+
+
+
+/**
+ * @brief Calcula o tempo decorrido entre dois instantes de tempo.
+ *
+ * Esta função calcula o tempo decorrido entre dois instantes de tempo
+ * fornecidos, em microsegundos.
+ *
+ * @param inicio O instante de tempo inicial.
+ * @param fim O instante de tempo final.
+ * @return O tempo decorrido entre os dois instantes, em microsegundos.
+ */
+tempo_tipo calcula_tempo(clock_t inicio, clock_t fim){
+    return ((tempo_tipo) (fim - inicio)) / CLOCKS_PER_SEC * 1000 * 1000;
+}
+
+
+/**
+ * @brief Calcula o tempo médio de busca de uma palavra em uma árvore 2-3.
+ *
+ * Esta função realiza múltiplas buscas de uma palavra específica em uma árvore 2-3
+ * e calcula o tempo médio gasto nessas buscas.
+ *
+ * @param arvore Ponteiro para a árvore 2-3 onde a busca será realizada.
+ * @param info Palavra a ser buscada na árvore.
+ * @param repeticoes Número de vezes que a busca será realizada para calcular a média.
+ * @return O tempo médio gasto nas buscas.
+ */
+tempo_tipo calcular_tempo_medio(ARV2_3 **arvore, char *info, int repeticoes)
+{
+    tempo_tipo media = 0;
+
+    for (int i = 0; i < repeticoes; i++)
+    {
+        clock_t inicio, fim;
+        ARV2_3 *no_encontrado;
+        
+
+        tempo_tipo tempo_gasto;
+
+        inicio = clock();
+
+        // Função para buscar na árvore
+        no_encontrado = buscar_palavra_2_3(*arvore, info);
+
+        fim = clock();
+        
+        tempo_gasto = calcula_tempo(inicio, fim);
+        media += tempo_gasto;
+    }
+    
+    media /= repeticoes;
+    return media;
+}
+
+/**
+ * @brief Busca um nó em uma árvore 2-3 e imprime o caminho percorrido.
+ *
+ * Esta função busca um nó em uma árvore 2-3 que contém a informação especificada
+ * e imprime o caminho percorrido até encontrar o nó. A árvore 2-3 é uma árvore
+ * balanceada onde cada nó pode conter uma ou duas informações.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info String contendo a informação a ser buscada na árvore.
+ * @return Retorna um ponteiro para o nó que contém a informação buscada, ou NULL
+ *         se a informação não for encontrada.
+ */
+ARV2_3 *arvore23_buscar_caminho(ARV2_3 *raiz, char *info)
+{
+    ARV2_3 *no = NULL;
+
+    if (raiz != NULL)
+    {
+        printf("[1º] %s ", raiz->info1.palavra_portugues);
+
+        if (raiz->quant_infos == 2)
+            printf("| [2º] %s ", raiz->info2.palavra_portugues);
+
+        printf("-> ");
+   
+        if (strcmp(info, raiz->info1.palavra_portugues) == 0 || 
+            (raiz->quant_infos == 2 && strcmp(info, raiz->info2.palavra_portugues) == 0)) {
+            no = raiz;
+        } else if (strcmp(info, raiz->info1.palavra_portugues) < 0) {
+            no = arvore23_buscar_caminho(raiz->esquerda, info);
+        } else if (raiz->quant_infos == 1 || (strcmp(info, raiz->info2.palavra_portugues) < 0)) {
+            no = arvore23_buscar_caminho(raiz->centro, info);
+        } else {
+            no = arvore23_buscar_caminho(raiz->direita, info);
+        }
+    }
+
+    return no;
+}

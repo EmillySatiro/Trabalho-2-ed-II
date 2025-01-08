@@ -2,7 +2,7 @@
 #define ARV2_3_H 
 #include "../Binaria/ARV_BINARIA.h"
 
-
+typedef double tempo_tipo;
 
 typedef struct Informacao{
 
@@ -69,6 +69,11 @@ int _1_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3 *pai, ARV2_3 **origem, ARV2
 int _2_remover_2_3(ARV2_3 **raiz, char *info, ARV2_3  *pai, ARV2_3  **origem, ARV2_3  **maior);
 void remover_palavra_ingles_e_unidade_2_3(ARV2_3 **raiz, char *palavra_ingles, int unidade);
 int remover_palavra_completa_2_3(ARV2_3 **raiz, char *palavra_portugues, int unidade);
+
+/*funções de pegar tempo de busca*/
+tempo_tipo calcula_tempo(clock_t inicio, clock_t fim);
+tempo_tipo calcular_tempo_medio(ARV2_3 **arvore, char *info, int repeticoes);
+ARV2_3 *arvore23_buscar_caminho(ARV2_3 *raiz, char *info);
 
 /*Funções de liberação 2_3*/
 void liberar_arvore_2_3_binaria(Informacao *info);
