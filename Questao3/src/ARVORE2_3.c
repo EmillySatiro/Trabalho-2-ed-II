@@ -16,12 +16,13 @@
  * @note Em caso de falha na alocação de memória, a função imprime uma mensagem
  *       de erro e encerra o programa.
  */
-ARVORE2_3* criar_no_Q3(Informacao_memoria info, ARVORE2_3* esq, ARVORE2_3* centro, ARVORE2_3* dir) {
-    ARVORE2_3* novo = (ARVORE2_3*) malloc(sizeof(ARVORE2_3));
+ARVORE2_3 *criar_no_Q3(Informacao_memoria info, ARVORE2_3 *esq, ARVORE2_3 *centro, ARVORE2_3 *dir)
+{
+    ARVORE2_3 *novo = (ARVORE2_3 *)malloc(sizeof(ARVORE2_3));
 
     // Inicializa o novo nó com a informação e filhos passados
     novo->info1 = info;
-    novo->quant_infos = 1;  // Inicialmente, o nó tem uma informação
+    novo->quant_infos = 1; // Inicialmente, o nó tem uma informação
 
     novo->esquerda = esq;
     novo->centro = centro;
@@ -101,7 +102,6 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
         {
             break;
         }
-
     }
 
     // Cria o primeiro nó
@@ -131,13 +131,11 @@ void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
             {
                 break;
             }
-
-        
         }
 
         // Atualização do estado alternado
         state = (info.state == 'L') ? 'O' : 'L';
-        
+
         // Criação do novo nó
         Informacao_memoria novaInfo = criar_info(state, bloco_inicio, bloco_fim);
         insere_Q3(raiz, novaInfo);
@@ -166,58 +164,89 @@ void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info)
     }
 }
 
-
-ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai) {
+ARVORE2_3 *inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **pai)
+{
     Informacao_memoria sobe_sup;
     ARVORE2_3 *maior = NULL;
 
     // Se o nó for NULL, cria um novo nó
-    if (*no == NULL) {
+    if (*no == NULL)
+    {
         *no = criar_no_Q3(info, NULL, NULL, NULL);
-    } else {
+    }
+    else
+    {
         // Verifica se é folha
-        if (eh_folha_Q3(*no)) {
+        if (eh_folha_Q3(*no))
+        {
             // Se o nó tem 1 informação
-            if ((*no)->quant_infos == 1) {
-                if (info.block_fim < (*no)->info1.block_fim) {
+            if ((*no)->quant_infos == 1)
+            {
+                if (info.block_fim < (*no)->info1.block_fim)
+                {
                     add_elementos_Q3(*no, info, NULL); // Adiciona à esquerda
-                } else if (info.block_fim > (*no)->info1.block_fim) {
+                }
+                else if (info.block_fim > (*no)->info1.block_fim)
+                {
                     add_elementos_Q3(*no, info, NULL); // Adiciona à direita
-                } else {
+                }
+                else
+                {
                     atualizar_no_Q3(*no, info); // Atualiza valores caso exista
                 }
-            } else if (info.block_fim != (*no)->info2.block_fim) { // Para nós com duas informações
+            }
+            else if (info.block_fim != (*no)->info2.block_fim)
+            { // Para nós com duas informações
                 maior = quebra_No_Q3(no, info, sobe, NULL);
-                if (pai == NULL) { // Cria nova raiz caso necessário
+                if (pai == NULL)
+                { // Cria nova raiz caso necessário
                     *no = criar_no_Q3(*sobe, *no, maior, NULL);
                     maior = NULL;
                 }
-            } else {
+            }
+            else
+            {
                 atualizar_no_Q3(*no, info);
             }
-        } else { // Caso não seja folha
-            if (info.block_fim < (*no)->info1.block_fim) {
+        }
+        else
+        { // Caso não seja folha
+            if (info.block_fim < (*no)->info1.block_fim)
+            {
                 maior = inserir_Elemento_Q3(&((*no)->esquerda), info, sobe, no);
-            } else if (info.block_fim == (*no)->info1.block_fim) {
+            }
+            else if (info.block_fim == (*no)->info1.block_fim)
+            {
                 atualizar_no_Q3(*no, info);
                 maior = NULL;
-            } else if ((*no)->quant_infos == 1 || info.block_fim < (*no)->info2.block_fim) {
+            }
+            else if ((*no)->quant_infos == 1 || info.block_fim < (*no)->info2.block_fim)
+            {
                 maior = inserir_Elemento_Q3(&((*no)->centro), info, sobe, no);
-            } else if (info.block_fim == (*no)->info2.block_fim) {
+            }
+            else if (info.block_fim == (*no)->info2.block_fim)
+            {
                 atualizar_no_Q3(*no, info);
                 maior = NULL;
-            } else {
+            }
+            else
+            {
                 maior = inserir_Elemento_Q3(&((*no)->direita), info, sobe, no);
             }
 
             // Se "maior" precisa ser reorganizado
-            if (maior) {
-                if ((*no)->quant_infos == 1) {
+            if (maior)
+            {
+                if ((*no)->quant_infos == 1)
+                {
                     add_elementos_Q3(*no, *sobe, maior);
                     maior = NULL;
-                } else {
+                }
+                else
+                {
                     maior = quebra_No_Q3(no, *sobe, &sobe_sup, &maior);
-                    if (pai == NULL) {
+                    if (pai == NULL)
+                    {
                         *no = criar_no_Q3(sobe_sup, *no, maior, NULL);
                         maior = NULL;
                     }
@@ -228,7 +257,6 @@ ARVORE2_3* inserir_Elemento_Q3(ARVORE2_3 **no, Informacao_memoria info, Informac
 
     return maior;
 }
-
 
 ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 **filho)
 {
@@ -282,8 +310,6 @@ ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memo
     return maior_info;
 }
 
-
-
 void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho)
 {
 
@@ -333,23 +359,30 @@ Informacao_memoria maior_info(ARVORE2_3 *raiz)
  *       Após a alocação, a função `intercalarNos` é chamada para ajustar a árvore,
  *       caso necessário.
  */
-void alocarBlocoRecursivo(ARVORE2_3 *atual, int *blocos_restantes) {
-    if (atual == NULL || *blocos_restantes == 0) {
+void alocarBlocoRecursivo(ARVORE2_3 *atual, int *blocos_restantes)
+{
+    if (atual == NULL || *blocos_restantes == 0)
+    {
         return; // Base da recursão: Nó vazio ou blocos alocados
     }
 
     // Tenta alocar em info1
-    if (atual->info1.state == 'L') {
+    if (atual->info1.state == 'L')
+    {
         int tamanho_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-        if (tamanho_info1 >= *blocos_restantes) {
-            if (tamanho_info1 > *blocos_restantes) {
+        if (tamanho_info1 >= *blocos_restantes)
+        {
+            if (tamanho_info1 > *blocos_restantes)
+            {
                 Informacao_memoria livre = {'L', atual->info1.block_inicio + *blocos_restantes, atual->info1.block_fim};
                 atual->info1.block_fim = atual->info1.block_inicio + *blocos_restantes - 1;
                 atual->info1.state = 'O';
 
                 // Cria nó central para o restante dos blocos livres
                 atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
-            } else {
+            }
+            else
+            {
                 atual->info1.state = 'O';
             }
 
@@ -360,17 +393,22 @@ void alocarBlocoRecursivo(ARVORE2_3 *atual, int *blocos_restantes) {
     }
 
     // Tenta alocar em info2
-    if (atual->quant_infos == 2 && atual->info2.state == 'L') {
+    if (atual->quant_infos == 2 && atual->info2.state == 'L')
+    {
         int tamanho_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-        if (tamanho_info2 >= *blocos_restantes) {
-            if (tamanho_info2 > *blocos_restantes) {
+        if (tamanho_info2 >= *blocos_restantes)
+        {
+            if (tamanho_info2 > *blocos_restantes)
+            {
                 Informacao_memoria livre = {'L', atual->info2.block_inicio + *blocos_restantes, atual->info2.block_fim};
                 atual->info2.block_fim = atual->info2.block_inicio + *blocos_restantes - 1;
                 atual->info2.state = 'O';
 
                 // Cria nó central para o restante dos blocos livres
                 atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
-            } else {
+            }
+            else
+            {
                 atual->info2.state = 'O';
             }
 
@@ -386,8 +424,10 @@ void alocarBlocoRecursivo(ARVORE2_3 *atual, int *blocos_restantes) {
     alocarBlocoRecursivo(atual->direita, blocos_restantes);
 }
 
-void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos) {
-    if (*raiz == NULL) {
+void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos)
+{
+    if (*raiz == NULL)
+    {
         printf("Árvore vazia.\n");
         return;
     }
@@ -397,17 +437,18 @@ void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos) {
     // Chamada inicial para o algoritmo recursivo
     alocarBlocoRecursivo(*raiz, &blocos_restantes);
 
-    if (blocos_restantes > 0) {
+    if (blocos_restantes > 0)
+    {
         printf("Não foi possível alocar todos os blocos. Restantes: %d\n", blocos_restantes);
-    } else {
+    }
+    else
+    {
         printf("Alocação de blocos concluída com sucesso.\n");
     }
 
     // Ajusta a estrutura da árvore após a alocação
     intercalarNos(raiz);
 }
-
-
 
 /**
  * @brief Intercala nós em uma árvore 2-3.
@@ -470,115 +511,151 @@ void intercalarNos(ARVORE2_3 **raiz)
     }
 }
 
+void concatenarBlocos(ARVORE2_3 *atual, int *blocos_restantes)
+{
+    if (atual == NULL || atual->quant_infos == 0 || *blocos_restantes <= 0)
+    {
+        return; // Nó inválido ou sem blocos relevantes
+    }
+
+    // Busca o próximo bloco relevante
+    ARVORE2_3 *proximo = encontrarProximo(atual);
+    if (proximo == NULL || proximo->quant_infos == 0)
+    {
+        return; // Não encontrou próximo ou próximo inválido
+    }
+
+    int size_atual = atual->info1.block_fim - atual->info1.block_inicio + 1;
+    int size_proximo = proximo->info1.block_fim - proximo->info1.block_inicio + 1;
+
+    // Verifica se o espaço combinado é suficiente para os blocos restantes
+    if ((size_atual + size_proximo) >= *blocos_restantes)
+    {
+        // Concatena os dois blocos em `info1` do nó atual
+        atual->info1.block_fim = proximo->info1.block_fim;
+        atual->quant_infos = 1; // Apenas `info1` permanece relevante
+        printf("Blocos concatenados: de %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
+
+        // Libera completamente o próximo nó
+        liberarNos(proximo);
+
+        // Caso blocos_restantes seja menor que o espaço total, cria um novo bloco
+        if (*blocos_restantes < (size_atual + size_proximo))
+        {
+            *blocos_restantes = (size_atual + size_proximo) - *blocos_restantes;
+
+            int novo_inicio = atual->info1.block_fim - *blocos_restantes + 1;
+            Informacao_memoria novo_bloco = {'L', novo_inicio, atual->info1.block_fim, 0, 0};
+
+            // Atualiza `info1` para o tamanho usado
+            atual->info1.block_fim = novo_inicio - 1;
+            atual->info2.block_inicio = atual->info1.block_fim + 1;
+            
+
+            // Insere o novo bloco na árvore
+            insere_Q3(&atual->centro, novo_bloco);
+            printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
+                   novo_bloco.block_inicio, novo_bloco.block_fim);
+        }
+    }
+}
 
 
-void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_block_fim) {
-    if (atual == NULL || *blocos_restantes <= 0) {
+ARVORE2_3* encontrarProximo(ARVORE2_3 *atual)
+{
+    if (atual == NULL)
+    {
+        return NULL;
+    }
+
+    ARVORE2_3 *proximo = atual->direita;
+    while (proximo && proximo->esquerda)
+    {
+        proximo = proximo->esquerda;
+    }
+
+    return proximo;
+}
+
+
+void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_block_fim)
+{
+    if (atual == NULL || *blocos_restantes <= 0)
+    {
         return; // Base da recursão: nó vazio ou não há mais blocos para liberar
     }
 
- 
+    int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
     // Liberação em info1
-   if (atual->info1.state == 'O' && *blocos_restantes > 0) {
-    int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
+    // if (atual->info1.state == 'O' && *blocos_restantes > 0)
+    // {
+    //     if (size_info1 >= *blocos_restantes)
+    //     {
+    //         // Libera parte ou todo o bloco de info1 e cria um novo nó para o bloco restante
+    //         int novo_inicio = atual->info1.block_inicio + *blocos_restantes;
 
-    if (size_info1 >= *blocos_restantes) {
-        // Libera parte ou todo o bloco de info1 e cria um novo nó para o bloco restante
-        int novo_inicio = atual->info1.block_inicio + *blocos_restantes;
+    //         // Atualiza info1 para indicar que foi liberado
+    //         atual->info1.block_fim = novo_inicio - 1; // Atualiza o fim do bloco liberado
+    //         atual->info1.state = 'L';
 
-        // Atualiza info1 para indicar que foi liberado
-        atual->info1.block_fim = novo_inicio - 1; // Atualiza o fim do bloco liberado
-        atual->info1.state = 'L';
+    //         // Cria uma nova informação para o restante do bloco
+    //         Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info1.block_inicio + size_info1 - 1};
 
-        // Cria uma nova informação para o restante do bloco
-        Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info1.block_fim + size_info1 - *blocos_restantes};
+    //         // Insere o novo bloco na árvore
+    //         insere_Q3(&atual->centro, novo_bloco);
 
-        // Insere o novo bloco no centro ou onde for necessário
-        insere_Q3(&atual->centro, novo_bloco);
+    //         printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
+    //                novo_bloco.block_inicio, novo_bloco.block_fim);
 
-        printf("Novo bloco criado com os blocos restantes: de %d a %d\n", 
-               novo_bloco.block_inicio, novo_bloco.block_fim);
+    //         *blocos_restantes = 0;
+    //     }
+    // }
 
-        *blocos_restantes = 0;
-    } else {
-        // Libera parcialmente info1
-        atual->info1.block_inicio += *blocos_restantes;
-        *blocos_restantes = 0;
-        printf("Blocos parcialmente liberados em info1: %d a %d\n", 
-               atual->info1.block_inicio, atual->info1.block_fim);
-    }
-}
+    int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
     // Liberação em info2, se aplicável
-    if (atual->quant_infos == 2 && atual->info2.state == 'O' && *blocos_restantes > 0) {
-    int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
+    // if (atual->quant_infos == 2 && atual->info2.state == 'O' && *blocos_restantes > 0)
+    // {
 
-    if (size_info2 >= *blocos_restantes) {
-        // Libera parte ou todo o bloco de info2 e cria um novo nó para o bloco restante
-        int novo_inicio = atual->info2.block_inicio + *blocos_restantes;
+    //     if (size_info2 >= *blocos_restantes)
+    //     {
+    //         // Libera parte ou todo o bloco de info2 e cria um novo nó para o bloco restante
+    //         int novo_inicio = atual->info2.block_inicio + *blocos_restantes;
 
-        // Atualiza info2 para indicar que foi liberado
-        atual->info2.block_fim = novo_inicio - 1; 
-        atual->info2.state = 'L';
+    //         // Atualiza info2 para indicar que foi liberado
+    //         atual->info2.block_fim = novo_inicio - 1;
+    //         atual->info2.state = 'L';
 
-        // Cria uma nova informação para o restante do bloco
-        Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info2.block_fim + size_info2 - *blocos_restantes};
+    //         // Cria uma nova informação para o restante do bloco
+    //         Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info2.block_inicio + size_info2 - 1};
 
-        // Insere o novo bloco no centro ou onde for necessário
-        insere_Q3(&atual->centro, novo_bloco);
+    //         // Insere o novo bloco na árvore
+    //         insere_Q3(&atual->centro, novo_bloco);
 
-        printf("Novo bloco criado com os blocos restantes: de %d a %d\n", 
-               novo_bloco.block_inicio, novo_bloco.block_fim);
+    //         printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
+    //                novo_bloco.block_inicio, novo_bloco.block_fim);
 
-        *blocos_restantes = 0;
-    } else {
-        // Libera parcialmente info2
-        atual->info2.block_inicio += *blocos_restantes;
-        *blocos_restantes = 0;
-        printf("Blocos parcialmente liberados em info2: %d a %d\n", 
-               atual->info2.block_inicio, atual->info2.block_fim);
+    //         *blocos_restantes = 0;
+    //     }
+    // }
+
+    // Caso os tamanhos de info1 e info2 sejam insuficientes, tenta concatenar blocos
+    if (atual->info1.state == 'O' && atual->quant_infos == 2 && atual->info2.state == 'O' && (size_info1 + size_info2) < *blocos_restantes)
+    {
+        printf("=====================================================================================");
+        concatenarBlocos(atual, blocos_restantes);
     }
-}
-
-   // Verificar se a concatenação é possível após liberação
-if (atual->quant_infos == 2 && atual->info1.state == 'O' && atual->info2.state == 'O' && *blocos_restantes > 0) {
-    int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-    int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-
-    if (size_info1 + size_info2 >= *blocos_restantes) {
-        // Concatena os dois blocos livres
-        atual->info1.block_fim = atual->info2.block_fim;
-        atual->quant_infos = 1; // Apenas info1 permanece relevante
-        printf("Blocos concatenados: de %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
-
-        // Ajustar o novo bloco caso "blocos_restantes" seja menor que o espaço total
-        if (*blocos_restantes < (size_info1 + size_info2)) {
-            int novo_inicio = atual->info1.block_inicio + *blocos_restantes;
-            Informacao_memoria novo_bloco = {'L', novo_inicio, atual->info1.block_fim};
-
-            // Atualiza info1 para o tamanho usado
-            atual->info1.block_fim = novo_inicio - 1;
-
-            // Insere o bloco restante ocupado como um novo nó
-            insere_Q3(&atual->centro, novo_bloco);
-            printf("Novo bloco criado com os blocos restantes: de %d a %d\n", 
-                   novo_bloco.block_inicio, novo_bloco.block_fim);
-        }
-
-        // Reduz os blocos restantes
-        *blocos_restantes = 0;
-    }
-}
-
 
     // Processar filhos recursivamente
     liberarBlocosRecursivo(atual->esquerda, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->centro, blocos_restantes, maior_block_fim);
     liberarBlocosRecursivo(atual->direita, blocos_restantes, maior_block_fim);
 
-    // Caso ainda sobrem blocos a liberar, tente criar novos nós livres
-    if (*blocos_restantes > 0) {
+    // Caso ainda sobrem blocos a liberar, tenta criar novos blocos livres
+    if (*blocos_restantes > 0)
+    {
         int novo_inicio = atual->info1.block_fim + 1;
-        if (novo_inicio + *blocos_restantes - 1 <= maior_block_fim) {
+        if (novo_inicio + *blocos_restantes - 1 <= maior_block_fim)
+        {
             Informacao_memoria livre = {'L', novo_inicio, novo_inicio + *blocos_restantes - 1};
             insere_Q3(&atual->centro, livre);
             printf("Novo bloco livre criado: de %d a %d\n", livre.block_inicio, livre.block_fim);
@@ -587,14 +664,11 @@ if (atual->quant_infos == 2 && atual->info1.state == 'O' && atual->info2.state =
     }
 
     // Garantir que não há estados inconsistentes após a recursão
-    if (atual->quant_infos == 2 && atual->info2.state == 'L') {
+    if (atual->quant_infos == 2 && atual->info2.state == 'L')
+    {
         atual->quant_infos = 1; // Ajusta caso info2 seja livre
     }
 }
-
-
-
-
 
 /**
  * @brief Libera blocos de memória em uma árvore 2-3.
@@ -609,8 +683,10 @@ if (atual->quant_infos == 2 && atual->info1.state == 'O' && atual->info2.state =
  * A função imprime informações detalhadas sobre os blocos liberados e os estados dos nós após a liberação e
  * possível concatenação. No final, chama a função `intercalarNos` para realizar operações adicionais na árvore.
  */
-void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco) {
-    if (*raiz == NULL) {
+void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco)
+{
+    if (*raiz == NULL)
+    {
         printf("Árvore vazia.\n");
         return;
     }
@@ -620,9 +696,12 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco)
     printf("Iniciando liberação de %d blocos...\n", quantidade_blocos);
     liberarBlocosRecursivo(*raiz, &blocos_restantes, ultimo_endereco);
 
-    if (blocos_restantes > 0) {
+    if (blocos_restantes > 0)
+    {
         printf("Nem todos os blocos foram liberados. Restantes: %d\n", blocos_restantes);
-    } else {
+    }
+    else
+    {
         printf("Liberação de blocos concluída com sucesso.\n");
     }
 
@@ -641,13 +720,13 @@ void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco)
  */
 void exibirNos(ARVORE2_3 *raiz)
 {
-    if (raiz) 
+    if (raiz)
     {
         // Visita o subárvore esquerda
         exibirNos(raiz->esquerda);
 
         // Exibe info1
-        if (raiz->quant_infos >= 1) 
+        if (raiz->quant_infos >= 1)
         {
             printf("====================================\n");
             printf("Estado: %c\n", raiz->info1.state);
@@ -660,7 +739,7 @@ void exibirNos(ARVORE2_3 *raiz)
         exibirNos(raiz->centro);
 
         // Exibe info2 (se houver)
-        if (raiz->quant_infos == 2) 
+        if (raiz->quant_infos == 2)
         {
             printf("====================================\n");
             printf("Estado: %c\n", raiz->info2.state);
@@ -673,7 +752,6 @@ void exibirNos(ARVORE2_3 *raiz)
         exibirNos(raiz->direita);
     }
 }
-
 
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior)
 {
@@ -717,7 +795,6 @@ ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_
 
     return filho1;
 }
-
 
 /**
  * @brief Libera todos os nós de uma árvore 2-3.

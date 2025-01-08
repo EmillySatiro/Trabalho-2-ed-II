@@ -33,6 +33,9 @@ Informacao_memoria criar_info(int state, int block_inicio, int block_fim);
 void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info);
 Informacao_memoria maior_info(ARVORE2_3 *raiz);
 void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco);
+void concatenarBlocos(ARVORE2_3 *atual, int *blocos_restantes);
+
+ARVORE2_3 *encontrarProximo(ARVORE2_3 *atual);
 
 /*Funções de liberar*/
 void liberarNos(ARVORE2_3* raiz);
@@ -40,6 +43,8 @@ void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info);
 
 /*Funções de listagem*/
 void exibirNos(ARVORE2_3* raiz);
+
+
 
 /*Funções suporte */
 void intercalarNos(ARVORE2_3 **raiz);
