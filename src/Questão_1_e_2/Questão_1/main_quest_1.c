@@ -16,12 +16,14 @@ int main() {
     srand(time(NULL));
     int tamanho = 5, repeticoes = 30;
     int quant_nos = 1000;  // Quantidade de palavras no conjunto
-    char palavras[][50] = {"processamento", "algoritmo", "programação", "código", "linguagem", 
-                                            "python", "java", "html", "css", "sql", 
-                                            "banco de dados", "api", "endpoint", "rest", "json", 
-                                            "xml", "tcp", "ssl", "vpn", "firewall", 
-                                            "segurança", "automação", "robótica", "iot", "wearables", 
-                                            "blockchain", "bitcoin", "ethereum", "criptomoeda", "smart contract"};
+    char palavras[][50] = {
+        "Bus", "Bug", "Bike", "Network", "System",
+        "Memory", "Computer", "Node", "Device", "Bicycle",
+        "Driver", "Keyboard", "Mouse", "Router", "Screen",
+        "Database", "File", "Code", "Signal", "Circuit",
+        "Battery", "Port", "Protocol", "Interface", "Processor",
+        "Monitor", "Algorithm", "Application", "Function", "Gateway"
+    };
     int quant_palavras = sizeof(palavras) / sizeof(char [50]);
 
     do {

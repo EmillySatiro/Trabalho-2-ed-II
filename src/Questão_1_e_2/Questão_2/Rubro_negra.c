@@ -728,11 +728,8 @@ tempo_tipo calcular_tempo_medio(Rubronegra **arvore, char *info, int repeticoes)
         tempo_tipo tempo_gasto;
 
         inicio = clock();
-
-        // Substitua pela função de busca desejada
         no_encontrado = arvorevp_buscar_caminho(*arvore, info); 
         fim = clock();
-        
         tempo_gasto = calcula_tempo(inicio, fim);
         media += tempo_gasto;
     }
@@ -766,10 +763,10 @@ Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra)
             printf("%s -> ", raiz->info->palavra_portugues);
             retorno = raiz;
         }else if(resultado < 0){
-            printf("Esquerda->   ");
+            //printf("Esquerda->   ");
             retorno = arvorevp_buscar_caminho(raiz->esquerda, palavra);
         }else if(resultado > 0){
-              printf("direita->   ");
+              //printf("direita->   ");
             retorno = arvorevp_buscar_caminho(raiz->direita, palavra);
         }
     }   
