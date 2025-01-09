@@ -51,7 +51,7 @@ int main() {
                     printf("Quantidade inválida.\n");
                     break;
                 }
-                liberarBlocos(&raiz, quantidade_blocos, ultimo_endereco);
+                liberarBlocos(&raiz, &quantidade_blocos, ultimo_endereco);
 
                 printf("\n=============== Nós após a liberação ==================\n");
                 exibirNos(raiz);

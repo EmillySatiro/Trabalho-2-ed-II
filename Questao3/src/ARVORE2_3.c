@@ -38,7 +38,11 @@ void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
     if (novo_no != NULL && *raiz != NULL)
     {
         ARVORE2_3 *maior = NULL;
-        if (sobe.block_fim > maior_info(*raiz).block_fim)
+        if (sobe.block_fim > maior_info(raiz).block_fim)
+        {
+            maior = novo_no;
+        }
+        else
         {
             maior = quebra_No_Q3(raiz, sobe, &sobe, novo_no);
         }
@@ -325,9 +329,9 @@ void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho)
  * @param raiz Ponteiro para a raiz da árvore 2-3.
  * @return A maior informação armazenada na raiz da árvore 2-3.
  */
-Informacao_memoria maior_info(ARVORE2_3 *raiz)
+Informacao_memoria maior_info(ARVORE2_3 **raiz)
 {
-    return raiz->quant_infos == 2 ? raiz->info2 : raiz->info1;
+    return (*raiz)->quant_infos == 2 ? (*raiz)->info2 : (*raiz)->info1;
 }
 
 /**
@@ -500,49 +504,28 @@ void intercalarNos(ARVORE2_3 **raiz)
 
 void concatenarBlocos(ARVORE2_3 *atual, int *blocos_restantes)
 {
-    if (atual == NULL || atual->quant_infos == 0 || *blocos_restantes <= 0)
+
+    int tamanho_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
+    int tamanho_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
+
+    if (tamanho_info1 + tamanho_info2 >= *blocos_restantes)
     {
-        return; // Nó inválido ou sem blocos relevantes
-    }
+        Informacao_memoria nova_info;
+        nova_info.state = 'L';
+        nova_info.block_inicio = atual->info1.block_inicio;
+        nova_info.block_fim = atual->info2.block_fim;
 
-    // Busca o próximo bloco relevante
-    ARVORE2_3 *proximo = encontrarProximo(atual);
-    if (proximo == NULL || proximo->quant_infos == 0)
-    {
-        return; // Não encontrou próximo ou próximo inválido
-    }
+        ARVORE2_3 *novo_no = criar_no_Q3(nova_info, NULL, NULL, NULL);
 
-    int size_atual = atual->info1.block_fim - atual->info1.block_inicio + 1;
-    int size_proximo = proximo->info1.block_fim - proximo->info1.block_inicio + 1;
+        // Atualiza o nó atual para ter apenas a nova informação
+        atual->info1 = nova_info;
+        atual->quant_infos = 1;
+        atual->centro = NULL;
+        atual->direita = NULL;
 
-    // Verifica se o espaço combinado é suficiente para os blocos restantes
-    if ((size_atual + size_proximo) >= *blocos_restantes)
-    {
-        // Concatena os dois blocos em `info1` do nó atual
-        atual->info1.block_fim = proximo->info1.block_fim;
-        atual->quant_infos = 1; // Apenas `info1` permanece relevante
-        printf("Blocos concatenados: de %d a %d\n", atual->info1.block_inicio, atual->info1.block_fim);
+        *blocos_restantes = 0;
 
-        // Libera completamente o próximo nó
-        liberarNos(proximo);
-
-        // Caso blocos_restantes seja menor que o espaço total, cria um novo bloco
-        if (*blocos_restantes < (size_atual + size_proximo))
-        {
-            *blocos_restantes = (size_atual + size_proximo) - *blocos_restantes;
-
-            int novo_inicio = atual->info1.block_fim - *blocos_restantes + 1;
-            Informacao_memoria novo_bloco = {'L', novo_inicio, atual->info1.block_fim, 0, 0};
-
-            // Atualiza `info1` para o tamanho usado
-            atual->info1.block_fim = novo_inicio - 1;
-            atual->info2.block_inicio = atual->info1.block_fim + 1;
-
-            // Insere o novo bloco na árvore
-            insere_Q3(&atual->centro, novo_bloco);
-            printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
-                   novo_bloco.block_inicio, novo_bloco.block_fim);
-        }
+        printf("Blocos concatenados e novo nó criado: de %d a %d\n", nova_info.block_inicio, nova_info.block_fim);
     }
 }
 
@@ -562,112 +545,6 @@ ARVORE2_3 *encontrarProximo(ARVORE2_3 *atual)
     return proximo;
 }
 
-void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_block_fim)
-{
-    if (atual == NULL || *blocos_restantes <= 0)
-    {
-        return; // Base da recursão: nó vazio ou não há mais blocos para liberar
-    }
-
-    liberarBlocosRecursivo(atual->esquerda, blocos_restantes, maior_block_fim);
-    int size_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-    int size_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-     if (*blocos_restantes == size_info1)
-    {
-        atual->info1.state = 'L';
-        *blocos_restantes = 0;
-    }
-    else if (atual->quant_infos == 2 && *blocos_restantes == size_info2)
-    {
-        atual->info2.state = 'L';
-        *blocos_restantes = 0;
-    }
-    else
-    {
-
-        // Liberação em info1
-        // if (atual->info1.state == 'O' && *blocos_restantes > 0)
-        // {
-        //     if (size_info1 >= *blocos_restantes)
-        //     {
-        //         // Libera parte ou todo o bloco de info1 e cria um novo nó para o bloco restante
-        //         int novo_inicio = atual->info1.block_inicio + *blocos_restantes;
-
-        //         // Atualiza info1 para indicar que foi liberado
-        //         atual->info1.block_fim = novo_inicio - 1; // Atualiza o fim do bloco liberado
-        //         atual->info1.state = 'L';
-
-        //         // Cria uma nova informação para o restante do bloco
-        //         Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info1.block_inicio + size_info1 - 1};
-
-        //         // Insere o novo bloco na árvore
-        //         insere_Q3(&atual->centro, novo_bloco);
-
-        //         printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
-        //                novo_bloco.block_inicio, novo_bloco.block_fim);
-
-        //         *blocos_restantes = 0;
-        //     }
-        // }
-
-        // Liberação em info2, se aplicável
-        // if (atual->quant_infos == 2 && atual->info2.state == 'O' && *blocos_restantes > 0)
-        // {
-
-        //     if (size_info2 >= *blocos_restantes)
-        //     {
-        //         // Libera parte ou todo o bloco de info2 e cria um novo nó para o bloco restante
-        //         int novo_inicio = atual->info2.block_inicio + *blocos_restantes;
-
-        //         // Atualiza info2 para indicar que foi liberado
-        //         atual->info2.block_fim = novo_inicio - 1;
-        //         atual->info2.state = 'L';
-
-        //         // Cria uma nova informação para o restante do bloco
-        //         Informacao_memoria novo_bloco = {'O', novo_inicio, atual->info2.block_inicio + size_info2 - 1};
-
-        //         // Insere o novo bloco na árvore
-        //         insere_Q3(&atual->centro, novo_bloco);
-
-        //         printf("Novo bloco criado com os blocos restantes: de %d a %d\n",
-        //                novo_bloco.block_inicio, novo_bloco.block_fim);
-
-        //         *blocos_restantes = 0;
-        //     }
-        // }
-
-        // Caso os tamanhos de info1 e info2 sejam insuficientes, tenta concatenar blocos
-        if (atual->info1.state == 'O' && atual->info2.state == 'O' && (size_info1 + size_info2) < *blocos_restantes)
-        {
-            printf("=====================================================================================");
-            concatenarBlocos(atual, blocos_restantes);
-        }
-
-        // Processar filhos recursivamente
-
-        // Caso ainda sobrem blocos a liberar, tenta criar novos blocos livres
-        if (*blocos_restantes > 0)
-        {
-            int novo_inicio = atual->info1.block_fim + 1;
-            if (novo_inicio + *blocos_restantes - 1 <= maior_block_fim)
-            {
-                Informacao_memoria livre = {'L', novo_inicio, novo_inicio + *blocos_restantes - 1};
-                insere_Q3(&atual->centro, livre);
-                printf("Novo bloco livre criado: de %d a %d\n", livre.block_inicio, livre.block_fim);
-                *blocos_restantes = 0;
-            }
-        }
-
-        // Garantir que não há estados inconsistentes após a recursão
-        if (atual->quant_infos == 2 && atual->info2.state == 'L')
-        {
-            atual->quant_infos = 1; // Ajusta caso info2 seja livre
-        }
-    }
-    liberarBlocosRecursivo(atual->centro, blocos_restantes, maior_block_fim);
-    liberarBlocosRecursivo(atual->direita, blocos_restantes, maior_block_fim);
-}
-
 /**
  * @brief Libera blocos de memória em uma árvore 2-3.
  *
@@ -681,31 +558,67 @@ void liberarBlocosRecursivo(ARVORE2_3 *atual, int *blocos_restantes, int maior_b
  * A função imprime informações detalhadas sobre os blocos liberados e os estados dos nós após a liberação e
  * possível concatenação. No final, chama a função `intercalarNos` para realizar operações adicionais na árvore.
  */
-void liberarBlocos(ARVORE2_3 **raiz, int quantidade_blocos, int ultimo_endereco)
+void liberarBlocos(ARVORE2_3 **raiz, int *blocos_restantes, int ultimo_endereco)
 {
-    if (*raiz == NULL)
+    if (*raiz == NULL || *blocos_restantes <= 0)
     {
-        printf("Árvore vazia.\n");
-        return;
+        return; // Nada para liberar ou árvore vazia.
     }
 
-    int blocos_restantes = quantidade_blocos;
+    // Processa o lado esquerdo
+    liberarBlocos(&(*raiz)->esquerda, blocos_restantes, ultimo_endereco);
 
-    printf("Iniciando liberação de %d blocos...\n", quantidade_blocos);
-    liberarBlocosRecursivo(*raiz, &blocos_restantes, ultimo_endereco);
+    if (*blocos_restantes <= 0) return;
 
-    if (blocos_restantes > 0)
+    // Verifica o primeiro bloco na raiz
+    int size_info1 = (*raiz)->info1.block_fim - (*raiz)->info1.block_inicio + 1;
+    if (*blocos_restantes >= size_info1)
     {
-        printf("Nem todos os blocos foram liberados. Restantes: %d\n", blocos_restantes);
+        (*raiz)->info1.state = 'L';
+        *blocos_restantes -= size_info1;
     }
     else
     {
-        printf("Liberação de blocos concluída com sucesso.\n");
+        // Fragmenta o bloco se sobrar espaço
+        Informacao_memoria nova_info;
+        nova_info.block_inicio = (*raiz)->info1.block_inicio;
+        nova_info.block_fim = nova_info.block_inicio + (*blocos_restantes) - 1;
+        nova_info.state = 'L';
+
+        (*raiz)->info1.block_inicio += *blocos_restantes;
+        insere_Q3(raiz, nova_info);
+        *blocos_restantes = 0;
     }
 
-    // Ajusta a estrutura da árvore após a liberação
-    intercalarNos(raiz);
+    // Se houver mais blocos e info2 está presente
+    if ((*raiz)->quant_infos == 2 && *blocos_restantes > 0)
+    {
+        int size_info2 = (*raiz)->info2.block_fim - (*raiz)->info2.block_inicio + 1;
+        if (*blocos_restantes >= size_info2)
+        {
+            (*raiz)->info2.state = 'L';
+            *blocos_restantes -= size_info2;
+        }
+        else
+        {
+            Informacao_memoria nova_info;
+            nova_info.block_inicio = (*raiz)->info2.block_inicio;
+            nova_info.block_fim = nova_info.block_inicio + (*blocos_restantes) - 1;
+            nova_info.state = 'L';
+
+            (*raiz)->info2.block_inicio += *blocos_restantes;
+            insere_Q3(raiz, nova_info);
+            *blocos_restantes = 0;
+        }
+    }
+
+    if (*blocos_restantes <= 0) return;
+
+    // Processa o centro e direita
+    liberarBlocos(&(*raiz)->centro, blocos_restantes, ultimo_endereco);
+    liberarBlocos(&(*raiz)->direita, blocos_restantes, ultimo_endereco);
 }
+
 
 /**
  * @brief Exibe os nós de uma árvore 2-3.
@@ -834,7 +747,7 @@ void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info)
     }
 }
 
-int arvore23_remover_nao_folha1_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info,ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior)
+int arvore23_remover_nao_folha1_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info, ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior)
 {
     int removeu = 0;
     ARVORE2_3 *filho = NULL, *pai = raiz;
@@ -846,7 +759,7 @@ int arvore23_remover_nao_folha1_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informac
     if (filho->quant_infos == 2)
     {
         // Se o nó possui duas informações, reduzimos a contagem e movemos os blocos
-        *info = info_filho;  // Atualiza a informação a ser removida
+        *info = info_filho;                     // Atualiza a informação a ser removida
         filho->info2 = (Informacao_memoria){0}; // Marca info2 como vazia
         filho->quant_infos = 1;
         removeu = 1; // Marca que a remoção foi realizada
@@ -857,12 +770,13 @@ int arvore23_remover_nao_folha1_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informac
         filho = buscar_menor_filho(filho2, &pai);
 
         // Usa uma função auxiliar para tratar a remoção e reorganização dos blocos
-        removeu = ondinha_1(info_filho, info, pai, origem, &raiz, maior, arvore23_remover_nao_folha1_q3);
+        removeu = ondinha_1(info_filho, info, pai, origem, &raiz, maior, _1_remover_2_3);
     }
 
     return removeu;
 }
-int arvore23_remover_nao_folha2_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info,ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior){
+int arvore23_remover_nao_folha2_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info, ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior)
+{
     int removeu = 0;
     ARVORE2_3 *filho = NULL, *pai = raiz;
     Informacao_memoria info_filho;
@@ -873,7 +787,7 @@ int arvore23_remover_nao_folha2_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informac
     if (filho->quant_infos == 2)
     {
         // Se o nó possui duas informações, reduzimos a contagem e movemos os blocos
-        *info = info_filho;  // Atualiza a informação a ser removida
+        *info = info_filho;                     // Atualiza a informação a ser removida
         filho->info2 = (Informacao_memoria){0}; // Marca info2 como vazia
         filho->quant_infos = 1;
         removeu = 1; // Marca que a remoção foi realizada
@@ -884,18 +798,19 @@ int arvore23_remover_nao_folha2_q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informac
         filho = buscar_menor_filho(filho2, &pai);
 
         // Usa uma função auxiliar para tratar a remoção e reorganização dos blocos
-        removeu = ondinha_1(info_filho, info, pai, origem, &raiz, maior, arvore23_remover_nao_folha2_q3);
+        removeu = ondinha_1(info_filho, info, pai, origem, &raiz, maior, _2_remover_2_3);
     }
 
     return removeu;
 }
 
-int ondinha_1(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai,ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior,int (*funcao_remover)(ARVORE2_3 **, int, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
+int ondinha_1(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, int *, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
 {
     // Chama a função de callback para remover o nó desejado
-    int removeu = funcao_remover(raiz, saindo.block_inicio, pai, origem, maior);
+    int removeu = funcao_remover(raiz, &saindo.fim, pai, origem, maior);
 
-    if (removeu) {
+    if (removeu)
+    {
         // Atualiza a entrada com a informação do bloco removido
         *entrada = saindo;
     }
@@ -903,83 +818,101 @@ int ondinha_1(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 
     return removeu;
 }
 
-ARVORE2_3* buscar_menor_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai){
+ARVORE2_3 *buscar_menor_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai)
+{
 
     ARVORE2_3 *filho;
-    
-    filho = raiz; 
 
-    while (!eh_folha_Q3(filho)) {
-        *pai = filho; 
+    filho = raiz;
+
+    while (!eh_folha_Q3(filho))
+    {
+        *pai = filho;
         filho = filho->esquerda;
     }
-    
+
     return filho;
 }
 
-ARVORE2_3* buscar_maior_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_memoria *info){
+ARVORE2_3 *buscar_maior_filho(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_memoria *info)
+{
     ARVORE2_3 *filho;
-    
-    filho = raiz; 
 
-    while (!eh_folha_Q3(filho)) {
-        *pai = filho; 
+    filho = raiz;
+
+    while (!eh_folha_Q3(filho))
+    {
+        *pai = filho;
         filho = filho->direita;
     }
 
-    *info = maior_info(filho);
+    *info = maior_info(&filho);
 
     return filho;
 }
 
-
-int _1_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior) {
+int _1_remover_2_3(ARVORE2_3 **raiz, int *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
+{
     int removeu = 0;
 
     // Verifica se a raiz não é NULL
-    if(*raiz != NULL) {
+    if (*raiz != NULL)
+    {
         // Verifica se a informação buscada é igual à info1 ou info2 do nó
         int info1 = eh_info1(**raiz, info);
         int info2 = eh_info2(**raiz, info);
 
-        if(info1 || info2) {
+        if (info1 || info2)
+        {
             removeu = 1; // Marca que o item foi encontrado e será removido
 
-            if(eh_folha_Q3(*raiz)) {
+            if (eh_folha_Q3(*raiz))
+            {
                 // Caso o nó seja uma folha, ajusta as informações
-                if((*raiz)->quant_infos == 2) {
-                    if(info1)
+                if ((*raiz)->quant_infos == 2)
+                {
+                    if (info1)
                         (*raiz)->info1 = (*raiz)->info2; // A primeira informação recebe a segunda
-                    (*raiz)->quant_infos = 1; // O nó passa a ter uma só informação
-                } else {
+                    (*raiz)->quant_infos = 1;            // O nó passa a ter uma só informação
+                }
+                else
+                {
                     // Se o nó for uma folha e a quantidade de informações for 1
                     if (pai == NULL)
                         no_2_3_desacolar(raiz); // Caso o nó não tenha pai, desacola
-                    else {
+                    else
+                    {
                         ARVORE2_3 *pai_aux;
                         Informacao_memoria info_pai;
 
                         // Caso o nó seja filho da esquerda ou do centro
-                        if(*raiz == pai->esquerda || (pai->quant_infos == 2 && *raiz == pai->centro)){
+                        if (*raiz == pai->esquerda || (pai->quant_infos == 2 && *raiz == pai->centro))
+                        {
                             pai_aux = buscar_pai(*origem, pai->info1.block_inicio);
 
                             // Identifica qual informação do pai será utilizada
-                            if(*raiz == pai->esquerda)
+                            if (*raiz == pai->esquerda)
                                 info_pai = pai->info1;
                             else
                                 info_pai = pai->info2;
 
                             // Realiza o ajuste em um dos filhos do nó
                             removeu = ondinha_1(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, _1_remover_2_3);
-                        } else { // Caso seja filho do centro ou da direita
+                        }
+                        else
+                        { // Caso seja filho do centro ou da direita
                             pai_aux = buscar_maior_pai(*origem, (*raiz)->info1.block_inicio);
                             ARVORE2_3 *menor_pai = buscar_menor_pai(*origem, (*raiz)->info1.block_inicio);
 
-                            if(pai_aux == NULL || (pai_aux != pai && menor_pai != NULL)) {
+                            if (pai_aux == NULL || (pai_aux != pai && menor_pai != NULL))
+                            {
                                 // Verifica qual pai tem o maior valor de palavra
-                                if (pai_aux->info1.block_inicio > (*raiz)->info1.block_inicio){
+                                if (pai_aux->info1.block_inicio > (*raiz)->info1.block_inicio)
+                                {
                                     info_pai = pai_aux->info1;
-                                } else {
+                                }
+                                else
+                                {
                                     info_pai = pai_aux->info2;
                                 }
                             }
@@ -988,27 +921,36 @@ int _1_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, A
                             int alt_pai_aux = calcular_altura(pai_aux);
 
                             if (pai_aux == NULL || (pai_aux != pai && menor_pai != NULL && alt_menor_pai <= alt_pai_aux &&
-                               (pai_aux->info1.block_inicio > (*raiz)->info1.block_inicio || pai_aux->info2.block_inicio > (*raiz)->info1.block_inicio))) {
+                                                    (pai_aux->info1.block_inicio > (*raiz)->info1.block_inicio || pai_aux->info2.block_inicio > (*raiz)->info1.block_inicio)))
+                            {
                                 info_pai = menor_pai->info1;
-                            } else {
+                            }
+                            else
+                            {
                                 ARVORE2_3 *avo = buscar_pai(*origem, pai_aux->info1.block_fim);
                                 removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, _1_remover_2_3);
                             }
                         }
                     }
                 }
-            } else if (info2) {
+            }
+            else if (info2)
+            {
                 // Remover não-folha com 2 informações no nó
                 removeu = arvore23_remover_nao_folha1_q3(origem, *raiz, &((*raiz)->info2), (*raiz)->centro, (*raiz)->direita, maior);
-            } else if(info1) {
+            }
+            else if (info1)
+            {
                 // Remover não-folha com 1 informação no nó
                 removeu = arvore23_remover_nao_folha1_q3(origem, *raiz, &((*raiz)->info1), (*raiz)->esquerda, (*raiz)->centro, maior);
             }
-        } else {
+        }
+        else
+        {
             // A árvore tem mais filhos, buscando nas diferentes opções de filhos
-            if((info->block_inicio < (*raiz)->info1.block_inicio))
+            if ((info < &(*raiz)->info1.block_inicio))
                 removeu = _1_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
-            else if((*raiz)->quant_infos == 1 || (info->block_inicio < (*raiz)->info2.block_inicio))
+            else if ((*raiz)->quant_infos == 1 || info < &(*raiz)->info2.block_inicio)
                 removeu = _1_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
                 removeu = _1_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
@@ -1018,62 +960,82 @@ int _1_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, A
     return removeu;
 }
 
-int _2_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior) {
+int _2_remover_2_3(ARVORE2_3 **raiz, int *info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
+{
     int removeu = 0;
 
-    if (*raiz != NULL) {
+    if (*raiz != NULL)
+    {
         int info1 = eh_info1(**raiz, info);
         int info2 = eh_info2(**raiz, info);
 
-        if (info1 || info2) {
+        if (info1 || info2)
+        {
             removeu = 1; // Item encontrado
 
-            if (eh_folha_Q3(*raiz)) {
+            if (eh_folha_Q3(*raiz))
+            {
                 // Remoção de folha
-                if ((*raiz)->quant_infos == 2) {
-                    if (info1) 
+                if ((*raiz)->quant_infos == 2)
+                {
+                    if (info1)
                         (*raiz)->info1 = (*raiz)->info2;
                     (*raiz)->quant_infos = 1;
-                } else {
+                }
+                else
+                {
                     if (pai == NULL)
                         no_2_3_desacolar(raiz); // Desacola se não houver pai
-                    else {
+                    else
+                    {
                         ARVORE2_3 *pai_aux;
                         Informacao_memoria info_pai;
 
-                        if (*raiz == pai->centro || (pai->quant_infos == 2 && *raiz == pai->direita)) {
+                        if (*raiz == pai->centro || (pai->quant_infos == 2 && *raiz == pai->direita))
+                        {
                             pai_aux = buscar_pai(*origem, pai->info1.block_inicio);
                             info_pai = (*raiz == pai->centro) ? pai->info1 : pai->info2;
 
                             removeu = ondinha_1(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, _2_remover_2_3);
-                        } else {
+                        }
+                        else
+                        {
                             pai_aux = buscar_menor_pai(*origem, (*raiz)->info1.block_inicio);
                             ARVORE2_3 *menor_pai = buscar_menor_pai_2_info(*origem, (*raiz)->info1.block_inicio);
                             ARVORE2_3 *avo;
 
-                            if (pai_aux == NULL || (pai_aux != pai && menor_pai != NULL)) {
+                            if (pai_aux == NULL || (pai_aux != pai && menor_pai != NULL))
+                            {
                                 removeu = -1;
                                 *maior = pai;
-                            } else {
+                            }
+                            else
+                            {
                                 info_pai = (pai_aux->quant_infos == 2 && (pai_aux->info2.block_inicio < (*raiz)->info1.block_inicio)) ? pai_aux->info2 : pai_aux->info1;
                                 avo = buscar_pai(*origem, info_pai.block_inicio);
-                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, _1_remover_2_3);
+                                removeu = ondinha_1(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, _2_remover_2_3);
                             }
                         }
                     }
                 }
-            } else if (info2) {
+            }
+            else if (info2)
+            {
                 // Remoção de nó não-folha com 2 informações
                 removeu = arvore23_remover_nao_folha2_q3(origem, *raiz, &((*raiz)->info2), (*raiz)->direita, (*raiz)->centro, maior);
-            } else if (info1) {
+            }
+            else if (info1)
+            {
                 // Remoção de nó não-folha com 1 informação
                 removeu = arvore23_remover_nao_folha2_q3(origem, *raiz, &((*raiz)->info1), (*raiz)->centro, (*raiz)->esquerda, maior);
             }
-        } else {
+        }
+        else
+        {
             // Busca nas subárvores de acordo com a comparação de blocos
-            if (info->block_inicio < (*raiz)->info1.block_inicio)
+            if (*info < (*raiz)->info1.block_inicio)
                 removeu = _2_remover_2_3(&(*raiz)->esquerda, info, *raiz, origem, maior);
-            else if ((*raiz)->quant_infos == 1 || (info->block_inicio < (*raiz)->info2.block_inicio))
+            else if ((*raiz)->quant_infos == 1 || (*info < (*raiz)->info2.block_inicio))
                 removeu = _2_remover_2_3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
                 removeu = _2_remover_2_3(&(*raiz)->direita, info, *raiz, origem, maior);
@@ -1083,53 +1045,60 @@ int _2_remover_2_3(ARVORE2_3 **raiz, Informacao_memoria *info, ARVORE2_3 *pai, A
     return removeu;
 }
 
+ARVORE2_3 *buscar_pai(ARVORE2_3 *raiz, int block_inicio)
+{
+    ARVORE2_3 *pai = NULL; // Inicia o ponteiro pai como NULL
 
-ARVORE2_3 *buscar_pai(ARVORE2_3 *raiz, int block_inicio) {
-    ARVORE2_3 *pai = NULL;  // Inicia o ponteiro pai como NULL
-
-    if (raiz != NULL) {  // Verifica se o nó raiz é válido
+    if (raiz != NULL)
+    { // Verifica se o nó raiz é válido
         // Verifica se o bloco procurado não corresponde ao bloco_inicio nem ao bloco_fim das informações no nó
-        if (!(raiz->info1.block_inicio == block_inicio || raiz->info2.block_inicio == block_inicio)) {
+        if (!(raiz->info1.block_inicio == block_inicio || raiz->info2.block_inicio == block_inicio))
+        {
             // Se o bloco procurado for menor que o bloco_inicio do nó atual
-            if (block_inicio < raiz->info1.block_inicio) {
-                pai = buscar_pai(raiz->esquerda, block_inicio);  // Busca o pai no nó da esquerda
-
-            } else if (raiz->quant_infos == 1 || (block_inicio < raiz->info2.block_inicio)) {
+            if (block_inicio < raiz->info1.block_inicio)
+            {
+                pai = buscar_pai(raiz->esquerda, block_inicio); // Busca o pai no nó da esquerda
+            }
+            else if (raiz->quant_infos == 1 || (block_inicio < raiz->info2.block_inicio))
+            {
                 // Se o nó tiver apenas uma informação ou o bloco procurado for menor que o bloco_fim da info2
-                pai = buscar_pai(raiz->centro, block_inicio);  // Busca o pai no nó do centro
-            } else {
+                pai = buscar_pai(raiz->centro, block_inicio); // Busca o pai no nó do centro
+            }
+            else
+            {
                 // Caso contrário, busca o pai no nó da direita
                 pai = buscar_pai(raiz->direita, block_inicio);
             }
-            
+
             // Se o pai for NULL, significa que o bloco procurado não foi encontrado em nenhum dos filhos
             // Então, o nó raiz é considerado como o pai
-            if (pai == NULL) {
+            if (pai == NULL)
+            {
                 pai = raiz;
             }
         }
     }
 
-    return pai;  // Retorna o ponteiro para o pai
+    return pai; // Retorna o ponteiro para o pai
 }
 
-ARVORE2_3 *buscar_menor_pai_2_info(ARVORE2_3 *raiz, Informacao_memoria *info)
+ARVORE2_3 *buscar_menor_pai_2_info(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *pai;
     pai = NULL;
 
-    if(raiz != NULL)
+    if (raiz != NULL)
     {
-        if(!eh_info1(*raiz, info) && !eh_info2(*raiz, info))
+        if (!eh_info1(*raiz, &info) && !eh_info2(*raiz, &info))
         {
-            if(info->block_inicio < raiz->info1.block_inicio)
+            if (info < raiz->info1.block_inicio)
                 pai = buscar_menor_pai_2_info(raiz->esquerda, info);
-            else if(raiz->quant_infos == 1 || info->block_inicio < raiz->info2.block_inicio)
+            else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
                 pai = buscar_menor_pai_2_info(raiz->centro, info);
             else
                 pai = buscar_menor_pai_2_info(raiz->direita, info);
 
-            if(pai == NULL && info->block_inicio < raiz->info1.block_inicio)
+            if (pai == NULL && info < raiz->info1.block_inicio)
                 pai = raiz;
         }
     }
@@ -1137,17 +1106,191 @@ ARVORE2_3 *buscar_menor_pai_2_info(ARVORE2_3 *raiz, Informacao_memoria *info)
     return pai;
 }
 
-int eh_info1(ARVORE2_3 no, Informacao_memoria *info) {
-    return no.info1.block_inicio == info->block_inicio;
+int eh_info1(ARVORE2_3 no, int *info)
+{
+    return no.info1.block_inicio == *info;
 }
 
-int eh_info2(ARVORE2_3 no, Informacao_memoria *info) {
-    return no.quant_infos == 2 && no.info2.block_inicio == info->block_inicio;
+int eh_info2(ARVORE2_3 no, int *info)
+{
+    return no.quant_infos == 2 && no.info2.block_inicio == *info;
 }
 
-void no_2_3_desacolar(ARVORE2_3 **no){
-    if(*no != NULL){
+void no_2_3_desacolar(ARVORE2_3 **no)
+{
+    if (*no != NULL)
+    {
         free(*no);
         *no = NULL;
     }
+}
+
+ARVORE2_3 *buscar_menor_pai(ARVORE2_3 *raiz, int block_inicio)
+{
+    ARVORE2_3 *pai = NULL;
+
+    if (raiz != NULL)
+    {
+        if (raiz->info1.block_inicio == block_inicio || (raiz->quant_infos == 2 && raiz->info2.block_inicio == block_inicio))
+            pai = raiz;
+        else
+        {
+            if (block_inicio < raiz->info1.block_inicio)
+                pai = buscar_menor_pai(raiz->esquerda, block_inicio);
+            else if (raiz->quant_infos == 1 || block_inicio < raiz->info2.block_inicio)
+                pai = buscar_menor_pai(raiz->centro, block_inicio);
+            else
+                pai = buscar_menor_pai(raiz->direita, block_inicio);
+        }
+    }
+
+    return pai;
+}
+
+ARVORE2_3 *buscar_maior_pai(ARVORE2_3 *raiz, int block_inicio)
+{
+    ARVORE2_3 *pai = NULL;
+
+    if (raiz != NULL)
+    {
+        if (raiz->info1.block_inicio == block_inicio || (raiz->quant_infos == 2 && raiz->info2.block_inicio == block_inicio))
+            pai = raiz;
+        else
+        {
+            if (block_inicio < raiz->info1.block_inicio)
+                pai = buscar_maior_pai(raiz->esquerda, block_inicio);
+            else if (raiz->quant_infos == 1 || block_inicio < raiz->info2.block_inicio)
+                pai = buscar_maior_pai(raiz->centro, block_inicio);
+            else
+                pai = buscar_maior_pai(raiz->direita, block_inicio);
+        }
+    }
+
+    return pai;
+}
+
+int calcular_altura(ARVORE2_3 *raiz)
+{
+    if (raiz == NULL)
+        return 0;
+
+    int altura_esq = calcular_altura(raiz->esquerda);
+    int altura_centro = calcular_altura(raiz->centro);
+    int altura_dir = calcular_altura(raiz->direita);
+
+    int max_altura = altura_esq > altura_centro ? altura_esq : altura_centro;
+    max_altura = max_altura > altura_dir ? max_altura : altura_dir;
+
+    return max_altura + 1;
+}
+
+void remover(ARVORE2_3 **raiz, int *info)
+{
+    ARVORE2_3 *maior, *posicao_juncao;
+    int removeu = _1_remover_2_3(raiz, info, NULL, raiz, &posicao_juncao);
+
+    if (removeu == -1)
+    {
+        removeu = 1;
+        Informacao_memoria valor_juncao = maior_info(&posicao_juncao);
+        maior = NULL;
+        int removeu_aux = _2_remover_2_3(raiz, &valor_juncao.block_inicio, maior, raiz, &posicao_juncao);
+
+        if (removeu_aux == -1)
+        {
+            ARVORE2_3 *pai, *posicao_juncao2;
+            Informacao_memoria *entrada;
+            pai = buscar_pai(*raiz, valor_juncao.block_inicio);
+
+            if (eh_info1(*posicao_juncao, &valor_juncao.block_inicio))
+                entrada = &(posicao_juncao->centro->info1);
+            else
+                entrada = &(posicao_juncao->direita->info1);
+
+            removeu_aux = ondinha_1(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2, _2_remover_2_3);
+
+            if (removeu_aux == -1)
+            {
+                valor_juncao = posicao_juncao2->info1;
+                pai = buscar_pai(*raiz, valor_juncao.block_inicio);
+                removeu_aux = ondinha_1(valor_juncao, &(posicao_juncao2->esquerda->info1), pai, raiz, &posicao_juncao2, &posicao_juncao, _1_remover_2_3);
+
+                valor_juncao = maior_info(&posicao_juncao);
+                maior = NULL;
+                removeu_aux = _2_remover_2_3(raiz, &valor_juncao.block_inicio, maior, raiz, &posicao_juncao);
+            }
+        }
+
+        if (*raiz == NULL)
+            *raiz = maior;
+    }
+}
+
+void concatenar_no(ARVORE2_3 **raiz, int *endereco_final, int limite, int valor_remover)
+{
+    *endereco_final = limite;
+    remover(raiz, &valor_remover);
+}
+
+ARVORE2_3 *buscar_maior_bloco(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, Informacao_memoria **valor_maior)
+{
+    ARVORE2_3 *maior;
+    ARVORE2_3 *pai;
+    *valor_maior = NULL;
+
+    if (eh_folha_Q3(no))
+    {
+        if (no->quant_infos == 2 && no->info1.block_inicio == info->block_inicio)
+            maior = no;
+        else
+            maior = buscar_maior_pai(*raiz, info->block_inicio);
+
+        if (maior != NULL)
+        {
+            if (maior->info1.block_inicio > info->block_inicio)
+                *valor_maior = &(maior->info1);
+            else
+                *valor_maior = &(maior->info2);
+        }
+    }
+    else
+    {
+        if (no->info1.block_inicio == info->block_inicio)
+            maior = buscar_menor_filho(no->centro, &pai);
+        else
+            maior = buscar_menor_filho(no->direita, &pai);
+
+        if (maior != NULL)
+            *valor_maior = &(maior->info1);
+    }
+
+    return maior;
+}
+
+ARVORE2_3 *buscar_menor_bloco(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, Informacao_memoria **valor_menor)
+{
+    ARVORE2_3 *menor, *pai;
+    *valor_menor = NULL;
+
+    if (eh_folha_Q3(no))
+    {
+        if (no->info1.block_inicio != info->block_inicio)
+            menor = no;
+        else
+            menor = buscar_menor_pai(*raiz, info->block_inicio);
+
+        if (menor != NULL)
+        {
+            if (menor->quant_infos == 2 && menor->info2.block_inicio < info->block_inicio)
+                *valor_menor = &(menor->info2);
+            else
+                *valor_menor = &(menor->info1);
+        }
+    }
+    else if (no->info1.block_inicio == info->block_inicio)
+        menor = buscar_maior_filho(no->esquerda, &pai, *valor_menor);
+    else
+        menor = buscar_maior_filho(no->centro, &pai, *valor_menor);
+
+    return menor;
 }
