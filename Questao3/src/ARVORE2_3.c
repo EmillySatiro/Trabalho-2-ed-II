@@ -1294,3 +1294,56 @@ ARVORE2_3 *buscar_menor_bloco(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memori
 
     return menor;
 }
+
+void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int quant)
+{
+    ARVORE2_3 *menor;
+    Informacao_memoria *valor_menor;
+
+    menor = buscar_menor_bloco(raiz, no, info, &valor_menor);
+
+    if (quant < (info->block_fim - info->block_inicio + 1))
+    {
+        if (menor == NULL)
+        {
+            Informacao_memoria data;
+            data.block_inicio = info->block_inicio;
+            data.block_fim = info->block_inicio + quant - 1;
+            data.state = !(info->state);
+
+            info->block_inicio += quant;
+            insere_Q3(raiz, data);
+        }
+        else
+        {
+            valor_menor->block_fim += quant;
+            info->block_inicio += quant;
+        }
+    }
+    else
+    {
+        ARVORE2_3 *maior;
+        Informacao_memoria *valor_maior;
+
+        maior = buscar_maior_bloco(raiz, no, info, &valor_maior);
+
+        if (menor == NULL && maior == NULL)
+            info->state = !(info->state);
+        else
+        {
+            if (menor == NULL)
+            {
+                info->state = !(info->state);
+                concatenar_no(raiz, &(info->block_fim), valor_maior->block_fim, valor_maior->block_inicio);
+            }
+            else if (maior == NULL)
+                concatenar_no(raiz, &(valor_menor->block_fim), info->block_fim, info->block_inicio);
+            else
+            {
+                int numero = valor_maior->block_inicio;
+                concatenar_no(raiz, &(valor_menor->block_fim), valor_maior->block_fim, info->block_inicio);
+                remover(raiz, &numero);
+            }
+        }
+    }
+}
