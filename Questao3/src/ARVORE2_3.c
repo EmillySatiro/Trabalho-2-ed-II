@@ -745,12 +745,12 @@ Informacao_memoria *no_2_3_maior_info_Q3(ARVORE2_3 *raiz)
     return raiz->quant_infos == 2 ? &(raiz->info2) : &(raiz->info1);
 }
 
-ARVORE2_3 *arvore2_3_criar()
+ARVORE2_3 *criar_Q3()
 {
     return NULL;
 }
 
-ARVORE2_3 *arvore2_3_buscar_Q3(ARVORE2_3 *raiz, int info)
+ARVORE2_3 *buscar_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *no = NULL;
 
@@ -759,11 +759,11 @@ ARVORE2_3 *arvore2_3_buscar_Q3(ARVORE2_3 *raiz, int info)
         if (eh_info1_Q3(raiz, info) || eh_info2_Q3(raiz, info))
             no = raiz;
         else if (info < raiz->info1.block_inicio)
-            no = arvore2_3_buscar(raiz->esquerda, info);
+            no = buscar_Q3(raiz->esquerda, info);
         else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
-            no = arvore2_3_buscar(raiz->centro, info);
+            no = buscar_Q3(raiz->centro, info);
         else
-            no = arvore2_3_buscar(raiz->direita, info);
+            no = buscar_Q3(raiz->direita, info);
     }
 
     return no;
@@ -810,11 +810,11 @@ ARVORE2_3 *buscar_pai_Q3(ARVORE2_3 *raiz, int info)
         if (!eh_info1_Q3(raiz, info) && !eh_info2_Q3(raiz, info))
         {
             if (info < raiz->info1.block_inicio)
-                pai = arvore2_3_buscar_pai(raiz->esquerda, info);
+                pai = buscar_pai_Q3(raiz->esquerda, info);
             else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
-                pai = arvore2_3_buscar_pai(raiz->centro, info);
+                pai = buscar_pai_Q3(raiz->centro, info);
             else
-                pai = arvore2_3_buscar_pai(raiz->direita, info);
+                pai = buscar_pai_Q3(raiz->direita, info);
 
             if (pai == NULL)
                 pai = raiz;
@@ -833,11 +833,11 @@ ARVORE2_3 *buscar_maior_pai_Q3(ARVORE2_3 *raiz, int info)
         if (!eh_info1_Q3(raiz, info) && !eh_info2_Q3(raiz, info))
         {
             if (info < raiz->info1.block_inicio)
-                pai = arvore2_3_buscar_maior_pai(raiz->esquerda, info);
+                pai = buscar_maior_pai_Q3(raiz->esquerda, info);
             else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
-                pai = arvore2_3_buscar_maior_pai(raiz->centro, info);
+                pai = buscar_maior_pai_Q3(raiz->centro, info);
             else
-                pai = arvore2_3_buscar_maior_pai(raiz->direita, info);
+                pai = buscar_maior_pai_Q3(raiz->direita, info);
 
             if (pai == NULL && ((raiz->quant_infos == 1 && raiz->info1.block_inicio > info) || (raiz->quant_infos == 2 && raiz->info2.block_inicio > info)))
                 pai = raiz;
@@ -856,11 +856,11 @@ ARVORE2_3 *buscar_menor_pai_Q3(ARVORE2_3 *raiz, int info)
         if (!eh_info1_Q3(raiz, info) && !eh_info2_Q3(raiz, info))
         {
             if (info < raiz->info1.block_inicio)
-                pai = arvore2_3_buscar_menor_pai(raiz->esquerda, info);
+                pai = buscar_menor_pai_Q3(raiz->esquerda, info);
             else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
-                pai = arvore2_3_buscar_menor_pai(raiz->centro, info);
+                pai = buscar_menor_pai_Q3(raiz->centro, info);
             else
-                pai = arvore2_3_buscar_menor_pai(raiz->direita, info);
+                pai = buscar_menor_pai_Q3(raiz->direita, info);
 
             if (pai == NULL && raiz->info1.block_inicio < info)
                 pai = raiz;
@@ -949,7 +949,7 @@ static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     return removeu;
 }
 
-int arvore23_remover1(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
+int remover1_(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
 {
     int removeu = 0;
 
@@ -987,7 +987,7 @@ int arvore23_remover1(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **or
                             else
                                 info_pai = pai->info2;
 
-                            removeu = ondinha_Q3(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, arvore23_remover1);
+                            removeu = ondinha_Q3(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, remover1_);
                         }
                         else
                         {
@@ -1017,7 +1017,7 @@ int arvore23_remover1(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **or
                             {
                                 ARVORE2_3 *avo;
                                 avo = buscar_pai_Q3(*origem, info_pai.block_inicio);
-                                removeu = ondinha_Q3(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, arvore23_remover1);
+                                removeu = ondinha_Q3(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, remover1_);
                             }
                         }
                     }
@@ -1031,11 +1031,11 @@ int arvore23_remover1(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **or
         else
         {
             if (info < (*raiz)->info1.block_inicio)
-                removeu = arvore23_remover1(&(*raiz)->esquerda, info, *raiz, origem, maior);
+                removeu = remover1_(&(*raiz)->esquerda, info, *raiz, origem, maior);
             else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_inicio)
-                removeu = arvore23_remover1(&(*raiz)->centro, info, *raiz, origem, maior);
+                removeu = remover1_(&(*raiz)->centro, info, *raiz, origem, maior);
             else
-                removeu = arvore23_remover1(&(*raiz)->direita, info, *raiz, origem, maior);
+                removeu = remover1_(&(*raiz)->direita, info, *raiz, origem, maior);
         }
     }
     return removeu;
@@ -1116,11 +1116,11 @@ int remover2_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, 
         else
         {
             if (info < (*raiz)->info1.block_inicio)
-                removeu = arvore23_remover2(&(*raiz)->esquerda, info, *raiz, origem, maior);
+                removeu = remover2_Q3(&(*raiz)->esquerda, info, *raiz, origem, maior);
             else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_inicio)
-                removeu = arvore23_remover2(&(*raiz)->centro, info, *raiz, origem, maior);
+                removeu = remover2_Q3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
-                removeu = arvore23_remover2(&(*raiz)->direita, info, *raiz, origem, maior);
+                removeu = remover2_Q3(&(*raiz)->direita, info, *raiz, origem, maior);
         }
     }
     return removeu;
@@ -1159,7 +1159,7 @@ int remover_Q3(ARVORE2_3 **raiz, int info)
 
                 valor_juncao = *(no_2_3_maior_info_Q3(posicao_juncao));
                 maior = NULL;
-                removeu_aux = arvore23_rebalancear(raiz, valor_juncao.block_inicio, &maior);
+                removeu_aux = rebalancear_Q3(raiz, valor_juncao.block_inicio, &maior);
             }
         }
 
