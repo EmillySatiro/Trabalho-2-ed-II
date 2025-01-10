@@ -31,6 +31,17 @@ ARVORE2_3 *criar_no_Q3(Informacao_memoria info, ARVORE2_3 *esq, ARVORE2_3 *centr
     return novo;
 }
 
+
+/**
+ * @brief Insere uma nova informação na árvore 2-3.
+ *
+ * Esta função insere um novo elemento na árvore 2-3, ajustando a estrutura da árvore conforme necessário.
+ * Se a inserção resultar em um nó que precisa ser dividido, a função realiza a divisão e ajusta a raiz da árvore.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param info Informação a ser inserida na árvore.
+ */
+
 void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
 {
     Informacao_memoria sobe;
@@ -54,490 +65,16 @@ void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
     
 }
 
-Informacao_memoria criar_info(int state, int block_inicio, int block_fim)
-{
-    Informacao_memoria info;
-    info.state = state;
-    info.block_inicio = block_inicio;
-    info.block_fim = block_fim;
-
-    return info;
-}
-
 /**
- * @brief Cadastra nós em uma árvore 2-3.
+ * @brief Exibe os nós de uma árvore 2-3 em ordem.
  *
- * Esta função cadastra nós em uma árvore 2-3, alternando o estado dos nós entre 'L' (livre) e 'O' (ocupado).
- * O usuário é solicitado a informar o estado e o bloco final do primeiro nó, e então a função continua
- * solicitando o bloco final dos próximos nós até que o endereço final seja alcançado.
- *
- * @param raiz Ponteiro para a raiz da árvore 2-3.
- * @param ultimo_endereco Endereço do último bloco na memória.
- */
-void cadastrarNos(ARVORE2_3 **raiz, int ultimo_endereco)
-{
-    Informacao_memoria info;
-    char state;
-    int bloco_inicio = 0, bloco_fim;
-
-    // Entrada inicial com validação do estado
-    printf("Informe o estado do primeiro nó (L para livre, O para ocupado): ");
-    while (1)
-    {
-        scanf(" %c", &state);
-        if (state == 'L' || state == 'O')
-        {
-            break;
-        }
-        printf("Entrada inválida. Informe L ou O: ");
-    }
-
-    // Primeira entrada de bloco_fim
-    while (1)
-    {
-        printf("Informe o bloco final do primeiro nó (deve ser >= 0 e <= %d): ", ultimo_endereco);
-        scanf("%d", &bloco_fim);
-
-        // Validação do bloco_fim
-        if (bloco_fim >= 0 && bloco_fim <= ultimo_endereco)
-        {
-            break;
-        }
-    }
-
-    // Cria o primeiro nó
-    info = criar_info(state, bloco_inicio, bloco_fim);
-    insere_Q3(&(*raiz), info);
-
-    // Imprime os valores do nó criado
-    printf("====================================\n");
-    printf("Estado: %c\n", info.state);
-    printf("Bloco Inicial: %d\n", info.block_inicio);
-    printf("Bloco Final: %d\n", info.block_fim);
-    printf("====================================\n");
-
-    // Continuar cadastrando até o último endereço
-    while (info.block_fim < ultimo_endereco)
-    {
-        bloco_inicio = info.block_fim + 1;
-
-        // Entrada e validação do próximo bloco_fim
-        while (1)
-        {
-            printf("Informe o bloco final do próximo nó (máx: %d): ", ultimo_endereco);
-            scanf("%d", &bloco_fim);
-
-            // Validação do bloco_fim
-            if (bloco_fim > bloco_inicio && bloco_fim <= ultimo_endereco)
-            {
-                break;
-            }
-        }
-
-        // Atualização do estado alternado
-        state = (info.state == 'L') ? 'O' : 'L';
-
-        // Criação do novo nó
-        Informacao_memoria novaInfo = criar_info(state, bloco_inicio, bloco_fim);
-        insere_Q3(raiz, novaInfo);
-
-        // Imprime os valores do nó criado
-        printf("====================================\n");
-        printf("Estado: %c\n", novaInfo.state);
-        printf("Bloco Inicial: %d\n", novaInfo.block_inicio);
-        printf("Bloco Final: %d\n", novaInfo.block_fim);
-        printf("====================================\n");
-
-        // Atualizar info com o novo nó criado
-        info = novaInfo;
-    }
-}
-
-void atualizar_no_Q3(ARVORE2_3 *no, Informacao_memoria info)
-{
-    if (info.block_fim == no->info1.block_fim)
-    {
-        no->info1 = info;
-    }
-    else
-    {
-        no->info2 = info;
-    }
-}
-
-ARVORE2_3 *inserir_Elemento_Q3(ARVORE2_3 *pai, ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe)
-{
-    ARVORE2_3 *maior = NULL;
-
-    if (*no == NULL)
-    {
-        *no = criar_no_Q3(info, NULL, NULL, NULL);
-    }
-    else
-    {
-        // Verifica se o elemento já existe no nó
-        if (info.block_fim == (*no)->info1.block_fim)
-        {
-            atualizar_no_Q3(*no, info); // Atualiza a informação existente
-            maior = NULL;
-        }
-        else if ((*no)->quant_infos == 2 && info.block_fim == (*no)->info2.block_fim)
-        {
-            atualizar_no_Q3(*no, info); // Atualiza a segunda informação
-            maior = NULL;
-        }
-        else
-        {
-            // Verifica se é um nó folha
-            if (eh_folha_Q3(*no))
-            {
-                if ((*no)->quant_infos == 1)
-                {
-                    add_elementos_Q3(*no, info, maior); // Adiciona diretamente no nó
-                }
-                else
-                {
-                    // Divide o nó em dois
-                    ARVORE2_3 *novo = quebra_No_Q3(no, info, sobe, maior);
-                    if (pai == NULL)
-                    {
-                        // Cria uma nova raiz
-                        ARVORE2_3 *novo_no = criar_no_Q3(*sobe, *no, novo, NULL);
-                        *no = novo_no;
-                    }
-                    else
-                    {
-                        maior = novo;
-                    }
-                }
-            }
-            else
-            {
-                // Nó interno - desce até encontrar o local correto
-                if (info.block_fim < (*no)->info1.block_fim)
-                {
-                    maior = inserir_Elemento_Q3(*no, &((*no)->esquerda), info, sobe);
-                }
-                else if ((*no)->quant_infos == 1 || info.block_fim < (*no)->info2.block_fim)
-                {
-                    maior = inserir_Elemento_Q3(*no, &((*no)->centro), info, sobe);
-                }
-                else
-                {
-                    maior = inserir_Elemento_Q3(*no, &((*no)->direita), info, sobe);
-                }
-
-                // Gerencia divisão do nó após inserir no filho
-                if (maior != NULL)
-                {
-                    if ((*no)->quant_infos == 1)
-                    {
-                        add_elementos_Q3(*no, *sobe, maior); // Adiciona no nó pai
-                        maior = NULL;
-                    }
-                    else
-                    {
-                        Informacao_memoria sobe1;
-                        ARVORE2_3 *novo = quebra_No_Q3(no, *sobe, &sobe1, maior);
-                        if (pai == NULL)
-                        {
-                            ARVORE2_3 *novo_no = criar_no_Q3(sobe1, *no, novo, NULL);
-                            *no = novo_no;
-                            maior = NULL;
-                        }
-                        else
-                        {
-                            maior = novo;
-                            *sobe = sobe1;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return maior;
-}
-
-ARVORE2_3 *quebra_No_Q3(ARVORE2_3 **no, Informacao_memoria info, Informacao_memoria *sobe, ARVORE2_3 *filho)
-{
-    ARVORE2_3 *novo_no;
-
-    // Caso 1: Novo valor (info) é menor que info1
-    if (info.block_fim <= (*no)->info1.block_fim)
-    {
-        *sobe = (*no)->info1;
-        novo_no = criar_no_Q3((*no)->info2, (*no)->centro, (*no)->direita, NULL);
-
-        (*no)->info1 = info;
-        (*no)->centro = filho;
-    }
-    // Caso 2: Novo valor está entre info1 e info2
-    else if (info.block_fim <= (*no)->info2.block_fim)
-    {
-        *sobe = info;
-        novo_no = criar_no_Q3((*no)->info2, filho, (*no)->direita, NULL);
-    }
-    // Caso 3: Novo valor é maior que info2
-    else
-    {
-        *sobe = (*no)->info2;
-        novo_no = criar_no_Q3(info, (*no)->direita, filho, NULL);
-    }
-
-    // Atualiza informações no nó atual
-    (*no)->quant_infos = 1;
-    (*no)->direita = NULL;
-
-    // Depuração pós-quebra
-    printf("Estado após quebra:\n");
-    printf("Nó Atual: Info1 = [%d-%d]\n", (*no)->info1.block_inicio, (*no)->info1.block_fim);
-    printf("Novo Nó Maior: Info1 = [%d-%d]\n",
-           novo_no->info1.block_inicio, novo_no->info1.block_fim);
-    printf("Elemento que Subiu = [%d-%d]\n", sobe->block_inicio, sobe->block_fim);
-
-    return novo_no;
-}
-
-void add_elementos_Q3(ARVORE2_3 *no, Informacao_memoria Info, ARVORE2_3 *filho)
-{
-
-    if (Info.block_fim > no->info1.block_fim)
-    {
-        no->info2 = Info;
-        no->direita = filho;
-    }
-    else
-    {
-        no->info2 = no->info1;
-        no->direita = no->centro;
-        no->info1 = Info;
-        no->centro = filho;
-    }
-    no->quant_infos = 2;
-}
-
-/**
- * @brief Retorna a maior informação armazenada na árvore 2-3.
- *
- * Esta função verifica a quantidade de informações armazenadas na raiz da árvore 2-3.
- * Se a quantidade de informações for igual a 2, retorna a segunda informação (info2).
- * Caso contrário, retorna a primeira informação (info1).
- *
- * @param raiz Ponteiro para a raiz da árvore 2-3.
- * @return A maior informação armazenada na raiz da árvore 2-3.
- */
-int maior_info(ARVORE2_3 *raiz)
-{
-    return raiz->quant_infos == 2 ? raiz->info2.block_fim : raiz->info1.block_fim;
-}
-
-/**
- * @brief Aloca blocos livres na árvore 2-3.
- *
- * Esta função percorre a árvore 2-3 e tenta alocar a quantidade de blocos especificada
- * em nós que estão livres (com estado 'L'). Caso o nó tenha blocos livres suficientes,
- * o estado é alterado para 'O' (ocupado) e o intervalo de blocos é atualizado. Além disso,
- * a função tenta concatenar blocos livres de nós adjacentes à direita.
- *
- * @param raiz Ponteiro para a raiz da árvore 2-3.
- * @param quantidade_blocos Número de blocos a serem alocados.
- *
- * @note A função imprime informações sobre a alocação e a concatenação de blocos.
- *       Caso a árvore esteja vazia, uma mensagem de erro é exibida.
- *       Após a alocação, a função `intercalarNos` é chamada para ajustar a árvore,
- *       caso necessário.
- */
-void alocarBlocoRecursivo(ARVORE2_3 *atual, int *blocos_restantes)
-{
-    if (atual == NULL || *blocos_restantes == 0)
-    {
-        return; // Base da recursão: Nó vazio ou blocos alocados
-    }
-
-    // Tenta alocar em info1
-    if (atual->info1.state == 'L')
-    {
-        int tamanho_info1 = atual->info1.block_fim - atual->info1.block_inicio + 1;
-        if (tamanho_info1 >= *blocos_restantes)
-        {
-            if (tamanho_info1 > *blocos_restantes)
-            {
-                Informacao_memoria livre = {'L', atual->info1.block_inicio + *blocos_restantes, atual->info1.block_fim};
-                atual->info1.block_fim = atual->info1.block_inicio + *blocos_restantes - 1;
-                atual->info1.state = 'O';
-
-                // Cria nó central para o restante dos blocos livres
-                atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
-            }
-            else
-            {
-                atual->info1.state = 'O';
-            }
-
-            printf("Bloco alocado no nó atual (info1).\n");
-            *blocos_restantes = 0;
-            return;
-        }
-    }
-
-    // Tenta alocar em info2
-    if (atual->quant_infos == 2 && atual->info2.state == 'L')
-    {
-        int tamanho_info2 = atual->info2.block_fim - atual->info2.block_inicio + 1;
-        if (tamanho_info2 >= *blocos_restantes)
-        {
-            if (tamanho_info2 > *blocos_restantes)
-            {
-                Informacao_memoria livre = {'L', atual->info2.block_inicio + *blocos_restantes, atual->info2.block_fim};
-                atual->info2.block_fim = atual->info2.block_inicio + *blocos_restantes - 1;
-                atual->info2.state = 'O';
-
-                // Cria nó central para o restante dos blocos livres
-                atual->centro = criar_no_Q3(livre, NULL, NULL, NULL);
-            }
-            else
-            {
-                atual->info2.state = 'O';
-            }
-
-            printf("Bloco alocado no nó atual (info2).\n");
-            *blocos_restantes = 0;
-            return;
-        }
-    }
-
-    // Recursão para os nós filhos (esquerda, centro e direita)
-    alocarBlocoRecursivo(atual->esquerda, blocos_restantes);
-    alocarBlocoRecursivo(atual->centro, blocos_restantes);
-    alocarBlocoRecursivo(atual->direita, blocos_restantes);
-}
-
-void alocarBloco(ARVORE2_3 **raiz, int quantidade_blocos)
-{
-    if (*raiz == NULL)
-    {
-        printf("Árvore vazia.\n");
-        return;
-    }
-
-    int blocos_restantes = quantidade_blocos;
-
-    // Chamada inicial para o algoritmo recursivo
-    alocarBlocoRecursivo(*raiz, &blocos_restantes);
-
-    if (blocos_restantes > 0)
-    {
-        printf("Não foi possível alocar todos os blocos. Restantes: %d\n", blocos_restantes);
-    }
-    else
-    {
-        printf("Alocação de blocos concluída com sucesso.\n");
-    }
-
-    // Ajusta a estrutura da árvore após a alocação
-    intercalarNos(raiz);
-}
-
-/**
- * @brief Intercala nós em uma árvore 2-3.
- *
- * Esta função ajusta os nós de uma árvore 2-3 de acordo com o estado das informações
- * contidas nos nós. Se dois nós consecutivos tiverem o mesmo estado, eles são ajustados
- * para manter a propriedade da árvore 2-3.
- *
- * @param raiz Ponteiro para a raiz da árvore 2-3.
- *
- * A função percorre a árvore a partir da raiz e realiza os seguintes ajustes:
- * - Se um nó tiver duas informações com o mesmo estado, a segunda informação é movida
- *   para um novo nó à direita.
- * - Se o estado da primeira informação de um nó for o mesmo do nó à direita, a informação
- *   do nó à direita é movida para o nó atual, ou o estado do nó à direita é ajustado.
- *
- * Se a árvore estiver vazia, uma mensagem é exibida.
- */
-void intercalarNos(ARVORE2_3 **raiz)
-{
-    if (*raiz)
-    {
-        ARVORE2_3 *atual = *raiz;
-        while (atual && atual->direita)
-        {
-            // Se info1 e info2 do nó atual tiverem o mesmo estado, ajusta
-            if (atual->quant_infos == 2 && atual->info1.state == atual->info2.state)
-            {
-                // Move info2 para a direita
-                ARVORE2_3 *novoNo = criar_no_Q3(atual->info2, NULL, NULL, NULL);
-                novoNo->direita = atual->direita;
-                atual->direita = novoNo;
-                atual->quant_infos = 1;
-            }
-
-            // Se o estado do nó atual for o mesmo do nó à direita, ajusta
-            if (atual->info1.state == atual->direita->info1.state)
-            {
-                if (atual->direita->quant_infos == 1)
-                {
-                    // Move info1 do nó à direita para a info2 do nó atual
-                    atual->info2 = atual->direita->info1;
-                    atual->quant_infos = 2;
-                    ARVORE2_3 *temp = atual->direita;
-                    atual->direita = atual->direita->direita;
-                    free(temp);
-                }
-                else
-                {
-                    atual->direita->info1.state = (atual->info1.state == 'L') ? 'O' : 'L';
-                }
-            }
-
-            atual = atual->direita;
-        }
-    }
-    else
-    {
-        printf("Árvore vazia.\n");
-    }
-}
-
-
-ARVORE2_3 *encontrarProximo(ARVORE2_3 *atual)
-{
-    if (atual == NULL)
-    {
-        return NULL;
-    }
-
-    ARVORE2_3 *proximo = atual->direita;
-    while (proximo && proximo->esquerda)
-    {
-        proximo = proximo->esquerda;
-    }
-
-    return proximo;
-}
-
-
-/**
- * @brief Libera blocos de memória em uma árvore 2-3.
- *
- * Esta função percorre a árvore 2-3 e libera os blocos de memória que estão ocupados ('O') e que têm tamanho
- * maior ou igual à quantidade de blocos especificada. Após liberar os blocos, a função tenta concatenar nós
- * adjacentes que estão livres ('L') para otimizar o uso da memória.
- *
- * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
- * @param quantidade_blocos Quantidade de blocos a serem liberados.
- *
- * A função imprime informações detalhadas sobre os blocos liberados e os estados dos nós após a liberação e
- * possível concatenação. No final, chama a função `intercalarNos` para realizar operações adicionais na árvore.
- */
-
-
-/**
- * @brief Exibe os nós de uma árvore 2-3.
- *
- * Esta função percorre recursivamente a árvore 2-3 e exibe as informações
- * armazenadas em cada nó. Para cada nó, são exibidos o estado e os blocos
- * inicial e final das informações contidas nele.
+ * Esta função percorre a árvore 2-3 em ordem e exibe as informações armazenadas
+ * em cada nó. A árvore é percorrida da seguinte maneira:
+ * 1. Visita a subárvore esquerda.
+ * 2. Exibe a primeira informação (info1) do nó atual, se existir.
+ * 3. Visita a subárvore central (entre info1 e info2).
+ * 4. Exibe a segunda informação (info2) do nó atual, se existir.
+ * 5. Visita a subárvore direita.
  *
  * @param raiz Ponteiro para o nó raiz da árvore 2-3.
  */
@@ -576,6 +113,17 @@ void exibirNos(ARVORE2_3 *raiz)
     }
 }
 
+/**
+ * @brief Adiciona uma nova informação a um nó 2-3.
+ *
+ * Esta função adiciona uma nova informação (info) a um nó 2-3 (no). Dependendo do valor de 
+ * info.block_inicio, a nova informação será adicionada como info1 ou info2 do nó. Além disso, 
+ * ajusta os ponteiros para os filhos do nó de acordo com a nova informação.
+ *
+ * @param no Ponteiro para o nó 2-3 onde a informação será adicionada.
+ * @param info Estrutura do tipo Informacao_memoria contendo a nova informação a ser adicionada.
+ * @param filho_maior Ponteiro para o filho maior que será ajustado no nó.
+ */
 void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 *filho_maior)
 {
     if (info.block_inicio != no->info1.block_inicio)
@@ -593,12 +141,30 @@ void no_2_3_adicionar_info_Q3(ARVORE2_3 *no, Informacao_memoria info, ARVORE2_3 
     no->quant_infos = 2;
 }
 
+/**
+ * @brief Libera a memória alocada para um nó da árvore 2-3 e define o ponteiro como NULL.
+ *
+ * Esta função recebe um ponteiro para um ponteiro de nó da árvore 2-3, libera a memória
+ * alocada para o nó e define o ponteiro para NULL, evitando assim acessos futuros a uma
+ * área de memória já liberada.
+ *
+ * @param no Ponteiro para um ponteiro de nó da árvore 2-3 que será desalocado.
+ */
 void no_2_3_desacolar_Q3(ARVORE2_3 **no)
 {
     free(*no);
     *no = NULL;
 }
 
+/**
+ * @brief Verifica se um nó é uma folha na árvore 2-3.
+ *
+ * Esta função verifica se o nó fornecido é uma folha, ou seja,
+ * se ele não possui filhos à esquerda.
+ *
+ * @param no Ponteiro para o nó da árvore 2-3 a ser verificado.
+ * @return Retorna 1 se o nó for uma folha, caso contrário, retorna 0.
+ */
 int eh_folha_Q3(ARVORE2_3 *no)
 {
     return no->esquerda == NULL;
@@ -625,6 +191,16 @@ void liberarNos(ARVORE2_3 *raiz)
     }
 }
 
+/**
+ * @brief Libera a informação de um nó da árvore 2-3.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz e marca a informação
+ * correspondente como liberada ('L') se o bloco de início da informação
+ * coincidir com o bloco de início fornecido.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param info Estrutura contendo a informação de memória a ser liberada.
+ */
 void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info)
 {
     if (raiz)
@@ -649,16 +225,42 @@ void liberarInfo(ARVORE2_3 *raiz, Informacao_memoria info)
 
 //a partir daquiiiiiiiiii ==============================================================================================================================================================
 
+/**
+ * @brief Verifica se o valor fornecido é igual ao valor de info1 do nó.
+ *
+ * Esta função compara o valor fornecido (info) com o valor de info1.block_inicio
+ * do nó (no) e retorna 1 (verdadeiro) se forem iguais, ou 0 (falso) caso contrário.
+ *
+ * @param no Ponteiro para o nó da árvore 2-3.
+ * @param info Valor a ser comparado com info1.block_inicio do nó.
+ * @return int Retorna 1 se info for igual a no->info1.block_inicio, caso contrário retorna 0.
+ */
 static int eh_info1_Q3(ARVORE2_3 *no, int info)
 {
     return info == no->info1.block_inicio;
 }
 
+/**
+ * @brief Verifica se o nó possui duas informações e se a segunda informação é igual ao valor fornecido.
+ *
+ * @param no Ponteiro para o nó da árvore 2-3.
+ * @param info Valor a ser comparado com a segunda informação do nó.
+ * @return Retorna 1 se o nó possui duas informações e a segunda informação é igual ao valor fornecido, caso contrário, retorna 0.
+ */
 static int eh_info2_Q3(ARVORE2_3 *no, int info)
 {
     return no->quant_infos == 2 && info == no->info2.block_inicio;
 }
 
+/**
+ * @brief Calcula a altura de uma árvore 2-3 a partir de um nó dado.
+ *
+ * Esta função calcula a altura de uma árvore 2-3 recursivamente, 
+ * considerando apenas a subárvore esquerda do nó fornecido.
+ *
+ * @param no Ponteiro para o nó da árvore 2-3 a partir do qual a altura será calculada.
+ * @return A altura da árvore 2-3 a partir do nó fornecido. Retorna -1 se o nó for NULL.
+ */
 static int calcular_altura_Q3(ARVORE2_3 *no)
 {
     int altura = -1;
@@ -669,6 +271,16 @@ static int calcular_altura_Q3(ARVORE2_3 *no)
     return altura;
 }
 
+/**
+ * @brief Verifica se é possível remover um nó da árvore 2-3.
+ *
+ * Esta função verifica se é possível remover um nó da árvore 2-3 a partir da raiz fornecida.
+ * A remoção é possível se o nó raiz contiver exatamente 2 informações ou se for possível
+ * remover um nó dos subárvores centro ou esquerda.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @return Retorna 1 se for possível remover um nó, caso contrário, retorna 0.
+ */
 static int possivel_remover_Q3(ARVORE2_3 *raiz)
 {
     int possivel = 0;
@@ -690,6 +302,20 @@ static int possivel_remover_Q3(ARVORE2_3 *raiz)
 }
 
 
+/**
+ * @brief Quebra um nó 2-3 em dois nós e promove uma informação para o nó pai.
+ *
+ * Esta função é utilizada para dividir um nó 2-3 que está cheio (contém duas informações)
+ * em dois nós e promover uma das informações para o nó pai. A função recebe um nó, uma
+ * informação a ser inserida, um ponteiro para armazenar a informação promovida e um
+ * ponteiro para o filho maior.
+ *
+ * @param no Ponteiro para o nó 2-3 que será quebrado.
+ * @param info Informação a ser inserida no nó.
+ * @param promove Ponteiro para armazenar a informação que será promovida para o nó pai.
+ * @param filho_maior Ponteiro para o filho maior que será associado ao novo nó criado.
+ * @return ARVORE2_3* Ponteiro para o novo nó criado após a quebra.
+ */
 static ARVORE2_3 *quebrar_no_q3(ARVORE2_3 *no, Informacao_memoria info, Informacao_memoria *promove, ARVORE2_3 *filho_maior)
 {
     ARVORE2_3 *maior;
@@ -716,6 +342,18 @@ static ARVORE2_3 *quebrar_no_q3(ARVORE2_3 *no, Informacao_memoria info, Informac
     return maior;
 }
 
+/**
+ * @brief Junta um nó 2-3 com uma nova informação e um nó maior, ajustando a raiz se necessário.
+ *
+ * Esta função adiciona uma nova informação e um nó maior a um nó 2-3 existente. 
+ * Se a raiz tiver zero informações após a adição, a função desacola a raiz.
+ *
+ * @param filho1 Ponteiro para o nó 2-3 que receberá a nova informação e o nó maior.
+ * @param info Informação a ser adicionada ao nó 2-3.
+ * @param maior Ponteiro para o nó maior a ser adicionado ao nó 2-3.
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @return Retorna o ponteiro para o nó 2-3 atualizado.
+ */
 ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_3 *maior, ARVORE2_3 **raiz)
 {
     no_2_3_adicionar_info_Q3(filho1, info, maior);
@@ -730,16 +368,34 @@ ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_
 
 
 
+/**
+ * @brief Retorna a maior informação armazenada em um nó 2-3.
+ *
+ * Esta função verifica a quantidade de informações armazenadas no nó 2-3
+ * e retorna um ponteiro para a maior informação.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @return Ponteiro para a maior informação armazenada no nó.
+ */
 Informacao_memoria *no_2_3_maior_info_Q3(ARVORE2_3 *raiz)
 {
     return raiz->quant_infos == 2 ? &(raiz->info2) : &(raiz->info1);
 }
 
-ARVORE2_3 *criar_Q3()
-{
-    return NULL;
-}
 
+/**
+ * @brief Busca um nó na árvore 2-3 que contém a informação especificada.
+ *
+ * Esta função realiza uma busca em uma árvore 2-3 para encontrar um nó que contém
+ * a informação especificada. A busca é feita de forma recursiva, navegando pelos
+ * filhos esquerdo, central ou direito, dependendo do valor da informação comparado
+ * com os valores armazenados nos nós.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info Informação a ser buscada na árvore.
+ * @return Retorna um ponteiro para o nó que contém a informação especificada,
+ *         ou NULL se a informação não for encontrada.
+ */
 ARVORE2_3 *buscar_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *no = NULL;
@@ -1244,6 +900,7 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
                 valor_menor->block_fim += quant; 
                 info->inicio += quant; 
                 concatenar_no_Q3(raiz, &(valor_menor->fim), info->block_fim, info->inicio);
+                
                 
             }
         }
