@@ -419,10 +419,6 @@ void inserir_lista_unidade(lista_unidade **lista, int unidade)
                 temp->proximo = NULL;
             }
         }
-        else
-        {
-            printf("Unidade já existente na lista.\n");
-        }
     }
 }
 
@@ -462,7 +458,7 @@ void remover_lista_unidade(lista_unidade **lista, int unidade)
 
             if (temp == NULL)
             {
-                printf("Unidade %d não encontrada na lista.\n", unidade);
+                printf("Unidade %d não encontrada na lista , verifique se vc digitou uma unidade valida!!.\n", unidade);
             }
             else{
                 anterior->proximo = temp->proximo;

@@ -58,7 +58,7 @@ int main() {
                 break;
             case 3:
                 printf("Você escolheu a Opção 3!\n");
-                printf("Digite a palavra: ");
+                printf("Digite a palavra(Caso Você digitie incorretamente não recebera nada como retorno): ");
                 fgets(palavra, sizeof(palavra), stdin); 
                 palavra[strcspn(palavra, "\n")] = '\0'; 
                 imprimir_palavras_ingles(arvore2_3, palavra);
@@ -69,7 +69,7 @@ int main() {
                 printf("Infome a unidade: \n");
                 scanf("%d", &unidade);
                 limparBuffer();
-                printf("Digite a palavra em ingles: ");
+                printf("Digite a palavra em ingles(Caso Você digitie incorretamente não recebera nada como retorno): ");
                 fgets(palavra_removida, sizeof(palavra_removida), stdin); 
                 palavra_removida[strcspn(palavra_removida, "\n")] = '\0'; 
                 remover_palavra_ingles_e_unidade_2_3(&arvore2_3, palavra_removida, unidade) ;

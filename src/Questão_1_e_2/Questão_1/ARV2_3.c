@@ -290,7 +290,6 @@ void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
             printf("Tradução para o Inglês:\n");
             mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
             printf("=====================================\n");
-           
 
         }
     }
@@ -308,23 +307,22 @@ void imprimir_palavras_unidade(ARV2_3 *raiz, int unidade) {
  * A função também utiliza a função `mostrar_arvore_binaria_completa` para exibir a tradução.
  */
 void imprimir_palavras_ingles(ARV2_3 *raiz, char *palavra_portugues) {
-    if (raiz == NULL) {
-        return;
-    }
+    if (raiz !=NULL) {
+        imprimir_palavras_ingles(raiz->esquerda, palavra_portugues);
 
-    imprimir_palavras_ingles(raiz->esquerda, palavra_portugues);
+        if (strcmp(raiz->info1.palavra_portugues, palavra_portugues) == 0) {
+            printf("Inglês: ");
+            mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
+        }
+        if (raiz->quant_infos == 2 && strcmp(raiz->info2.palavra_portugues, palavra_portugues) == 0) {
+            printf("Inglês: ");
+            mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
+        }
 
-    if (strcmp(raiz->info1.palavra_portugues, palavra_portugues) == 0) {
-        printf("Inglês: ");
-        mostrar_arvore_binaria_completa(raiz->info1.palavra_ingles);
+        imprimir_palavras_ingles(raiz->centro, palavra_portugues);
+        imprimir_palavras_ingles(raiz->direita, palavra_portugues);
     }
-    if (raiz->quant_infos == 2 && strcmp(raiz->info2.palavra_portugues, palavra_portugues) == 0) {
-        printf("Inglês: ");
-        mostrar_arvore_binaria_completa(raiz->info2.palavra_ingles);
-    }
-
-    imprimir_palavras_ingles(raiz->centro, palavra_portugues);
-    imprimir_palavras_ingles(raiz->direita, palavra_portugues);
+    
 }
 
 /**

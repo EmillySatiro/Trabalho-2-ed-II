@@ -8,7 +8,6 @@
     Memory: memória, lembrança;
     Computer: computador, calculador;
     Node: nó, ponto;
-    pepe: ponto;
     Device: dispositivo, aparelho;
 
 % Unidade 2
