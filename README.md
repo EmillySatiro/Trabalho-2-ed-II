@@ -37,13 +37,10 @@ chmod +x script.sh
 
 Caminho Base: O script utiliza um caminho relativo para determinar o diretório base do projeto, tornando-o portátil e adequado para diferentes ambientes.
 
-Substitua onde tem :
-
-BASE_DIR="/root/Trabalho-2-ed-II"
-
-Para achar o seu , basta usar o comando : 
+Substitua '/root/Trabalho-2-ed-II ' no seu script pelo seu usando o comando a baixo :
 
 pwd
+
 **4. Compilando o Projeto (se necessário)**
 Cada questão tem seus script , e basta inicializar ele ou pelo icone de execulção normal do VS.code como pelos comandos:
 
