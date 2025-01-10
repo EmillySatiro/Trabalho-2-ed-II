@@ -761,12 +761,15 @@ Rubronegra *arvorevp_buscar_caminho(Rubronegra *raiz, char *palavra)
 
         if(resultado == 0){
             printf("%s -> ", raiz->info->palavra_portugues);
+            printf("Cor do nó: %s", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
             retorno = raiz;
         }else if(resultado < 0){
-            //printf("Esquerda->   ");
+            printf("Cor do nó: %s", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+            printf("Esquerda->   ");
             retorno = arvorevp_buscar_caminho(raiz->esquerda, palavra);
         }else if(resultado > 0){
-              //printf("direita->   ");
+            printf("Cor do nó: %s", raiz->cor == PRETO ? "PRETO" : "VERMELHO");
+           printf("direita->   ");
             retorno = arvorevp_buscar_caminho(raiz->direita, palavra);
         }
     }   
