@@ -1226,61 +1226,67 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
     menor = buscar_menor_bloco_Q3(raiz, no, info, &valor_menor);
     if(info->state == 'O'){
 
-
-    if (quant <= (info->block_fim - info->block_inicio + 1))
-    {
-        if (menor == NULL)
+        if (quant <= (info->block_fim - info->block_inicio + 1))
         {
-            Informacao_memoria data;
-            data.block_inicio = info->block_inicio;
-            data.block_fim = info->block_fim;
-            data.state = 'L';
-            insere_Q3(raiz, data);
+            if (menor == NULL)
+            {
+                Informacao_memoria data;
+                data.block_inicio = info->block_inicio;
+                data.block_fim = info->block_fim;
+                data.state = 'L';
+                insere_Q3(raiz, data);
+            }
+            else
+            {
+                valor_menor->block_fim += quant;
+                if (menor->quant_infos == 2)
+                {
+                    if (menor->info2.block_fim == valor_menor->block_fim + 1)
+                    {
+                        valor_menor->block_fim = menor->info2.block_fim;
+                       
+                        remover_Q3(raiz, menor->info2.block_inicio); 
+                    }
+                }
+            }
         }
         else
         {
-            valor_menor->block_fim += quant;
-            if (menor->quant_infos == 2)
+            ARVORE2_3 *maior;
+            Informacao_memoria *valor_maior;
+
+            maior = buscar_primeiro_no_maior_que_a_info(*raiz, *info);
+
+            if (menor == NULL && maior == NULL)
+                info->state = 'L';
+            else
             {
-                if (menor->info2.block_fim == valor_menor->block_fim + 1)
+                if (menor == NULL)
                 {
-                    valor_menor->block_fim = menor->info2.block_fim;
-                    remover_Q3(raiz, menor->info2.block_inicio);
+                    info->state = 'L';
+                    concatenar_no_Q3(raiz, &(info->block_fim), valor_maior->block_fim, valor_maior->block_inicio);
+                }
+                else if (maior == NULL)
+                    concatenar_no_Q3(raiz, &(valor_menor->block_fim), info->block_fim, info->block_inicio);
+                else
+                {
+                    int numero = valor_maior->block_inicio;
+                    concatenar_no_Q3(raiz, &(valor_menor->block_fim), valor_maior->block_fim, info->block_inicio);
+                   
+                    remover_Q3(raiz, numero); 
                 }
             }
         }
     }
-    else
-    {
-        ARVORE2_3 *maior;
-        Informacao_memoria *valor_maior;
 
-        maior = buscar_primeiro_no_maior_que_a_info(*raiz, *info);
-
-        if (menor == NULL && maior == NULL)
-            info->state = 'L';
-        else
-        {
-            if (menor == NULL)
-            {
-                info->state = 'L';
-                concatenar_no_Q3(raiz, &(info->block_fim), valor_maior->block_fim, valor_maior->block_inicio);
-            }
-            else if (maior == NULL)
-                concatenar_no_Q3(raiz, &(valor_menor->block_fim), info->block_fim, info->block_inicio);
-            else
-            {
-                int numero = valor_maior->block_inicio;
-                concatenar_no_Q3(raiz, &(valor_menor->block_fim), valor_maior->block_fim, info->block_inicio);
-                remover_Q3(raiz, numero);
-            }
-        }
-    }
-}
+   
     if (no->quant_infos == 0) {
-        remover_Q3(raiz, no);  
+       
+        remover_Q3(raiz, no->info1.block_inicio);  
+        remover_Q3(raiz, no->info2.block_inicio);  
     }
 }
+
 
 ARVORE2_3 *buscar_primeiro_no_maior_que_a_info(ARVORE2_3 *raiz, Informacao_memoria info)
 {
