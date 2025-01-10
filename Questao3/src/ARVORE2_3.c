@@ -882,9 +882,9 @@ ARVORE2_3 *buscar_menor_pai_2_infos_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
-static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, Informacao_memoria, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
+static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, int, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
 {
-    int removeu = funcao_remover(raiz, saindo, pai, origem, maior);
+    int removeu = funcao_remover(raiz, saindo.block_inicio, pai, origem, maior);
     *entrada = saindo;
     return removeu;
 }
@@ -907,7 +907,7 @@ static int remover_no_interno1_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     else
     {
         filho = buscar_menor_filho_Q3(filho2, &pai);
-        removeu = ondinha_Q3(filho->info1, info, pai, origem, &filho, maior, remover_no_interno1_Q3);
+        removeu = ondinha_Q3(filho->info1, info, pai, origem, &filho, maior, remover1_Q3);
     }
 
     return removeu;
@@ -932,7 +932,7 @@ static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     else
     {
         filho = buscar_maior_filho_Q3(filho2, &pai, &info_filho);
-        removeu = ondinha_Q3(*info_filho, info, pai, origem, &filho, maior, remover_no_interno2_Q3);
+        removeu = ondinha_Q3(*info_filho, info, pai, origem, &filho, maior, remover2_Q3);
     }
 
     return removeu;
