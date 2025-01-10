@@ -32,6 +32,8 @@ ARVORE2_3 *criar_no_Q3(Informacao_memoria info, ARVORE2_3 *esq, ARVORE2_3 *centr
 }
 
 
+
+
 /**
  * @brief Insere uma nova informação na árvore 2-3.
  *
@@ -415,7 +417,17 @@ ARVORE2_3 *buscar_Q3(ARVORE2_3 *raiz, int info)
     return no;
 }
 
-ARVORE2_3 *buscar_menor_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai)
+/**
+ * @brief Encontra o menor filho de uma árvore 2-3.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz fornecida e encontra o menor filho,
+ * que é o nó mais à esquerda da árvore. Além disso, atualiza o ponteiro do pai do menor filho.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param pai Ponteiro para o ponteiro do pai do menor filho encontrado.
+ * @return Ponteiro para o menor filho encontrado.
+ */
+ARVORE2_3 *menor_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai)
 {
     ARVORE2_3 *filho = raiz;
 
@@ -428,7 +440,18 @@ ARVORE2_3 *buscar_menor_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai)
     return filho;
 }
 
-ARVORE2_3 *buscar_maior_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_memoria **maior_valor)
+/**
+ * @brief Encontra o maior filho de uma árvore 2-3 e retorna o nó folha correspondente.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz até encontrar o maior filho folha.
+ * Durante a travessia, ela atualiza o ponteiro do pai e o maior valor encontrado.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param pai Ponteiro para armazenar o pai do maior filho encontrado.
+ * @param maior_valor Ponteiro para armazenar a maior informação encontrada no nó folha.
+ * @return ARVORE2_3* Ponteiro para o maior filho folha encontrado.
+ */
+ARVORE2_3 *maior_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_memoria **maior_valor)
 {
     ARVORE2_3 *filho = raiz;
 
@@ -447,6 +470,18 @@ ARVORE2_3 *buscar_maior_filho_Q3(ARVORE2_3 *raiz, ARVORE2_3 **pai, Informacao_me
     return filho;
 }
 
+/**
+ * @brief Busca o nó pai de um nó que contém a informação especificada em uma árvore 2-3.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz, procurando o nó pai do nó que contém
+ * a informação especificada. Se a informação não estiver presente na árvore, a função retorna
+ * NULL. Caso contrário, retorna o nó pai.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info Informação a ser buscada na árvore.
+ * @return Ponteiro para o nó pai do nó que contém a informação especificada, ou NULL se a
+ *         informação não estiver presente na árvore.
+ */
 ARVORE2_3 *buscar_pai_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *pai = NULL;
@@ -470,6 +505,16 @@ ARVORE2_3 *buscar_pai_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
+/**
+ * @brief Busca o maior pai de um nó em uma árvore 2-3 que possui um valor menor que o valor fornecido.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz e busca o maior pai de um nó que possui um valor menor que o valor fornecido (info).
+ * A função retorna o ponteiro para o nó pai encontrado ou NULL se nenhum pai for encontrado.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info Valor inteiro a ser buscado na árvore.
+ * @return ARVORE2_3* Ponteiro para o nó pai encontrado ou NULL se nenhum pai for encontrado.
+ */
 ARVORE2_3 *buscar_maior_pai_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *pai = NULL;
@@ -493,6 +538,18 @@ ARVORE2_3 *buscar_maior_pai_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
+/**
+ * @brief Busca o nó pai que possui a menor chave maior que a chave fornecida.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz e busca o nó pai que possui a menor chave
+ * maior que a chave fornecida (info). Se a chave fornecida já estiver presente na árvore, a função
+ * retorna NULL.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info Chave a ser buscada na árvore.
+ * @return Ponteiro para o nó pai que possui a menor chave maior que a chave fornecida, ou NULL se
+ *         a chave fornecida já estiver presente na árvore ou se a árvore estiver vazia.
+ */
 ARVORE2_3 *buscar_menor_pai_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *pai = NULL;
@@ -516,6 +573,18 @@ ARVORE2_3 *buscar_menor_pai_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
+/**
+ * @brief Busca o nó pai que possui duas informações e cujo valor da segunda informação é menor que o valor fornecido.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz em busca do nó pai que possui duas informações (quant_infos == 2)
+ * e cuja segunda informação (info2.block_inicio) é menor que o valor fornecido (info). A busca é realizada de forma
+ * recursiva, navegando pelos filhos esquerdo, centro e direito da árvore conforme o valor da informação fornecida.
+ *
+ * @param raiz Ponteiro para o nó raiz da árvore 2-3.
+ * @param info Valor da informação a ser buscada.
+ * @return Retorna um ponteiro para o nó pai que possui duas informações e cuja segunda informação é menor que o valor fornecido.
+ *         Retorna NULL se não encontrar tal nó.
+ */
 ARVORE2_3 *buscar_menor_pai_2_infos_Q3(ARVORE2_3 *raiz, int info)
 {
     ARVORE2_3 *pai = NULL;
@@ -539,6 +608,23 @@ ARVORE2_3 *buscar_menor_pai_2_infos_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
+/**
+ * @brief Função auxiliar para remoção e substituição de um nó em uma árvore 2-3.
+ *
+ * Esta função realiza a remoção de um nó especificado pela estrutura `saindo` e 
+ * substitui o conteúdo de `entrada` com os dados removidos. A função de remoção 
+ * é fornecida como um parâmetro.
+ *
+ * @param saindo Estrutura `Informacao_memoria` que contém os dados do nó a ser removido.
+ * @param entrada Ponteiro para a estrutura `Informacao_memoria` onde os dados removidos serão armazenados.
+ * @param pai Ponteiro para o nó pai na árvore 2-3.
+ * @param origem Ponteiro duplo para o nó de origem na árvore 2-3.
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param maior Ponteiro duplo para o maior nó na árvore 2-3.
+ * @param funcao_remover Função que realiza a remoção de um nó na árvore 2-3.
+ *
+ * @return Retorna um inteiro indicando se a remoção foi bem-sucedida.
+ */
 static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, int, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
 {
     int removeu = funcao_remover(raiz, saindo.block_inicio, pai, origem, maior);
@@ -546,6 +632,19 @@ static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, AR
     return removeu;
 }
 
+/**
+ * @brief Remove um nó interno de uma árvore 2-3.
+ *
+ * Esta função remove um nó interno de uma árvore 2-3, ajustando a estrutura da árvore conforme necessário.
+ *
+ * @param origem Ponteiro duplo para a árvore de origem.
+ * @param raiz Ponteiro para a raiz da árvore.
+ * @param info Ponteiro para a informação de memória a ser removida.
+ * @param filho1 Ponteiro para o primeiro filho da raiz.
+ * @param filho2 Ponteiro para o segundo filho da raiz.
+ * @param maior Ponteiro duplo para armazenar o maior nó.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, caso contrário, retorna 0.
+ */
 static int remover_no_interno1_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info, ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior)
 {
     int removeu;
@@ -554,7 +653,7 @@ static int remover_no_interno1_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
 
     pai = raiz;
 
-    filho = buscar_maior_filho_Q3(filho1, &pai, &info_filho);
+    filho = maior_filho_Q3(filho1, &pai, &info_filho);
 
     if (filho->quant_infos == 2)
     {
@@ -563,13 +662,27 @@ static int remover_no_interno1_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     }
     else
     {
-        filho = buscar_menor_filho_Q3(filho2, &pai);
+        filho = menor_filho_Q3(filho2, &pai);
         removeu = ondinha_Q3(filho->info1, info, pai, origem, &filho, maior, remover1_Q3);
     }
 
     return removeu;
 }
 
+
+/**
+ * @brief Remove um nó interno de uma árvore 2-3.
+ *
+ * Esta função remove um nó interno de uma árvore 2-3, ajustando os ponteiros e informações conforme necessário.
+ *
+ * @param origem Ponteiro duplo para a árvore de origem.
+ * @param raiz Ponteiro para a raiz da árvore.
+ * @param info Ponteiro para a informação de memória a ser removida.
+ * @param filho1 Ponteiro para o primeiro filho.
+ * @param filho2 Ponteiro para o segundo filho.
+ * @param maior Ponteiro duplo para o maior nó.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, caso contrário, retorna 0.
+ */
 static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informacao_memoria *info, ARVORE2_3 *filho1, ARVORE2_3 *filho2, ARVORE2_3 **maior)
 {
     int removeu;
@@ -578,7 +691,7 @@ static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
 
     pai = raiz;
 
-    filho = buscar_menor_filho_Q3(filho1, &pai);
+    filho = menor_filho_Q3(filho1, &pai);
 
     if (filho->quant_infos == 2)
     {
@@ -588,13 +701,27 @@ static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     }
     else
     {
-        filho = buscar_maior_filho_Q3(filho2, &pai, &info_filho);
+        filho = maior_filho_Q3(filho2, &pai, &info_filho);
         removeu = ondinha_Q3(*info_filho, info, pai, origem, &filho, maior, remover2_Q3);
     }
 
     return removeu;
 }
 
+/**
+ * @brief Remove um nó de uma árvore 2-3.
+ *
+ * Esta função remove um nó contendo a informação especificada de uma árvore 2-3.
+ * A função lida com diferentes casos, incluindo a remoção de folhas e nós internos,
+ * e ajusta a árvore conforme necessário para manter suas propriedades.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param info Informação a ser removida da árvore.
+ * @param pai Ponteiro para o nó pai do nó atual.
+ * @param origem Ponteiro duplo para a raiz original da árvore.
+ * @param maior Ponteiro duplo para armazenar o maior nó durante a remoção.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, -1 se houve um caso especial de remoção, ou 0 se a informação não foi encontrada.
+ */
 int remover1_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
 {
     int removeu = 0;
@@ -687,6 +814,20 @@ int remover1_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, 
     return removeu;
 }
 
+/**
+ * @brief Remove um nó de uma árvore 2-3.
+ *
+ * Esta função remove um nó contendo a informação especificada de uma árvore 2-3.
+ * A função lida com diferentes casos, incluindo a remoção de folhas e nós internos,
+ * e ajusta a árvore conforme necessário para manter suas propriedades.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param info Informação a ser removida da árvore.
+ * @param pai Ponteiro para o nó pai do nó atual.
+ * @param origem Ponteiro duplo para a raiz original da árvore.
+ * @param maior Ponteiro duplo para armazenar o maior nó durante a remoção.
+ * @return int Retorna 1 se a remoção foi bem-sucedida, -1 se houve um caso especial de remoção, ou 0 se a informação não foi encontrada.
+ */
 int remover2_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
 {
     int removeu = 0;
@@ -772,6 +913,17 @@ int remover2_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, 
     return removeu;
 }
 
+/**
+ * @brief Remove um nó com a informação especificada de uma árvore 2-3.
+ *
+ * Esta função remove um nó contendo a informação especificada da árvore 2-3.
+ * Se a remoção causar um desequilíbrio na árvore, a função tenta rebalancear
+ * a árvore para manter suas propriedades.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param info Informação a ser removida da árvore.
+ * @return Retorna 1 se a remoção foi bem-sucedida, -1 caso contrário.
+ */
 int remover_Q3(ARVORE2_3 **raiz, int info)
 {
     ARVORE2_3 *maior, *posicao_juncao;
@@ -817,6 +969,20 @@ int remover_Q3(ARVORE2_3 **raiz, int info)
     return removeu;
 }
 
+/**
+ * @brief Realiza o balanceamento de uma árvore 2-3.
+ *
+ * Esta função verifica se o segundo filho é nulo ou se não possui informações.
+ * Se for o caso, ele desacopla o nó e junta os nós filhos com a raiz, 
+ * ajustando a árvore para manter suas propriedades de balanceamento.
+ *
+ * @param raiz Ponteiro para a raiz da árvore.
+ * @param filho1 Ponteiro para o primeiro filho.
+ * @param filho2 Ponteiro para o segundo filho.
+ * @param info Informação de memória a ser utilizada no balanceamento.
+ * @param maior Ponteiro para o maior nó após o balanceamento.
+ * @return Retorna 1 se o balanceamento foi realizado, caso contrário, retorna 0.
+ */
 static int balanceamento_Q3(ARVORE2_3 **raiz, ARVORE2_3 *filho1, ARVORE2_3 **filho2, Informacao_memoria info, ARVORE2_3 **maior)
 {
     int balanceou = 0;
@@ -831,6 +997,19 @@ static int balanceamento_Q3(ARVORE2_3 **raiz, ARVORE2_3 *filho1, ARVORE2_3 **fil
     return balanceou;
 }
 
+/**
+ * @brief Rebalanceia uma árvore 2-3 após a remoção de um nó.
+ *
+ * Esta função percorre a árvore 2-3 a partir da raiz, procurando o nó que contém a informação
+ * especificada por 'info'. Se necessário, realiza operações de balanceamento para manter as
+ * propriedades da árvore 2-3.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param info Informação a ser utilizada para encontrar o nó a ser rebalançado.
+ * @param maior Ponteiro duplo para armazenar o maior nó durante o processo de rebalanceamento.
+ * @return Retorna 1 se o rebalanceamento foi realizado com sucesso, -1 se não foi possível
+ *         realizar o rebalanceamento, ou 0 se não houve necessidade de rebalanceamento.
+ */
 int rebalancear_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 **maior)
 {
     int balanceou = 0;
@@ -868,12 +1047,36 @@ int rebalancear_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 **maior)
     return balanceou;
 }
 
+/**
+ * @brief Concatena um valor no endereço final e remove um valor da árvore 2-3.
+ *
+ * Esta função define o valor do endereço final como o limite fornecido e, em seguida,
+ * remove um valor específico da árvore 2-3.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param endereco_final Ponteiro para o endereço final que será atualizado com o limite.
+ * @param limite Valor que será atribuído ao endereço final.
+ * @param valor_remover Valor que será removido da árvore 2-3.
+ */
 void concatenar_no_Q3(ARVORE2_3 **raiz, int *endereco_final, int limite, int valor_remover)
 {
     *endereco_final = limite;
     remover_Q3(raiz, valor_remover);
 }
 
+/**
+ * @brief Modifica um nó na árvore 2-3 com base nas informações de memória fornecidas.
+ *
+ * Esta função modifica um nó na árvore 2-3, ajustando os blocos de memória conforme necessário.
+ * Se o estado da informação de memória for 'O' (ocupado), a função verifica se a quantidade
+ * fornecida é menor ou igual ao tamanho do bloco de memória. Dependendo do resultado, a função
+ * pode inserir novos dados na árvore, concatenar blocos de memória ou alterar o estado do bloco.
+ *
+ * @param raiz Ponteiro duplo para a raiz da árvore 2-3.
+ * @param no Ponteiro para o nó atual na árvore 2-3.
+ * @param info Ponteiro para a estrutura de informação de memória que contém os dados a serem modificados.
+ * @param quant Quantidade de memória a ser modificada.
+ */
 void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int quant)
 {
     ARVORE2_3 *menor;
@@ -937,30 +1140,20 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
 }
 
 
-ARVORE2_3 *buscar_primeiro_no_maior_que_a_info(ARVORE2_3 *raiz, Informacao_memoria info)
-{
-    ARVORE2_3 *no = NULL;
-
-    if (raiz != NULL)
-    {
-        if (raiz->info1.block_inicio > info.block_inicio)
-            no = raiz;
-        else if (raiz->quant_infos == 2 && raiz->info2.block_inicio > info.block_inicio)
-            no = raiz;
-        else
-        {
-            if (raiz->info1.block_inicio > info.block_inicio)
-                no = buscar_primeiro_no_maior_que_a_info(raiz->esquerda, info);
-            else if (raiz->quant_infos == 1 || raiz->info2.block_inicio > info.block_inicio)
-                no = buscar_primeiro_no_maior_que_a_info(raiz->centro, info);
-            else
-                no = buscar_primeiro_no_maior_que_a_info(raiz->direita, info);
-        }
-    }
-
-    return no;
-}
-
+/**
+ * @brief Busca o menor bloco em uma árvore 2-3.
+ *
+ * Esta função busca o menor bloco de memória em uma árvore 2-3 a partir de um nó específico.
+ * Se o nó fornecido for uma folha, a função verifica se o bloco de memória do nó é diferente
+ * do bloco de memória fornecido. Se for diferente, o nó é considerado o menor. Caso contrário,
+ * a função busca o menor bloco no pai do nó.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param no Ponteiro para o nó a partir do qual a busca será realizada.
+ * @param info Ponteiro para a informação de memória que está sendo buscada.
+ * @param valor_menor Ponteiro para armazenar a informação de memória do menor bloco encontrado.
+ * @return Ponteiro para o nó que contém o menor bloco de memória encontrado.
+ */
 ARVORE2_3 *buscar_menor_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, Informacao_memoria **valor_menor)
 {
     ARVORE2_3 *menor, *pai;
@@ -982,13 +1175,28 @@ ARVORE2_3 *buscar_menor_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_mem
         }
     }
     else if (no->info1.block_inicio == info->block_inicio)
-        menor = buscar_maior_filho_Q3(no->esquerda, &pai, valor_menor);
+        menor = maior_filho_Q3(no->esquerda, &pai, valor_menor);
     else
-        menor = buscar_maior_filho_Q3(no->centro, &pai, valor_menor);
+        menor = maior_filho_Q3(no->centro, &pai, valor_menor);
 
     return menor;
 }
 
+/**
+ * @brief Busca o maior bloco de memória a partir de um nó específico em uma árvore 2-3.
+ *
+ * Esta função busca o maior bloco de memória a partir de um nó específico em uma árvore 2-3.
+ * Se o nó fornecido for uma folha, a função verifica se o nó contém duas informações e se a
+ * primeira informação corresponde ao bloco de início fornecido. Caso contrário, a função busca
+ * o maior pai a partir da raiz. Se o nó não for uma folha, a função busca o menor filho a partir
+ * do nó central ou direito, dependendo da correspondência do bloco de início.
+ *
+ * @param raiz Ponteiro para a raiz da árvore 2-3.
+ * @param no Ponteiro para o nó a partir do qual a busca será realizada.
+ * @param info Ponteiro para a estrutura de informação de memória que contém o bloco de início a ser buscado.
+ * @param valor_maior Ponteiro para um ponteiro que será atualizado para apontar para a maior informação de memória encontrada.
+ * @return Ponteiro para o nó que contém o maior bloco de memória encontrado, ou NULL se nenhum bloco for encontrado.
+ */
 ARVORE2_3 *buscar_maior_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, Informacao_memoria **valor_maior)
 {
     ARVORE2_3 *maior, *pai;
@@ -1012,9 +1220,9 @@ ARVORE2_3 *buscar_maior_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_mem
     else
     {
         if (no->info1.block_inicio == info->block_inicio)
-            maior = buscar_menor_filho_Q3(no->centro, &pai);
+            maior = menor_filho_Q3(no->centro, &pai);
         else
-            maior = buscar_menor_filho_Q3(no->direita, &pai);
+            maior = menor_filho_Q3(no->direita, &pai);
 
         if (maior != NULL)
             *valor_maior = &(maior->info1);
@@ -1023,6 +1231,17 @@ ARVORE2_3 *buscar_maior_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_mem
     return maior;
 }
 
+/**
+ * @brief Desaloca um nó em uma árvore 2-3.
+ *
+ * Esta função busca um nó na memória com base no status fornecido e, se encontrado,
+ * modifica o nó de acordo com as informações de memória associadas.
+ *
+ * @param arvore Ponteiro duplo para a árvore 2-3.
+ * @param quant_nos Quantidade de nós na árvore.
+ * @param status Status do nó a ser buscado na memória.
+ * @return Retorna 1 se um nó foi encontrado e modificado, caso contrário, retorna 0.
+ */
 int desalocar_no_Q3(ARVORE2_3 **arvore, int quant_nos, char status)
 {
     Informacao_memoria *info_escolhido = NULL;
@@ -1044,6 +1263,19 @@ int desalocar_no_Q3(ARVORE2_3 **arvore, int quant_nos, char status)
     return info_escolhido != NULL;
 }
 
+/**
+ * @brief Busca um nó na árvore 2-3 que atenda aos critérios especificados.
+ *
+ * Esta função percorre a árvore 2-3 em busca de um nó que contenha uma informação
+ * com estado 'O' e que tenha um bloco de memória disponível com tamanho suficiente
+ * para a quantidade especificada. A busca é realizada em pré-ordem (esquerda, centro, direita).
+ *
+ * @param arvore Ponteiro duplo para a raiz da árvore 2-3.
+ * @param quant Quantidade de blocos de memória necessários.
+ * @param status Estado desejado da informação ('O' para ocupado).
+ * @param info_escolhido Ponteiro duplo para armazenar a informação escolhida, se encontrada.
+ * @return Ponteiro para o nó da árvore que contém a informação escolhida, ou NULL se não encontrado.
+ */
 ARVORE2_3 *buscar_no_memoria_Q3(ARVORE2_3 **arvore, int quant, char status, Informacao_memoria **info_escolhido)
 {
     ARVORE2_3 *no = NULL;
