@@ -1,4 +1,14 @@
-Claro! Para facilitar a execução dos scripts presentes no repositório [Trabalho-2-ed-II](https://github.com/EmillySatiro/Trabalho-2-ed-II.git), siga as instruções abaixo:
+# Trabalho 2 - Estruturas de Dados II
+
+Este repositório contém os scripts e arquivos necessários para a execução do Trabalho 2 da disciplina de Estruturas de Dados II.
+
+## Pré-requisitos
+
+Antes de executar os scripts, verifique se o seu sistema possui os seguintes pré-requisitos:
+
+- **Compilador GCC**: O compilador GCC deve estar instalado no seu sistema. Você pode verificar se o GCC está instalado executando o comando `gcc --version` no terminal. Se não estiver instalado, você pode instalá-lo através do Homebrew com o comando `brew install gcc`.
+
+Para facilitar a execução dos scripts presentes no repositório [Trabalho-2-ed-II](https://github.com/EmillySatiro/Trabalho-2-ed-II.git), siga as instruções abaixo:
 
 **1. Clonando o Repositório**
 
@@ -18,97 +28,29 @@ Após o clone, acesse o diretório do projeto:
 cd Trabalho-2-ed-II
 ```
 
-**3. Identificando a Linguagem dos Scripts**
+**3. Instalando Dependências (se necessário)**
+Conceder Permissões de Execução ao Script:
 
-Verifique a extensão dos arquivos para identificar a linguagem de programação utilizada. Por exemplo, arquivos com extensão `.py` indicam scripts Python, `.java` para Java, `.c` para C, entre outros.
+Antes de executar o script, é necessário conceder permissões de execução:
+Copiar código
+chmod +x script.sh
 
-**4. Instalando Dependências (se necessário)**
+Caminho Base: O script utiliza um caminho relativo para determinar o diretório base do projeto, tornando-o portátil e adequado para diferentes ambientes.
+Substitua onde tem :
+# Diretório base do projeto
+BASE_DIR="/root/Trabalho-2-ed-II"
 
-Alguns projetos podem requerer a instalação de dependências ou bibliotecas específicas. Verifique se há arquivos como `requirements.txt` (para Python) ou `pom.xml` (para Java) no diretório do projeto.
+Para achar o seu , basta usar o comando : 
 
-- **Para Python**:
+pwd
+**4. Compilando o Projeto (se necessário)**
+Cada questão tem seus script , e basta inicializar ele ou pelo icone de execulção normal do VS.code como pelos comandos:
 
-  Se houver um arquivo `requirements.txt`, instale as dependências com:
+chmod +x /caminho/para/o/script/
 
-  ```bash
-  pip install -r requirements.txt
-  ```
-
-- **Para Java**:
-
-  Se o projeto utiliza Maven, você pode compilar e instalar as dependências com:
-
-  ```bash
-  mvn install
-  ```
-
-**5. Compilando o Projeto (se necessário)**
-
-Algumas linguagens requerem compilação antes da execução.
-
-- **Para C**:
-
-  Compile o código-fonte com o GCC:
-
-  ```bash
-  gcc nome_do_arquivo.c -o nome_do_programa
-  ```
-
-  Substitua `nome_do_arquivo.c` pelo nome do seu arquivo C e `nome_do_programa` pelo nome desejado para o executável.
-
-**6. Executando os Scripts**
-
-- **Para Python**:
-
-  Execute o script com:
-
-  ```bash
-  python nome_do_script.py
-  ```
-
-- **Para Java**:
-
-  Compile o código-fonte com o comando:
-
-  ```bash
-  javac NomeDoArquivo.java
-  ```
-
-  E execute com:
-
-  ```bash
-  java NomeDoArquivo
-  ```
-
-- **Para C**:
-
-  Após a compilação, execute o programa com:
-
-  ```bash
-  ./nome_do_programa
-  ```
+/caminho/para/o/script/
 
 **Observações Finais**
 
-- **Permissões de Execução**:
+Certifique-se de substituir `nome_do_script`, `nome_do_arquivo`, `nome_do_programa` , `nome_do_ambiente` `camimho/para/o/scrip` pelos nomes correspondentes aos arquivos e diretórios do seu projeto.
 
-  Se você encontrar problemas relacionados a permissões ao tentar executar um script, conceda permissões de execução com:
-
-  ```bash
-  chmod +x nome_do_script
-  ```
-
-- **Ambiente Virtual (para Python)**:
-
-  É recomendável utilizar um ambiente virtual para gerenciar dependências. Crie e ative um ambiente virtual com:
-
-  ```bash
-  python -m venv nome_do_ambiente
-  source nome_do_ambiente/bin/activate  # No Windows: nome_do_ambiente\Scripts\activate
-  ```
-
-Certifique-se de substituir `nome_do_script`, `nome_do_arquivo`, `nome_do_programa` e `nome_do_ambiente` pelos nomes correspondentes aos arquivos e diretórios do seu projeto.
-
-Para uma demonstração visual de como executar um script Python, você pode assistir ao seguinte vídeo:
-
- 
