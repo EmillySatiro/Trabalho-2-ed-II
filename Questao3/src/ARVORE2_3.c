@@ -51,6 +51,7 @@ void insere_Q3(ARVORE2_3 **raiz, Informacao_memoria info)
     {
         *raiz = criar_no_Q3(sobe, *raiz, novo_no, NULL);
     }
+    
 }
 
 Informacao_memoria criar_info(int state, int block_inicio, int block_fim)
@@ -747,9 +748,9 @@ ARVORE2_3 *buscar_Q3(ARVORE2_3 *raiz, int info)
     {
         if (eh_info1_Q3(raiz, info) || eh_info2_Q3(raiz, info))
             no = raiz;
-        else if (info < raiz->info1.block_inicio)
+        else if (info < raiz->info1.block_fim)
             no = buscar_Q3(raiz->esquerda, info);
-        else if (raiz->quant_infos == 1 || info < raiz->info2.block_inicio)
+        else if (raiz->quant_infos == 1 || info < raiz->info2.block_fim)
             no = buscar_Q3(raiz->centro, info);
         else
             no = buscar_Q3(raiz->direita, info);
@@ -1120,35 +1121,38 @@ int remover_Q3(ARVORE2_3 **raiz, int info)
     ARVORE2_3 *maior, *posicao_juncao;
     int removeu = remover1_Q3(raiz, info, NULL, raiz, &posicao_juncao);
 
+    
+
     if (removeu == -1)
     {
         removeu = 1;
         Informacao_memoria valor_juncao = *(no_2_3_maior_info_Q3(posicao_juncao));
         maior = NULL;
-        int removeu_aux = rebalancear_Q3(raiz, valor_juncao.block_inicio, &maior);
+        int removeu_aux = rebalancear_Q3(raiz, valor_juncao.block_fim, &maior);
 
         if (removeu_aux == -1)
         {
             ARVORE2_3 *pai, *posicao_juncao2;
             Informacao_memoria *entrada;
-            pai = buscar_pai_Q3(*raiz, valor_juncao.block_inicio);
+            pai = buscar_pai_Q3(*raiz, valor_juncao.block_fim);
 
-            if (eh_info1_Q3(posicao_juncao, valor_juncao.block_inicio))
+            if (eh_info1_Q3(posicao_juncao, valor_juncao.block_fim))
                 entrada = &(posicao_juncao->centro->info1);
             else
                 entrada = &(posicao_juncao->direita->info1);
+
 
             removeu_aux = ondinha_Q3(valor_juncao, entrada, pai, raiz, &posicao_juncao, &posicao_juncao2, remover2_Q3);
 
             if (removeu_aux == -1)
             {
                 valor_juncao = posicao_juncao2->info1;
-                pai = buscar_pai_Q3(*raiz, valor_juncao.block_inicio);
+                pai = buscar_pai_Q3(*raiz, valor_juncao.block_fim);
                 removeu_aux = ondinha_Q3(valor_juncao, &(posicao_juncao2->esquerda->info1), pai, raiz, &posicao_juncao2, &posicao_juncao, remover1_Q3);
 
                 valor_juncao = *(no_2_3_maior_info_Q3(posicao_juncao));
                 maior = NULL;
-                removeu_aux = rebalancear_Q3(raiz, valor_juncao.block_inicio, &maior);
+                removeu_aux = rebalancear_Q3(raiz, valor_juncao.block_fim, &maior);
             }
         }
 
@@ -1180,9 +1184,9 @@ int rebalancear_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 **maior)
     {
         if (!eh_folha_Q3(*raiz))
         {
-            if (info < (*raiz)->info1.block_inicio)
+            if (info < (*raiz)->info1.block_fim)
                 balanceou = rebalancear_Q3(&((*raiz)->esquerda), info, maior);
-            else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_inicio)
+            else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_fim)
             {
                 if ((*raiz)->esquerda->quant_infos == 2 && !possivel_remover_Q3((*raiz)->centro))
                     balanceou = -1;
@@ -1222,6 +1226,8 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
     Informacao_memoria *valor_menor;
 
     menor = buscar_menor_bloco_Q3(raiz, no, info, &valor_menor);
+    if(info->state == 'O'){
+
 
     if (quant <= (info->block_fim - info->block_inicio + 1))
     {
@@ -1236,7 +1242,14 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
         else
         {
             valor_menor->block_fim += quant;
-            info->block_inicio += quant;
+            if (menor->quant_infos == 2)
+            {
+                if (menor->info2.block_fim == valor_menor->block_fim + 1)
+                {
+                    valor_menor->block_fim = menor->info2.block_fim;
+                    remover_Q3(raiz, menor->info2.block_inicio);
+                }
+            }
         }
     }
     else
@@ -1244,7 +1257,7 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
         ARVORE2_3 *maior;
         Informacao_memoria *valor_maior;
 
-        maior = buscar_maior_bloco_Q3(raiz, no, info, &valor_maior);
+        maior = buscar_primeiro_no_maior_que_a_info(*raiz, *info);
 
         if (menor == NULL && maior == NULL)
             info->state = 'L';
@@ -1265,6 +1278,31 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
             }
         }
     }
+     }
+}
+
+ARVORE2_3 *buscar_primeiro_no_maior_que_a_info(ARVORE2_3 *raiz, Informacao_memoria info)
+{
+    ARVORE2_3 *no = NULL;
+
+    if (raiz != NULL)
+    {
+        if (raiz->info1.block_inicio > info.block_inicio)
+            no = raiz;
+        else if (raiz->quant_infos == 2 && raiz->info2.block_inicio > info.block_inicio)
+            no = raiz;
+        else
+        {
+            if (raiz->info1.block_inicio > info.block_inicio)
+                no = buscar_primeiro_no_maior_que_a_info(raiz->esquerda, info);
+            else if (raiz->quant_infos == 1 || raiz->info2.block_inicio > info.block_inicio)
+                no = buscar_primeiro_no_maior_que_a_info(raiz->centro, info);
+            else
+                no = buscar_primeiro_no_maior_que_a_info(raiz->direita, info);
+        }
+    }
+
+    return no;
 }
 
 ARVORE2_3 *buscar_menor_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, Informacao_memoria **valor_menor)
