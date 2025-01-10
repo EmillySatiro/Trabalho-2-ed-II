@@ -1397,7 +1397,7 @@ ARVORE2_3 *buscar_no_memoria_Q3(ARVORE2_3 **arvore, int quant, char status, Info
 
         if (*info_escolhido == NULL)
         {
-            if ((*arvore)->info1.state == status && ((*arvore)->info1.block_fim - (*arvore)->info1.block_inicio + 1) >= quant)
+            if ((*arvore)->info1.state == 'O' && ((*arvore)->info1.block_fim - (*arvore)->info1.block_inicio + 1) >= quant)
             {
                 *info_escolhido = &((*arvore)->info1);
                 no = *arvore;
@@ -1407,7 +1407,7 @@ ARVORE2_3 *buscar_no_memoria_Q3(ARVORE2_3 **arvore, int quant, char status, Info
                 no = buscar_no_memoria_Q3(&((*arvore)->centro), quant, status, info_escolhido);
                 if ((*arvore)->quant_infos == 2)
                 {
-                    if ((*arvore)->info2.state == status && ((*arvore)->info2.block_fim - (*arvore)->info2.block_inicio + 1) >= quant)
+                    if ((*arvore)->info2.state == '0' && ((*arvore)->info2.block_fim - (*arvore)->info2.block_inicio + 1) >= quant)
                     {
                         *info_escolhido = &((*arvore)->info2);
                         no = *arvore;
