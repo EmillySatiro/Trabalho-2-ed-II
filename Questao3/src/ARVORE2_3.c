@@ -1121,8 +1121,6 @@ int remover_Q3(ARVORE2_3 **raiz, int info)
     ARVORE2_3 *maior, *posicao_juncao;
     int removeu = remover1_Q3(raiz, info, NULL, raiz, &posicao_juncao);
 
-    
-
     if (removeu == -1)
     {
         removeu = 1;
@@ -1278,7 +1276,10 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
             }
         }
     }
-     }
+}
+    if (no->quant_infos == 0) {
+        remover_Q3(raiz, no);  
+    }
 }
 
 ARVORE2_3 *buscar_primeiro_no_maior_que_a_info(ARVORE2_3 *raiz, Informacao_memoria info)
