@@ -36,8 +36,9 @@ Copiar código
 chmod +x script.sh
 
 Caminho Base: O script utiliza um caminho relativo para determinar o diretório base do projeto, tornando-o portátil e adequado para diferentes ambientes.
+
 Substitua onde tem :
-# Diretório base do projeto
+
 BASE_DIR="/root/Trabalho-2-ed-II"
 
 Para achar o seu , basta usar o comando : 
