@@ -34,8 +34,13 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
+<<<<<<< HEAD
+      "cwd": "/home/walison/Trabalho-2-ed-II/Questao3/src",
+      "program": "/home/walison/Trabalho-2-ed-II/Questao3/src/build/Debug/outDebug",
+=======
       "cwd": "/home/walison/Trabalho-2-ed-II",
       "program": "/home/walison/Trabalho-2-ed-II/build/Debug/outDebug",
+>>>>>>> origin/main
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

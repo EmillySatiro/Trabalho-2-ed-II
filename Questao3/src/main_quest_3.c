@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../../Questao3/src/ARVORE2_3.h"
-
+//oi
 int main() {
     ARVORE2_3 *raiz = NULL;
     int opcao;
@@ -41,7 +41,7 @@ int main() {
                     printf("Quantidade inválida.\n");
                     break;
                 }
-                alocarNos(&raiz, quantidade_blocos);
+                alocarBloco(&raiz, quantidade_blocos);
                 printf("\n=============== Nós após a alocação ==================\n");
                 exibirNos(raiz);
                 break;
@@ -51,7 +51,8 @@ int main() {
                     printf("Quantidade inválida.\n");
                     break;
                 }
-                liberarBlocos(&raiz, quantidade_blocos);
+                desalocar_no_Q3(&raiz, quantidade_blocos,'O');
+
                 printf("\n=============== Nós após a liberação ==================\n");
                 exibirNos(raiz);
                 break;
