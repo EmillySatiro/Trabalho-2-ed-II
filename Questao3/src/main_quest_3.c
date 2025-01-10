@@ -51,7 +51,7 @@ int main() {
                     printf("Quantidade inválida.\n");
                     break;
                 }
-                liberarBlocos(&raiz, quantidade_blocos, ultimo_endereco);
+                desalocar_no_Q3(&raiz, quantidade_blocos,'O');
 
                 printf("\n=============== Nós após a liberação ==================\n");
                 exibirNos(raiz);

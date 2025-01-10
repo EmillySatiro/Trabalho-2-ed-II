@@ -603,20 +603,7 @@ int eh_folha_Q3(ARVORE2_3 *no)
     return no->esquerda == NULL;
 }
 
-ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_3 *maior, ARVORE2_3 **raiz)
-{
-    if (filho1->quant_infos == 2)
-        filho1->quant_infos = 1;
 
-    no_2_3_adicionar_info_Q3(filho1, info, maior);
-
-    (*raiz)->quant_infos--;
-
-    if ((*raiz)->quant_infos == 0)
-        no_2_3_desacolar_Q3(raiz);
-
-    return filho1;
-}
 
 /**
  * @brief Libera todos os nós de uma árvore 2-3.
@@ -739,6 +726,8 @@ ARVORE2_3 *no_2_3_juntar_Q3(ARVORE2_3 *filho1, Informacao_memoria info, ARVORE2_
 
     return filho1;
 }
+
+
 
 Informacao_memoria *no_2_3_maior_info_Q3(ARVORE2_3 *raiz)
 {
@@ -893,9 +882,9 @@ ARVORE2_3 *buscar_menor_pai_2_infos_Q3(ARVORE2_3 *raiz, int info)
     return pai;
 }
 
-static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, int, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
+static int ondinha_Q3(Informacao_memoria saindo, Informacao_memoria *entrada, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **raiz, ARVORE2_3 **maior, int (*funcao_remover)(ARVORE2_3 **, Informacao_memoria, ARVORE2_3 *, ARVORE2_3 **, ARVORE2_3 **))
 {
-    int removeu = funcao_remover(raiz, saindo.block_inicio, pai, origem, maior);
+    int removeu = funcao_remover(raiz, saindo, pai, origem, maior);
     *entrada = saindo;
     return removeu;
 }
@@ -912,7 +901,7 @@ static int remover_no_interno1_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
 
     if (filho->quant_infos == 2)
     {
-        *info = *info_filho;
+        *info_filho = *info;
         filho->quant_infos = 1;
     }
     else
@@ -949,7 +938,7 @@ static int remover_no_interno2_Q3(ARVORE2_3 **origem, ARVORE2_3 *raiz, Informaca
     return removeu;
 }
 
-int remover1_(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
+int remover1_Q3(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, ARVORE2_3 **maior)
 {
     int removeu = 0;
 
@@ -987,7 +976,7 @@ int remover1_(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, AR
                             else
                                 info_pai = pai->info2;
 
-                            removeu = ondinha_Q3(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, remover1_);
+                            removeu = ondinha_Q3(info_pai, &((*raiz)->info1), pai_aux, origem, &pai, maior, remover1_Q3);
                         }
                         else
                         {
@@ -1017,7 +1006,7 @@ int remover1_(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, AR
                             {
                                 ARVORE2_3 *avo;
                                 avo = buscar_pai_Q3(*origem, info_pai.block_inicio);
-                                removeu = ondinha_Q3(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, remover1_);
+                                removeu = ondinha_Q3(info_pai, &((*raiz)->info1), avo, origem, &pai_aux, maior, remover1_Q3);
                             }
                         }
                     }
@@ -1031,11 +1020,11 @@ int remover1_(ARVORE2_3 **raiz, int info, ARVORE2_3 *pai, ARVORE2_3 **origem, AR
         else
         {
             if (info < (*raiz)->info1.block_inicio)
-                removeu = remover1_(&(*raiz)->esquerda, info, *raiz, origem, maior);
+                removeu = remover1_Q3(&(*raiz)->esquerda, info, *raiz, origem, maior);
             else if ((*raiz)->quant_infos == 1 || info < (*raiz)->info2.block_inicio)
-                removeu = remover1_(&(*raiz)->centro, info, *raiz, origem, maior);
+                removeu = remover1_Q3(&(*raiz)->centro, info, *raiz, origem, maior);
             else
-                removeu = remover1_(&(*raiz)->direita, info, *raiz, origem, maior);
+                removeu = remover1_Q3(&(*raiz)->direita, info, *raiz, origem, maior);
         }
     }
     return removeu;
@@ -1234,16 +1223,14 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
 
     menor = buscar_menor_bloco_Q3(raiz, no, info, &valor_menor);
 
-    if (quant < (info->block_fim - info->block_inicio + 1))
+    if (quant <= (info->block_fim - info->block_inicio + 1))
     {
         if (menor == NULL)
         {
             Informacao_memoria data;
             data.block_inicio = info->block_inicio;
-            data.block_fim = info->block_inicio + quant - 1;
-            data.state = !(info->state);
-
-            info->block_inicio += quant;
+            data.block_fim = info->block_fim;
+            data.state = 'L';
             insere_Q3(raiz, data);
         }
         else
@@ -1260,12 +1247,12 @@ void modificar_no(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_memoria *info, int
         maior = buscar_maior_bloco_Q3(raiz, no, info, &valor_maior);
 
         if (menor == NULL && maior == NULL)
-            info->state = !(info->state);
+            info->state = 'L';
         else
         {
             if (menor == NULL)
             {
-                info->state = !(info->state);
+                info->state = 'L';
                 concatenar_no_Q3(raiz, &(info->block_fim), valor_maior->block_fim, valor_maior->block_inicio);
             }
             else if (maior == NULL)
@@ -1340,4 +1327,65 @@ ARVORE2_3 *buscar_maior_bloco_Q3(ARVORE2_3 **raiz, ARVORE2_3 *no, Informacao_mem
     }
 
     return maior;
+}
+
+int desalocar_no_Q3(ARVORE2_3 **arvore, int quant_nos, char status)
+{
+    Informacao_memoria *info_escolhido = NULL;
+    ARVORE2_3 *no_escolhido = buscar_no_memoria_Q3(arvore, quant_nos, status, &info_escolhido);
+
+    if (info_escolhido != NULL)
+    {
+        printf("\nNó escolhido: \n");
+        printf("Estado: %c\n", info_escolhido->state);
+        printf("Bloco Inicial: %d\n", info_escolhido->block_inicio);
+        printf("Bloco Final: %d\n", info_escolhido->block_fim);
+
+        modificar_no(arvore, no_escolhido, info_escolhido, quant_nos);
+    }
+    else
+    {
+        printf("\nNão há nó disponível\n");
+    }
+    return info_escolhido != NULL;
+}
+
+ARVORE2_3 *buscar_no_memoria_Q3(ARVORE2_3 **arvore, int quant, char status, Informacao_memoria **info_escolhido)
+{
+    ARVORE2_3 *no = NULL;
+    if (*arvore != NULL)
+    {
+        no = buscar_no_memoria_Q3(&((*arvore)->esquerda), quant, status, info_escolhido);
+
+        if (*info_escolhido == NULL)
+        {
+            if ((*arvore)->info1.state == status && ((*arvore)->info1.block_fim - (*arvore)->info1.block_inicio + 1) >= quant)
+            {
+                *info_escolhido = &((*arvore)->info1);
+                no = *arvore;
+            }
+            else
+            {
+                no = buscar_no_memoria_Q3(&((*arvore)->centro), quant, status, info_escolhido);
+                if ((*arvore)->quant_infos == 2)
+                {
+                    if ((*arvore)->info2.state == status && ((*arvore)->info2.block_fim - (*arvore)->info2.block_inicio + 1) >= quant)
+                    {
+                        *info_escolhido = &((*arvore)->info2);
+                        no = *arvore;
+                    }
+                    else if (*info_escolhido == NULL)
+                    {
+                        no = buscar_no_memoria_Q3(&((*arvore)->direita), quant, status, info_escolhido);
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        *info_escolhido = NULL;
+    }
+
+    return no;
 }
